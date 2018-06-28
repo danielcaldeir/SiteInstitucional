@@ -1,0 +1,152 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 16/01/2018, 10:05:19
+    Author     : vouteligar
+*/
+
+body{
+    margin: 0;
+    background-color: #1e1e1e;
+}
+
+.topo{
+    width: 100%;
+    max-width: 980px;
+    height: 470px;
+    margin: auto;
+}
+
+.topo1{
+    height: 120px;
+}
+
+.banner{
+    height: 350px;
+    background-color: #514e51;
+}
+
+.menu{
+    width: 100%;
+    max-width: 980px;
+    height: 50px;
+    margin: auto;
+    background-color: #0062b7;
+}
+
+.menu ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu li{
+    height: 50px;
+    line-height: 50px;
+    float: left;
+    padding-left: 50px;
+    padding-right: 50px;
+    color: #ffffff;
+}
+
+.container-site{
+    width: 100%;
+    max-width: 980px;
+    /*height: ;*/
+    background-color: #ffffff;
+    margin: auto;
+    min-height: 480px;
+    padding: 10px;
+}
+
+.h1{
+    padding-top: 0px;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 0px;
+}
+
+.home-sobre,
+.home-contato,
+.home-portfolio{
+    padding-top: 10px;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 10px;
+}
+.home-servicos{
+    padding-top: 10px;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 10px;
+}
+.home-portfolio{
+    clear: both;
+    padding: 20px;
+}
+
+.home-sobre img{
+    float: left;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.home-sobre h1,
+.home-contato h1,
+.home-portfolio h1{
+    margin: 0;
+    padding-top: 0px;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 40px;
+}
+.home-servicos h1{
+    margin: 0;
+    padding-top: 0px;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 40px;
+}
+
+.home-sobre h4,
+.home-contato h4,
+.home-portfolio h4{
+    margin: 0;
+    padding: 20px;
+}
+.home-servicos h4{
+    margin: 0;
+    padding: 20px;
+}
+
+.portfolio-item {
+    width: 200px;
+    height: 150px;
+    float: left;
+    border: 3px solid #e2e8ee;
+    margin: 10px;
+}
+
+.home-contato input,
+.home-contato textarea{
+    width: 400px;
+    height: 30px;
+    border: 1px solid #000;
+    border-radius: 5px;
+}
+.home-contato textarea{
+    height: 150px;
+}
+
+.rodape{
+    width: 100%;
+    max-width: 980px;
+    height: 100px;
+    margin: auto;
+    background-color: #303030;
+    margin-bottom: 50px;
+}
+
