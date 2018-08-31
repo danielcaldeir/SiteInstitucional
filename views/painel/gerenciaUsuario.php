@@ -28,7 +28,7 @@
                 </ul>
             </div>
             <a href="<?php echo BASE_URL; ?>cadastrar/">Adicionar novo Usuario</a>
-            <table border="1" width="100%" class="table-striped">
+            <table border="1" width="900px" class="table-striped">
                 <tr >
                     <th class="text-uppercase text-center">Nome</th>
                     <th class="text-uppercase text-center">E-Mail</th>

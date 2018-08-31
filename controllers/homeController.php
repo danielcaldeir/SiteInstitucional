@@ -15,12 +15,14 @@ class homeController extends controller{
     //put your code here
     
     public function index() {
-        $dados = array (
-            "nome" => "Daniel Caldeira"
-        );
+        $dados = array ();
+		//$dados['nome'] = "Daniel Caldeira";
         
         $portfolio = new Portfolio();
         $dados['portfolio'] = $portfolio->getTrabalhos(4);
+		
+		$pag = new Paginas();
+		$dados['paginas'] = $pag->selecionarAllPaginas();
         
         $this->loadTemplate("home", $dados);
     }
@@ -34,24 +36,91 @@ class homeController extends controller{
         $this->loadTemplate("portfolio", $dados);
     }
     
-    public function sobre() {
-        $this->loadTemplate("sobre");
-    }
-    
-    public function servicos() {
-        $dados = array();
-        $this->loadTemplate("servicos" , $dados);
-    }
-    
-    public function contato() {
-        $dados = array();
-        $this->loadTemplate("contato", $dados);
-    }
-    public function enviarEmail() {
-        $dados = array();
+	public function pagina($url){
+		$pag = new Paginas();
+        $pag->selecionarPaginasURL($url);
         
+        $dados = array();
+        $dados["url"] = $pag->getURL();
+        $dados["titulo"] = $pag->getTitulo();
+        $dados["corpo"] = $pag->getCorpo();
+        
+        $this->loadTemplate("paginas", $dados);
+	}
+	
+	public function formulario($titulo){
+		$form = new Formulario();
+		global $config;
+        
+        $dados = array();
+        $dados["email"] = $config['email'];
+        $dados["titulo"] = $titulo;
+        $dados["formularios"] = $form->selecionarFormularioTitulo($titulo);
+        
+        $this->loadTemplate("formularios", $dados);
+	}
+	
+    //public function sobre() {
+    //    $this->loadTemplate("sobre");
+    //}
+    
+    //public function servicos() {
+    //    $dados = array();
+    //    $this->loadTemplate("servicos" , $dados);
+    //}
+    
+    //public function contato() {
+    //    $dados = array();
+    //    $this->loadTemplate("contato", $dados);
+    //}
+	
+    public function enviarEmail() {
+		if(!empty($_POST['titulo'])) {
+			$titulo = $_POST['titulo'];
+			unset($_POST['titulo']);
+			$label = array_keys($_POST);
+			$valor = array();
+			if (count($label) > 0){
+				for ($i=0; $i<count($label);$i++){
+					$valor[] = $_POST[$label[$i]];
+				}
+			}
+			
+			$msg = "Os Valores passados foram: <br/>";
+			if (count($label) > 0){
+				for ($i=0; $i<count($label);$i++){
+					$msg = $msg . $label[$i]. " : ". $valor[$i]. "<br/>"; 
+				}
+			}
+            $email = $_POST['email'];
+			//$msg = $_POST['mensagem'];
+			
+			$assunto = "Formulario do Sistema: ".$titulo."!";
+            $mensagem = "Clique no link para redefinir sua senha:<br/>";
+			$mensagem = $mensagem . $msg;
+            
+			$headers = 'From: seuemail@seusite.com.br'."\r\n" .
+                              'X-Mailer: PHP/'.phpversion();
+                
+            mail($email, $assunto, $mensagem, $headers);
+			
+			
+                
+                echo ("<h2>OK! ".utf8_decode($assunto)."</h2>");
+                echo ("<br>");
+                echo ("<br>");
+                echo ("<h2>E-Mail: ".$email."</h2>");
+                //echo ("<a href=".$link.">Clique aqui para redefinir senha</a>");
+                
+                echo $mensagem;
+            exit();    
+                //$dados = array();
+				//$dados["redefinir"] = "true";
+        }
+        $dados = array();
         $this->loadTemplate("contato", $dados);
     }
+	
     public function indexClassificados() {
         
         $refat = 1;

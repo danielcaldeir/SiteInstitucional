@@ -13,6 +13,7 @@ and open the template in the editor.
         <link rel="stylesheet" type="text/css" href="<?php echo BASE; ?>asserts/css/template.css" />
         <script type="text/javascript" src="<?php echo BASE; ?>asserts/js/jquery-3.2.1.js" ></script>
         <script type="text/javascript" src="<?php echo BASE; ?>asserts/js/bootstrap.min.js" ></script>
+		<script type="text/javascript" src="<?php echo(BASE);?>asserts/ckeditor/ckeditor.js"></script>
     </head>
     <body>
 		<nav class="navbar navbar-inverse">
@@ -22,7 +23,8 @@ and open the template in the editor.
                 </div>
                 <ul class="nav navbar-nav navbar-right">
                     <?php if ( !empty($_SESSION['user']) ): ?>
-                    <li><a href="<?php echo BASE; ?>painel/">Meus Anuncios</a></li>
+					<li><a href="<?php echo BASE; ?>cadastrar/gerenciaUsuario/">Gerenciar Usuario</a></li>
+                    <li><a href="<?php echo BASE; ?>painel/">Gerenciar Página</a></li>
                     <li><a href="<?php echo BASE; ?>sair/">Sair</a></li>
                     <?php else : ?>
                     <li><a href="<?php echo BASE; ?>cadastrar/">Cadastra-se</a></li>
@@ -37,21 +39,20 @@ and open the template in the editor.
             <div class="banner"></div>
         </div>
         <div class="menu">
-            <ul >
-                <a href="<?php echo BASE; ?>"><li >HOME</li></a>
+        <!--    <ul >
+                <a href="<?php echo BASE; ?>painel/"><li >HOME</li></a>
                 <a href="<?php echo BASE; ?>painel/portfolio"><li >PORTFOLIO</li></a>
                 <a href="<?php echo BASE; ?>painel/sobre"><li >SOBRE</li></a>
                 <a href="<?php echo BASE; ?>painel/servicos"><li >SERVICOS</li></a>
                 <a href="<?php echo BASE; ?>painel/contato"><li >CONTATO</li></a>
             </ul>
+		-->
+			<?php $this->loadMenuPainel()?>
         </div>
         <div class="container-site">
             <?php $this->loadViewInPainel($viewName, $viewData); ?>
         </div>
         <div class="rodape"></div>
-        
-        
-        
         <!--
         <nav class="navbar navbar-right navbar-fixed-bottom">
             <div class="container-fluid">

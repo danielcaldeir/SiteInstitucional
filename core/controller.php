@@ -32,4 +32,18 @@ class controller {
         extract($viewData);
         include ("views/painel/".$viewName.".php");
     }
+	
+	public function loadMenu() {
+        $menu = new Menu("menu");
+        $viewMenu = array();
+        $viewMenu['menu'] = $menu->selecionarALLMenu();
+        $this->loadView('menu', $viewMenu);
+    }
+	
+	public function loadMenuPainel() {
+        $menu = new Menu("menu");
+        $viewMenu = array();
+        $viewMenu['menu'] = $menu->selecionarALLMenu();
+        $this->loadViewInPainel('menu', $viewMenu);
+    }
 }

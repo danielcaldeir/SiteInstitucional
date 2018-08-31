@@ -13,6 +13,7 @@
  */
 
 require_once ('./core/controller.php');
+require_once ('./models/Menu.php');
 
 class Core {
     //put your code here
@@ -75,6 +76,16 @@ class Core {
         //echo ("<br>");//Qual os Parametros
         
         $c = new $this->currentController();
+		
+		if(!method_exists($c, $currentAction)){
+			$pNome = $currentAction;
+			$menu = new Menu("menu");
+			$menu->selecionarMenuURL($pNome);
+            $currentAction = $menu->getTipo();
+            //$param = array();
+			$param[] = $pNome;
+        }
+		//print_r ($param);
         //$c->$currentAction();
         call_user_func_array(array($c, $currentAction), $param);
     }

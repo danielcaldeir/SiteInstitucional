@@ -92,9 +92,8 @@ class loginController extends controller{
     }
     
     public function esqueciSenha($error = "") {
-        $dados = array(
-            "error" => $error
-        );
+        $dados = array();
+		$dados["error"] = $error;
         $this->loadTemplate("esqueciSenha", $dados);
     }
     
@@ -143,22 +142,22 @@ class loginController extends controller{
                 
                 echo $mensagem;
                 
-                $dados = array(
-                    "redefinir" => "true",
-                    "link" => $link,
-                    "token" => $token
-                );
+                $dados = array();
+				$dados["redefinir"] = "true";
+				$dados["link"] = $link;
+				$dados["token"] = $token;
+				
                 //print_r($dados);
                 //$this->loadTemplate("redefinir", $dados);
                 header("Location: ".BASE_URL."login/redefinir/".$token);
                 //header("Location: ../index.php?pag=esqueciSenha&sucess=true&link=".$link);
                 //exit();
             } else {
-                $dados = array(
-                    "error" => "true",
-                    "token" => $token,
-                    "link" => $link
-                );
+                $dados = array();
+				$dados["error"] = "true";
+				$dados["token"] = $token;
+				$dados["link"] = $link;
+                
                 //$this->loadTemplate("esqueciSenha", $dados);
                 header("Location: ".BASE_URL."login/esqueciSenha/error/");
             }
@@ -179,14 +178,16 @@ class loginController extends controller{
             $config['connect'] = "connected";
             
             //exit();
-            header("Location: ".BASE_URL);
-            //$this->loadTemplate("inicial");
+            //header("Location: ".BASE_URL);
+			$dados = array();
+			$dados['nome'] = "Administrador: ".$dado['nome'];
+            $this->loadPainel("home", $dados);
         } else {
             //$result = "Usuario desabilitado ou E-Mail Invalido!";
             //header("Location: ".BASE_URL."login/index/true/");
-            $dados = array (
-                "habilitado" => "true"
-            );
+            $dados = array ();
+			$dados["habilitado"] = "true";
+            
             $this->loadTemplate("login", $dados);
         }
     }
@@ -208,9 +209,9 @@ class loginController extends controller{
             } else {
                 //$result = "E-mail ou Senha Invalido!";
                 //header("Location: ".BASE_URL."login/index/true/");
-                $dados = array (
-                    "error" => "true"
-                );
+                $dados = array ();
+				$dados["error"] = "true";
+                
                 $this->loadTemplate("login", $dados);
             }
         }

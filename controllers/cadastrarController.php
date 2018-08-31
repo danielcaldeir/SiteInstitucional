@@ -12,12 +12,32 @@
  * @author Daniel_Caldeira
  */
 class cadastrarController extends controller{
+	private $user;
+	
+	public function __construct() {
+        $this->user = array();
+        if (isset($_SESSION['user'])){
+            $this->user['nome'] = $_SESSION['user']['nome'];
+            $this->user['email'] = $_SESSION['user']['email'];
+            //$this->user['senha'] =$_SESSION['user']['senha'];
+            $this->user['telefone'] = $_SESSION['user']['telefone'];
+        }
+        if (count($this->user) == 0){
+            $login = new loginController();
+            $login->index();
+            exit();
+        }
+        //global $config;
+        //$this->config = $config;
+        //parent::__construct();
+    }
+	
     //put your code here
     public function index($confirme = ""){
-        $dados = array(
-            "confirme" => $confirme
-        );
-        $this->loadTemplate("cadastrar", $dados);
+        $dados = array();
+        $dados["confirme"] = $confirme;
+        
+        $this->loadPainel("addUsuario", $dados);
     }
     
     public function gerenciaUsuario(){
@@ -29,12 +49,23 @@ class cadastrarController extends controller{
             $usuarios[] = $user->result();
         }
         
-        $dados = array(
-            "usuarios" => $usuarios
-        );
-        $this->loadTemplate("gerenciaUsuario", $dados);
+        $dados = array();
+        $dados["usuarios"] = $usuarios;
+        
+        $this->loadPainel("gerenciaUsuario", $dados);
     }
-    
+	
+	public function excluirUser($id){
+        $dados = array();
+        $user = new usuario();
+		
+		$user->setID($id);
+        $dados['id'] = $id;
+        $dados['usuario'] = $menu->selecionarUser();
+        
+        $this->loadPainel("excluirMenu", $dados);
+    }
+	
     public function editarUserControll(){
         // put your code here
         $user = new usuario();
@@ -62,19 +93,19 @@ class cadastrarController extends controller{
             "telefone" => $telefone
         );
         if ($user->numRows() > 1){
-            $dados = array(
-                "confirme" => "existe",
-                "dado" => $dado
-            );
-            $this->loadTemplate("editarUser", $dados);
+            $dados = array();
+            $dados["confirme"] = "existe";
+            $dados["dado"] = $dado;
+            
+            $this->loadPainel("editUsuario", $dados);
         } else {
             $sql = $user->atualizarNomeEmailSenha();
             
-            $dados = array(
-                "confirme" => "sucess",
-                "dado" => $dado
-            );
-            $this->loadTemplate("editarUser", $dados);
+            $dados = array();
+            $dados["confirme"] = "sucess";
+            $dados["dado"] = $dado;
+            
+            $this->loadPainel("editUsuario", $dados);
         }
     }
     
@@ -126,42 +157,42 @@ class cadastrarController extends controller{
                     //echo ("<a href=".$link.">Clique aqui para confirmar</a>");
 
                     //header("Location: ../index.php?pag=cadastrar&sucess=true&link=".$link);
-                    $dados = array(
-                        "confirme" => "sucess",
-                        "link" => $link
-                    );
-                    $this->loadTemplate("cadastrar", $dados);
+                    $dados = array();
+                    $dados["confirme"] = "sucess";
+                    $dados["link"] = $link;
+                    
+                    $this->loadPainel("addUsuario", $dados);
                     //exit();
                 } else {
                     //header("Location: ../index.php?pag=cadastrar&existe=true");
-                    $dados = array(
-                        "confirme" => "existe"
-                    );
-                    $this->loadTemplate("cadastrar", $dados);
+                    $dados = array();
+                    $dados["confirme"] = "existe";
+                    
+                    $this->loadPainel("addUsuario", $dados);
                 }
 
             } else {
                 //header("Location: ../index.php?pag=cadastrar&error=true");
-                $dados = array(
-                    "confirme" => "error"
-                );
-                $this->loadTemplate("cadastrar", $dados);
+                $dados = array();
+                $dados["confirme"] = "error";
+                
+                $this->loadPainel("addUsuario", $dados);
             }
         } else{
             //header("Location: ../index.php?pag=cadastrar&error=true");
-            $dados = array(
-                "confirme" => "error"
-            );
-            $this->loadTemplate("cadastrar", $dados);
+            $dados = array();
+            $dados["confirme"] = "error";
+            
+            $this->loadPainel("addUsuario", $dados);
         }
     }
     
     public function confirmarEmail($token, $confirme = ""){
-        $dados = array(
-            "token" => $token,
-            "confirme" => $confirme
-        );
-        $this->loadTemplate("confirmarEmail", $dados);
+        $dados = array();
+        $dados["token"] = $token;
+        $dados["confirme"] = $confirme;
+        
+        $this->loadPainel("confirmarEmail", $dados);
     }
     
     public function editarUser($id, $confirme = ""){
@@ -172,19 +203,17 @@ class cadastrarController extends controller{
         if ($user->numRows() > 0) {
             $dado = $user->result();
             
-            $dados = array(
-                "dado" => $dado,
-                "confirme" => $confirme
-            );
+            $dados = array();
+            $dados["dado"] = $dado;
+            $dados["confirme"] = $confirme;
         }else{
             //header("Location: gerenciaUsuario.php");
-            $dados = array(
-                "dado" => "",
-                "confirme" => $confirme
-            );
+            $dados = array();
+            $dados["dado"] = "";
+            $dados["confirme"] = $confirme;
         }
         
-        $this->loadTemplate("editarUser", $dados);
+        $this->loadPainel("editUsuario", $dados);
     }
     
     public function sisConfirmarEmail(){
@@ -204,7 +233,7 @@ class cadastrarController extends controller{
                 $dados = array(
                     "confirme" => "sucess"
                 );
-                $this->loadTemplate("confirmarEmail", $dados);
+                $this->loadPainel("confirmarEmail", $dados);
                 //exit();
             } else {
                 //echo ("<h2>Cadastro Nao Confirmado ou utilizado!</h2>");
@@ -213,7 +242,7 @@ class cadastrarController extends controller{
                 $dados = array(
                     "confirme" => "error"
                 );
-                $this->loadTemplate("confirmarEmail", $dados);
+                $this->loadPainel("confirmarEmail", $dados);
                 //exit();
             }
         } else {
@@ -221,7 +250,7 @@ class cadastrarController extends controller{
             $dados = array(
                 "confirme" => "error"
             );
-            $this->loadTemplate("cadastrar", $dados);
+            $this->loadPainel("addUsuario", $dados);
             //exit();
         }
     }

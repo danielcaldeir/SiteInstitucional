@@ -37,11 +37,12 @@ class model {
     public function query($sql){
         $query = $this->pdo->query($sql);
         $this->numRows = $query->rowCount();
-        if ($this->numRows == 1){
-            $this->array = $query->fetch();
-        } else {
-            $this->array = $query->fetchALL();
-        }
+		$this->array = $query->fetchALL();
+    //    if ($this->numRows == 1){
+    //        $this->array = $query->fetch();
+    //    } else {
+    //        $this->array = $query->fetchALL();
+    //    }
         //echo ("Array: ".$this->array."<br>");
         //echo ("sql: ".$sql."<br>");
     }
@@ -92,8 +93,8 @@ class model {
         }
     }
     
-    public function delete($table, $data, $where = array(), $where_cond = "AND"){
-        if (!empty($table) && (is_array($data) && count($data)) && is_array($where)){
+    public function delete($table, $where = array(), $where_cond = "AND"){
+        if (!empty($table) && is_array($where)){
             $sql = "DELETE FROM ".$table;
             if (count($where) > 0) {
                 $dados = array();

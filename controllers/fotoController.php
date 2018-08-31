@@ -11,7 +11,7 @@
  *
  * @author Daniel_Caldeira
  */
-class fotoController {
+class fotoController extends controller{
     //put your code here
     public function index() {
         $dados = array ();
@@ -115,7 +115,8 @@ class fotoController {
                         $imageOriginal = imagecreatefrompng($destino.$nomeFoto);
                     }
                     
-                    imagecopyresampled($imagemFinal, $imageOriginal, 0, 0, 0, 0, $largura, $altura, $larguraOriginal, $alturaOriginal);
+                //    imagecopyresampled($imagemFinal, $imageOriginal, 0, 0, 0, 0, $largura, $altura, $larguraOriginal, $alturaOriginal);
+					imagecopyresampled($imagemFinal, $imageOriginal, 0, 0, 0, 0, $larguraOriginal, $alturaOriginal, $larguraOriginal, $alturaOriginal);
                     imagejpeg($imagemFinal, $destino.$nomeFoto,80);
                     
                     $portfolio = new Portfolio();
@@ -123,5 +124,28 @@ class fotoController {
                 }
             }
         }
+    }
+	
+	public function delPortfolio($imagem = null, $destino = null) {
+		//print ($imagem);
+		//print ('<br>');
+		//print ($destino);
+		$portfolio = new Portfolio();
+		$portfolio->getPortfolioImagem($imagem);
+		
+		$id = $portfolio->getID();
+		if (is_int($id)){
+			//$fp = fopen($destino,'r');
+			//$portfolio->deletarPortfolio($id);
+			$ret = unlink($destino);
+			if ($ret){
+				print('Arquivo Excluido');
+				$portfolio->deletarPortfolio($id);
+			} else {
+				print('Erro ao Excluir');
+			}
+		} else {
+			print('Erro Nao foi encontrado o Portifolio');
+		}
     }
 }

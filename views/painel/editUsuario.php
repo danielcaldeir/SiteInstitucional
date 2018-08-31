@@ -1,7 +1,8 @@
+
 <div class="container-fluid">
-    <div class="jumbotron">
-        <h4>Cadastrar</h4>
-    </div>
+	<div style="clear: both"></div>
+    <h1 class="h1">Editar Usuário</h1>
+    <br/>
     <?php if ( $confirme == "error" ) :?>
             <div class="alert-warning">
                 <label>Preencha todos os Campos</label>
@@ -9,26 +10,23 @@
     <?php endif; ?>
     <?php if ( $confirme == "existe" ) :?>
             <div class="alert-warning">
-                <label>Este usuario ja existe!</label><br>
+                <label>Duplicidade de E-Mail!</label><br>
                 <a href="<?php echo BASE_URL; ?>login/">Faca o login.</a>
             </div>
     <?php endif; ?>
     <?php if ( $confirme == "sucess" ) :?>
             <div class="alert-success">
-                <strong>Parabens Cadastro Realizado!</strong>
-                <a href="<?php echo($link); ?>">
-                    Acesse o Link para confirmar o cadastro.
-                </a>
+                <strong>Parabens Usuario Editado com Sucesso!</strong>
             </div>
     <?php endif; ?>
-    <form action="<?php echo BASE_URL; ?>cadastrar/addUser" method="POST">
+    <form action="<?php echo BASE_URL; ?>cadastrar/editarUserControll" method="POST">
         <div class="form-group">
             <label for="nome">Nome:</label>
-            <input type="text" name="nome" id="nome" class="form-control"/>
+            <input type="text" name="nome" id="nome" class="form-control" value="<?php echo($dado['nome']);?>"/>
         </div>
         <div class="form-group">
             <label for="email">E-Mail:</label>
-            <input type="email" name="email" id="email" class="form-control"/>
+            <input type="email" name="email" id="email" class="form-control" value="<?php echo($dado['email']);?>"/>
         </div>
         <div class="form-group">
             <label for="senha">Senha:</label>
@@ -36,9 +34,15 @@
         </div>
         <div class="form-group">
             <label for="telefone">Telefone:</label>
-            <input type="text" name="telefone" id="telefone" class="form-control"/>
+            <input type="text" name="telefone" id="telefone" class="form-control" value="<?php echo($dado['telefone']);?>"/>
         </div>
-        <input type="submit" id="botaoEnviarForm" value="Cadastrar" class="btn-default"/>
+        <input type="hidden" name="id" value="<?php echo($dado['id']);?>">
+      <?php if ( $confirme == "sucess" ) :?>
+        <input type="submit" id="botaoEnviarForm" value="Editar" class="btn-default" disabled="true"/>
+      <?php else :?>
+        <input type="submit" id="botaoEnviarForm" value="Editar" class="btn-default"/>
+      <?php endif;?>
+        
     </form>
     <br/>
     <br/>

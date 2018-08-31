@@ -15,51 +15,27 @@ and open the template in the editor.
         <script type="text/javascript" src="<?php echo BASE; ?>asserts/js/bootstrap.min.js" ></script>
     </head>
     <body>
-		<nav class="navbar navbar-inverse">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="<?php echo BASE; ?>">Site Institucional</a>
-                </div>
-                <ul class="nav navbar-nav navbar-right">
-                    <?php if ( !empty($_SESSION['user']) ): ?>
-                    <li><a href="<?php echo BASE; ?>painel/">Meus Anuncios</a></li>
-                    <li><a href="<?php echo BASE; ?>sair/">Sair</a></li>
-                    <?php else : ?>
-                    <li><a href="<?php echo BASE; ?>cadastrar/">Cadastra-se</a></li>
-                    <li><a href="<?php echo BASE; ?>login/">Login</a></li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-        </nav>
 		
         <div class="topo">
             <div class="topo1"></div>
             <div class="banner"></div>
         </div>
         <div class="menu">
-            <ul >
+            <!--
+			<ul >
                 <a href="<?php echo BASE; ?>"><li >HOME</li></a>
                 <a href="<?php echo BASE_URL; ?>portfolio"><li >PORTFOLIO</li></a>
-                <a href="<?php echo BASE_URL; ?>sobre"><li >SOBRE</li></a>
-                <a href="<?php echo BASE_URL; ?>servicos"><li >SERVICOS</li></a>
-                <a href="<?php echo BASE_URL; ?>contato"><li >CONTATO</li></a>
+                <a href="<?php echo BASE_URL; ?>SOBRE"><li >SOBRE</li></a>
+                <a href="<?php echo BASE_URL; ?>SERVICOS"><li >SERVICOS</li></a>
+                <a href="<?php echo BASE_URL; ?>CONTATO"><li >CONTATO</li></a>
             </ul>
+			-->
+			<?php $this->loadMenu(); ?>
         </div>
         <div class="container-site">
             <?php $this->loadView($viewName, $viewData); ?>
         </div>
         <div class="rodape"></div>
         
-        
-        
-        <!--
-        <nav class="navbar navbar-right navbar-fixed-bottom">
-            <div class="container-fluid">
-                <div class="navbar-text navbar-default">
-                    <h3>Página produzida para Analise de Programação</h3>
-                </div>
-            </div>
-        </nav>
-        -->
     </body>
 </html>

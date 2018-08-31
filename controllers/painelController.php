@@ -35,9 +35,11 @@ class painelController extends Controller{
     //put your code here
     public function index() {
         //$paginas = new Paginas();
-        
+        $menu = new Menu("menu");
+		
         $dados = array();
         $dados['nome'] = "Administrador: ".$this->user['nome'];
+		$dados['menus'] = $menu->selecionarALLMenu();
         //$dados['paginas'] = $paginas->selecionarALLPaginas();
         
         $this->loadPainel("home", $dados);
@@ -54,32 +56,54 @@ class painelController extends Controller{
         $this->loadPainel("selMenus", $dados);
     }
     
-    public function paginas() {
-        $paginas = new Paginas();
-        
+    public function pagina($url = null) {
+        //$paginas = new Paginas();
+		$pag = new Paginas();
         $dados = array();
-        $dados['nome'] = "Administrador: ".$this->user['nome'];
-        $dados['paginas'] = $paginas->selecionarALLPaginas();
-        $this->loadPainel("selPaginas", $dados);
+		
+		if (is_null($url)){
+			$dados['nome'] = "Administrador: ".$this->user['nome'];
+			//$dados['paginas'] = $paginas->selecionarALLPaginas();
+			$dados['paginas'] = $pag->selecionarALLPaginas();
+			$this->loadPainel("selPaginas", $dados);
+		} else {
+			$pag->selecionarPaginasURL($url);
+			$dados['nome'] = "Administrador: ".$this->user['nome'];
+			$id = $pag->getID();
+			$dados["id"] = $id;
+			$dados['confirme'] = "";
+			$dados['pagina'] = $pag->selecionarPaginasID($id);
+			
+			$this->loadPainel("editPagina", $dados);
+		}
+        //$this->loadPainel("selPaginas", $dados);
     }
 	
 	public function portfolio() {
         $dados = array ();
-        
         $portfolio = new Portfolio();
+		
         $dados['portfolio'] = $portfolio->getTrabalhos();
+		$dados['nome'] = "Administrador: ".$this->user['nome'];
         
         $this->loadPainel("selPortfolio", $dados);
     }
     
-	public function sobre() {
-        $dados = array ();
-        $this->loadPainel("selSobre", $dados);
-    }
+	//public function sobre() {
+    //    $dados = array ();
+    //    $this->loadPainel("selSobre", $dados);
+    //}
 	
-	public function servicos() {
-        $dados = array ();
-        $this->loadPainel("selServicos", $dados);
+	public function formulario($titulo = null, $confirme = null) {
+        $dados = array();
+		$formulario = new Formulario();
+		
+		$dados['nome'] = "Administrador: ".$this->user['nome'];
+		$dados['formulario'] = $formulario->selecionarFormularioTitulo($titulo);
+		$dados['titulo'] = $titulo;
+		$dados['confirme'] = $confirme;
+		
+        $this->loadPainel("selFormulario", $dados);
     }
 	
     public function addMenu($confirme = ""){
@@ -111,9 +135,10 @@ class painelController extends Controller{
         $menu = new Menu("menu");
         $nome = addslashes($_POST['nome']);
         $url = addslashes($_POST['url']);
+		$tipo = addslashes($_POST['tipo']);
         
         if (!empty($nome) && !empty($url)){
-            $menu->incluirMenu($nome, $url);
+            $menu->incluirMenu($nome, $url, $tipo);
             //$confirme = "success";
             header("Location: ".BASE_URL."painel/addMenu/success");
         } else {
@@ -129,10 +154,11 @@ class painelController extends Controller{
             $id = addslashes($_POST['id']);
             $nome = utf8_decode(addslashes($_POST['nome']) );
             $url = addslashes($_POST['url']);
+			$tipo = addslashes($_POST['tipo']);
             
             if (!empty($nome) && !empty($url) ){
                 $menu = new Menu("menu");
-                $menu->atualizarMenuNomeURL($id, $nome, $url);
+                $menu->atualizarMenuNomeURL($id, $nome, $url, $tipo);
                 
                 header("Location: ".BASE_URL."painel/editMenu/".$id."/sucess");
             } else {
@@ -266,14 +292,69 @@ class painelController extends Controller{
     }
     
     public function delPortfolio($id){
-        $dados = array();
         $portfolio = new Portfolio;
-        $dados['id'] = $id;
-        $dados['portfolio'] = $portfolio->deletarPortfolio($id);
-        
+		$fotoCTRL = new fotoController();
+		$dados = array();
+		$portfolio->getPortfolioID($id);
+		
+		$dados['id'] = $portfolio->getID();
+		$dados['imagem'] = $portfolio->getImagem();
+		
+		$destino = (".\\imagem\\portfolio\\");
+		if (file_exists($destino.$portfolio->getImagem())){
+			$destinoFinal = $destino.$portfolio->getImagem();
+			print ('Verdadeiro');
+			print ('<br/>');
+			$fotoCTRL->delPortfolio($portfolio->getImagem(), $destinoFinal);
+		} else{
+			print ($portfolio->getImagem());
+			print ('<br/>');
+			print ('Falso');
+		}
+		
+        //$dados['portfolio'] = $portfolio->deletarPortfolio($id);
+        //exit();
         $this->loadPainel("delPortfolio", $dados);
     }
     
+	public function addFormulario($confirme = ""){
+		$formulario = new Formulario();
+        $titulo = addslashes($_POST['titulo']);
+        $label = addslashes($_POST['label']);
+		$tipo = addslashes($_POST['tipo']);
+        
+        if (!empty($titulo) && !empty($label)){
+            $formulario->incluirFormularioTituloLabelTipo($titulo, $label, $tipo);
+            //$confirme = "success";
+            header("Location: ".BASE_URL."painel/formulario/".$titulo."/success");
+        } else {
+            header("Location: ".BASE_URL."painel/formulario/error");
+            //$confirme = "error";
+        }
+        
+        //$this->addMenu($confirme);
+    }
+	
+	public function delFormulario($id = ""){
+		$formulario = new Formulario();
+        //$titulo = addslashes($_POST['titulo']);
+        //$label = addslashes($_POST['label']);
+		//$tipo = addslashes($_POST['tipo']);
+        
+        if (!empty($id) ){
+			$formulario->selecionarFormularioID($id);
+			$titulo = $formulario->getTitulo();
+            $formulario->deletarFormularioID($id);
+            //$confirme = "success";
+            header("Location: ".BASE_URL."painel/formulario/".$titulo."/success");
+        } else {
+            header("Location: ".BASE_URL."painel/formulario/error");
+            //$confirme = "error";
+        }
+        
+        //$this->addMenu($confirme);
+    }
+	
     public function sisEditPropriedade() {
         $config = new Config();
         if (isset($_POST['site_title']) && !empty($_POST['site_title'])){
