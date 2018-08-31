@@ -13,8 +13,9 @@ $config = array();
 if (ENVIROMENT == "development"){
     define("BASE_URL", "http://localhost/SiteInstitucional/index.php/");
     define("BASE", "http://localhost/SiteInstitucional/");
-    $config['dbname'] = "caixaeletronico";
-    $config['host'] = "localhost";
+    //$config['dbname'] = "caixaeletronico";
+    $config['dbname'] = "blog";
+	$config['host'] = "localhost";
     $config['dbuser'] = "root";
     $config['dbpass'] = "root";
     $config['connect'] = "connect";

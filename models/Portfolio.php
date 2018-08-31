@@ -40,6 +40,25 @@ class Portfolio extends model{
         }
     }
     
+	public function incluirPortfolio($imagem){
+        $tabela = "portfolio";
+        $dados = array (
+            "imagem" => $imagem
+        );
+        $this->insert($tabela, $dados);
+        $this->query("SELECT LAST_INSERT_ID() as ID");
+        return $this->array;
+    }
+	
+	public function deletarPortfolio($id){
+        $tabela = "portfolio";
+        $where = array( 
+            "id" => $id 
+        );
+        $this->delete($tabela, $where);
+        return null;
+    }
+	
     public function setID($id) {
         $this->id = $id;
     }

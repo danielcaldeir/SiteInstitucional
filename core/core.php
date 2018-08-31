@@ -28,15 +28,15 @@ class Core {
         //print_r($url);//visualizador de URL
         //echo ("<br>");
         
-        if (!empty($url)){
+        if (!empty($url) && !($url == '/')){
             $url = explode('/', $url);
-        //    array_shift($url);
+            array_shift($url);
             
             //print_r($url);//variaveis da URL
             //echo ("<br>");
             
-        //    $this->currentController = $url[0].'Controller';
-            $this->currentController = 'homeController';
+            $this->currentController = $url[0].'Controller';
+        //    $this->currentController = 'homeController';
             array_shift($url);
             
             //print_r($url);//variaveis da URL
@@ -60,6 +60,14 @@ class Core {
             $param = array();
         }
         
+		if (!file_exists('controllers/'.$this->currentController.'.php')){
+            $pNome = explode("Controller", $this->currentController);
+            $this->currentController = 'homeController';
+            $currentAction = $pNome[0];
+            //$param = array();
+            //$param[] = $pNome;
+        }
+		
         //echo ("Controller: ".$this->currentController."<br>");//Qual o Controller
         //echo ("Action: ".$currentAction."<br>");//Qual a Action
         //echo ("Param: ");

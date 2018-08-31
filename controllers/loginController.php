@@ -167,10 +167,15 @@ class loginController extends controller{
     
     private function verificarStatus($dado) {
         global $config;
+		if (!isset($_SESSION['user'])){
+            $_SESSION['user'] = array();
+        }
         if ($dado['status'] == 1){
-            $_SESSION['id'] = $dado['id'];
-            $_SESSION['nome'] = $dado['nome'];
-            $_SESSION['email'] = $dado['email'];
+            $_SESSION['user']['id'] = $dado['id'];
+            $_SESSION['user']['nome'] = $dado['nome'];
+            $_SESSION['user']['email'] = $dado['email'];
+			$_SESSION['user']['status'] = $dado['status'];
+			$_SESSION['user']['telefone'] = $dado['telefone'];
             $config['connect'] = "connected";
             
             //exit();

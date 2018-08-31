@@ -39,14 +39,14 @@ and open the template in the editor.
         <div class="menu">
             <ul >
                 <a href="<?php echo BASE; ?>"><li >HOME</li></a>
-                <a href="<?php echo BASE_URL; ?>portfolio"><li >PORTFOLIO</li></a>
-                <a href="<?php echo BASE_URL; ?>sobre"><li >SOBRE</li></a>
-                <a href="<?php echo BASE_URL; ?>servicos"><li >SERVICOS</li></a>
-                <a href="<?php echo BASE_URL; ?>contato"><li >CONTATO</li></a>
+                <a href="<?php echo BASE; ?>painel/portfolio"><li >PORTFOLIO</li></a>
+                <a href="<?php echo BASE; ?>painel/sobre"><li >SOBRE</li></a>
+                <a href="<?php echo BASE; ?>painel/servicos"><li >SERVICOS</li></a>
+                <a href="<?php echo BASE; ?>painel/contato"><li >CONTATO</li></a>
             </ul>
         </div>
         <div class="container-site">
-            <?php $this->loadView($viewName, $viewData); ?>
+            <?php $this->loadViewInPainel($viewName, $viewData); ?>
         </div>
         <div class="rodape"></div>
         

@@ -21,4 +21,15 @@ class controller {
     public function loadTemplate($viewName, $viewData = array()) {
         include ("views/template.php");
     }
+	
+	public function loadPainel($viewName, $viewData = array()) {
+        //echo ("<br>Nome: ".$viewName);
+        //include ("views/painel/". $this->config['site_painel'].".php");
+		include ("views/painel/template.php");
+    }
+	
+	public function loadViewInPainel($viewName, $viewData = array()) {
+        extract($viewData);
+        include ("views/painel/".$viewName.".php");
+    }
 }

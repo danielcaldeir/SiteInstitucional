@@ -74,4 +74,54 @@ class fotoController {
             }
         }
     }
+	
+	public function addPortfolio($fotos = array()) {
+        //print "<br><br>Quantidade: ".count($fotos['tmp_name']);
+        if (count($fotos['tmp_name']) > 0){
+            $destino = (".\\imagem\\portfolio\\");
+        //    print "<br><br>";
+        //    print_r($destino);
+            
+            for ($q=0; $q<count($fotos['tmp_name']); $q++){
+                $tipo = $fotos['type'][$q];
+        //        print "<br><br>";
+        //        print_r($tipo);
+                
+                if (in_array($tipo, array('image/jpg','image/png','image/jpeg'))) {
+                    //$nomeFoto = time().rand("0","0.99").$fotos['name'][$q];
+					$nomeFoto = $fotos['name'][$q];
+                    move_uploaded_file($fotos['tmp_name'][$q], $destino.$nomeFoto);
+        //            print "<br><br>";
+        //            print_r($nomeFoto);
+        //            print "<br><br>";
+                    
+                    list($larguraOriginal, $alturaOriginal) = getimagesize($destino.$nomeFoto);
+                //    $ratio = $larguraOriginal / $alturaOriginal;
+                //    $largura = "500";
+                //    $altura = "500";
+                //    if ($largura / $altura > $ratio) {
+                //        $largura = $altura * $ratio;
+                //    } else {
+                //        $altura = $largura / $ratio;
+                //    }
+                    
+					$imagemFinal = imagecreatetruecolor($larguraOriginal, $alturaOriginal);
+                //    $imagemFinal = imagecreatetruecolor($largura, $altura);
+                    if ($tipo == "image/jpg"){
+                        $imageOriginal = imagecreatefromjpeg($destino.$nomeFoto);
+                    } elseif ($tipo == "image/jpeg") {
+                        $imageOriginal = imagecreatefromjpeg($destino.$nomeFoto);
+                    } elseif ($tipo == "image/png") {
+                        $imageOriginal = imagecreatefrompng($destino.$nomeFoto);
+                    }
+                    
+                    imagecopyresampled($imagemFinal, $imageOriginal, 0, 0, 0, 0, $largura, $altura, $larguraOriginal, $alturaOriginal);
+                    imagejpeg($imagemFinal, $destino.$nomeFoto,80);
+                    
+                    $portfolio = new Portfolio();
+                    $portfolio->incluirPortfolio($nomeFoto);
+                }
+            }
+        }
+    }
 }

@@ -130,6 +130,19 @@ body{
     margin: 10px;
 }
 
+.portfolio-painel {
+    width: 200px;
+    height: 160px;
+    float: left;
+    border: 3px solid #e2e8ee;
+    margin: 10px;
+}
+
+.portfolio-painel  a{
+    margin: 100px;
+	
+}
+
 .home-contato input,
 .home-contato textarea{
     width: 400px;
