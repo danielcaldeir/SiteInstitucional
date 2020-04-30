@@ -4,13 +4,25 @@
             </div>
             <?php if (!empty($error)) :?>
             <div class="alert-warning">
+                <label>Preencha um E-mail valido!</label>
+            </div>
+            <?php endif; ?>
+            <?php if (!empty($validateLogin)) :?>
+            <div class="alert-warning">
                 <label>E-mail ou Senha Invalido!</label>
             </div>
             <?php endif; ?>
             <?php if (!empty($habilitado)) :?>
             <div class="alert-warning">
-                <label>Usuário Desabilitado ou E-mail Invalido!</label>
+                <label>Usuário sem Permissao neste site ou Desabilitado!</label>
             </div>
+            <?php endif; ?>
+            <?php if (!empty($permission)) :?>
+              <?php if ($permission) :?>
+                <div class="callout callout-danger">
+                  <label>Usuario nao tem permissao nesta area do SITE!</label>
+                </div>
+              <?php endif; ?>
             <?php endif; ?>
             <form action="<?php echo BASE_URL; ?>login/logar/" method="POST">
                 E-Mail:

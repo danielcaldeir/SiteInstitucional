@@ -14,44 +14,53 @@
 class Portfolio extends model{
     private $id;
     private $imagem;
-    //put your code here
     
-	public function getPortfolioID($id){
-		$tabela = "portfolio";
+    private function incluirElementos($elementos = array()) {
+        if (count($elementos) == 1){
+            foreach ($elementos as $item) {
+                $this->setID($item['id']);
+                $this->setImagem($item['imagem']);
+            }
+        }
+    }
+    
+    //put your code here
+    public function getPortfolioID($id){
+        $tabela = "portfolio";
         $colunas = array ("id", "imagem");
-        $where = array(
-            "id" => $id
-        );
+        $where = array();
+            $where["id"] = $id;
+        //);
         $this->selectTable($tabela, $colunas, $where);
-		if ($this->numRows() > 0){
-			$array = $this->result();
-			$this->setID($array['id']);
-			$this->setImagem($array['imagem']);
+        if ($this->numRows() > 0){
+            $array = $this->result();
+            $this->setID($array['id']);
+            $this->setImagem($array['imagem']);
             return $array;
         } else {
             return array();
         }
         //return $this->result();
-	}
-	
-	public function getPortfolioImagem($imagem){
-		$tabela = "portfolio";
+    }
+    
+    public function getPortfolioImagem($imagem){
+        $tabela = "portfolio";
         $colunas = array ("id", "imagem");
-        $where = array(
-            "imagem" => $imagem
-        );
+        $where = array();
+            $where["imagem"] = $imagem;
+        //);
         $this->selectTable($tabela, $colunas, $where);
-		if ($this->numRows() == 1){
-			$array = $this->result();
-			$this->setID($array['id']);
-			$this->setImagem($array['imagem']);
+        if ($this->numRows() == 1){
+            $array = $this->result();
+            $this->setID($array['id']);
+            $this->setImagem($array['imagem']);
             return $array;
         } else {
             return array();
         }
         //return $this->result();
-	}
-	
+    }
+    
     public function getTrabalhos($n = null) {
         $tabela = "portfolio";
         $colunas = array ("id", "imagem");
@@ -62,8 +71,8 @@ class Portfolio extends model{
         } else {
             if (is_numeric($n)){
                 $groupBy = array(
-					"ORDER BY RAND()",
-					"LIMIT ".$n
+                    "ORDER BY RAND()",
+                    "LIMIT ".$n
                 );
             } else {
                 $groupBy = array();
@@ -77,36 +86,28 @@ class Portfolio extends model{
         }
     }
     
-	public function incluirPortfolio($imagem){
+    public function incluirPortfolio($imagem){
         $tabela = "portfolio";
-        $dados = array (
-            "imagem" => $imagem
-        );
+        $dados = array ();
+            $dados["imagem"] = $imagem;
+        //);
         $this->insert($tabela, $dados);
         $this->query("SELECT LAST_INSERT_ID() as ID");
         return $this->array;
     }
-	
-	public function deletarPortfolio($id){
+    
+    public function deletarPortfolio($id){
         $tabela = "portfolio";
-        $where = array( 
-            "id" => $id 
-        );
+        $where = array();
+            $where["id"] = $id;
+        //);
         $this->delete($tabela, $where);
         return null;
     }
-	
-    public function setID($id) {
-        $this->id = $id;
-    }
-    public function getID() {
-        return $this->id;
-    }
     
-    public function setImagem($imagem) {
-        $this->imagem = $imagem;
-    }
-    public function getImagem() {
-        return $this->imagem;
-    }
+    public function setID($id) { $this->id = $id; }
+    public function getID() { return $this->id; }
+    
+    public function setImagem($imagem) { $this->imagem = $imagem; }
+    public function getImagem() { return $this->imagem; }
 }

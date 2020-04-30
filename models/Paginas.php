@@ -21,9 +21,9 @@ class Paginas extends Model{
     public function selecionarPaginasURL($url){
         $tabela = "paginas";
         $colunas = array ("id", "url", "titulo", "corpo");
-        $where = array(
-            "url" => $url
-        );
+        $where = array();
+            $where["url"] = $url;
+        //);
         $this->selectTable($tabela, $colunas, $where);
         if ($this->numRows > 0){
             $array = $this->result();
@@ -42,9 +42,9 @@ class Paginas extends Model{
     public function selecionarPaginasID($id){
         $tabela = "paginas";
         $colunas = array ("id", "url", "titulo", "corpo");
-        $where = array(
-            "id" => $id
-        );
+        $where = array();
+            $where["md5(id)"] = $id;
+        //);
         $this->selectTable($tabela, $colunas, $where);
         if ($this->numRows > 0){
             $array = $this->result();
@@ -76,11 +76,11 @@ class Paginas extends Model{
     
     public function incluirPaginaURLTituloCorpo($url,$titulo, $corpo){
         $tabela = "paginas";
-        $dados = array (
-            "url" => $url,
-            "titulo" => $titulo,
-            "corpo" => $corpo
-        );
+        $dados = array ();
+            $dados["url"] = $url;
+            $dados["titulo"] = $titulo;
+            $dados["corpo"] = $corpo;
+        //);
         $this->insert($tabela, $dados);
         $this->query("SELECT LAST_INSERT_ID() as ID");
         return $this->array;
@@ -88,21 +88,21 @@ class Paginas extends Model{
     
     public function atualizarPaginaURLTituloCorpo($id, $url, $titulo, $corpo){
         $tabela = "paginas";
-        $dados = array (
-            "url" => $url,
-            "titulo" => $titulo,
-            "corpo" => $corpo
-        );
-        $where = array (
-            "id" => $id
-        );
+        $dados = array ();
+            $dados["url"] = $url;
+            $dados["titulo"] = $titulo;
+            $dados["corpo"] = $corpo;
+        //);
+        $where = array ();
+            $where["id"] = $id;
+        //);
         $this->update($tabela, $dados, $where);
     }
     
     public function deletarPaginaID($id){
         $tabela = "paginas";
         $where = array();
-        $where['id'] = $id;
+            $where['id'] = $id;
         $this->delete($tabela, $where);
         return null;
     }

@@ -13,13 +13,11 @@ $config = array();
 if (ENVIROMENT == "development"){
     define("BASE_URL", "http://localhost/SiteInstitucional/index.php/");
     define("BASE", "http://localhost/SiteInstitucional/");
-    //$config['dbname'] = "caixaeletronico";
-    $config['dbname'] = "blog";
-	$config['host'] = "localhost";
+    $config['dbname'] = "cms";
+    $config['host'] = "localhost";
     $config['dbuser'] = "root";
     $config['dbpass'] = "root";
     $config['connect'] = "connect";
-	$config['email'] = "daniel@hotmail.com";
 } else {
     define("BASE_URL", "http://www.meusite.com.br/");
     $config['dbname'] = "blog";
@@ -27,5 +25,4 @@ if (ENVIROMENT == "development"){
     $config['dbuser'] = "root";
     $config['dbpass'] = "root";
     $config['connect'] = "connect";
-	$config['email'] = "daniel@hotmail.com";
 }

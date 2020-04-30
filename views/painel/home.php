@@ -7,8 +7,8 @@
         <!--<h3><pre><?php //print_r($this->config)?></pre></h3>-->
         <fieldset style="border: 1px solid; border-color: #000">
             <legend>Página Principal</legend>
-			<a href="<?php echo BASE; ?>painel/menus"><h4>Menu</h4></a>
-			<a href="<?php echo BASE; ?>painel/pagina"><h4>Pagina</h4></a>
+			<a href="<?php echo BASE; ?>menu/"><h4>Menu</h4></a>
+			<a href="<?php echo BASE; ?>pagina/"><h4>Pagina</h4></a>
 			<br/>
 			<br/>
 			<label>Menus Registrados</label>

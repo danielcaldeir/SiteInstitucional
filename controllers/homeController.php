@@ -16,13 +16,16 @@ class homeController extends controller{
     
     public function index() {
         $dados = array ();
-		//$dados['nome'] = "Daniel Caldeira";
+        //$dados['nome'] = "Daniel Caldeira";
         
         $portfolio = new Portfolio();
         $dados['portfolio'] = $portfolio->getTrabalhos(4);
-		
-		$pag = new Paginas();
-		$dados['paginas'] = $pag->selecionarAllPaginas();
+        
+        $pag = new Paginas();
+        $dados['paginas'] = $pag->selecionarPaginasURL('home');
+        
+        $depo = new Depoimentos();
+        $dados['depoimentos'] = $depo->selecionarALLDepoimentos();
         
         $this->loadTemplate("home", $dados);
     }
@@ -36,8 +39,8 @@ class homeController extends controller{
         $this->loadTemplate("portfolio", $dados);
     }
     
-	public function pagina($url){
-		$pag = new Paginas();
+    public function pagina($url){
+        $pag = new Paginas();
         $pag->selecionarPaginasURL($url);
         
         $dados = array();
@@ -46,11 +49,11 @@ class homeController extends controller{
         $dados["corpo"] = $pag->getCorpo();
         
         $this->loadTemplate("paginas", $dados);
-	}
-	
-	public function formulario($titulo){
-		$form = new Formulario();
-		global $config;
+    }
+    
+    public function formulario($titulo){
+        $form = new Formulario();
+        global $config;
         
         $dados = array();
         $dados["email"] = $config['email'];
@@ -58,7 +61,7 @@ class homeController extends controller{
         $dados["formularios"] = $form->selecionarFormularioTitulo($titulo);
         
         $this->loadTemplate("formularios", $dados);
-	}
+    }
 	
     //public function sobre() {
     //    $this->loadTemplate("sobre");

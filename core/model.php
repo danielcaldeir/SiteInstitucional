@@ -12,7 +12,7 @@
  * @author Daniel_Caldeira
  */
 
-class model {
+class Model {
     
     protected $pdo;
     protected $numRows;
@@ -35,16 +35,56 @@ class model {
     }
     
     public function query($sql){
-        $query = $this->pdo->query($sql);
-        $this->numRows = $query->rowCount();
-		$this->array = $query->fetchALL();
-    //    if ($this->numRows == 1){
-    //        $this->array = $query->fetch();
-    //    } else {
-    //        $this->array = $query->fetchALL();
-    //    }
+        try {
+            $query = $this->pdo->query($sql);
+            $this->numRows = $query->rowCount();
+            $this->array = $query->fetchALL();
+        } catch (PDOException $exc) {
+            echo $exc->getTraceAsString();
+            echo ("<br><br>");
+            echo $exc->getMessage();
+        }
         //echo ("Array: ".$this->array."<br>");
         //echo ("sql: ".$sql."<br>");
+    }
+    
+    private function montarWhere($where = array()) {
+        $dados = array();
+        foreach ($where as $chave => $valor) {
+            if (is_array($valor)){
+                if (array_key_exists('>', $valor)){
+                    foreach ($valor as $key => $VLitem) {
+                                //list($CHitem)  = array_keys($VLitem);
+                                $dados[] = $chave." ".$key."= '".$VLitem."'";
+                    }
+                } elseif (array_key_exists('<', $valor)){
+                    foreach ($valor as $key => $VLitem) {
+                                //list($CHitem) = array_keys($VLitem);
+                                $dados[] = $chave." ".$key."= '".$VLitem."'";
+                    }
+                }elseif (array_key_exists('!=', $valor)){
+                    foreach ($valor as $key => $VLitem) {
+                                //list($CHitem) = array_keys($VLitem);
+                                $dados[] = $chave." ".$key." '".$VLitem."'";
+                    }
+                }elseif (array_key_exists('LIKE', $valor)){
+                    foreach ($valor as $key => $VLitem) {
+                                //list($CHitem) = array_keys($VLitem);
+                                $dados[] = $chave." ".$key." '%".$VLitem."%'";
+                    }
+                } elseif (array_key_exists('BETWEEN', $valor)){
+                    foreach ($valor as $key => $VLitem) {
+                                //list($CHitem) = array_keys($VLitem);
+                                $dados[] = $chave." ".$key." '".implode("' AND '", $VLitem)."' ";
+                    }
+                } else {
+                    $dados[] = $chave." IN ('".implode("','", $valor)."')";
+                }
+            } else {
+                $dados[] = $chave." = '".addslashes($valor)."'";
+            }
+        }
+        return $dados;
     }
     
     public function insert($table, $data){
@@ -55,7 +95,7 @@ class model {
                 $dados[] = $chave." = '".addslashes($valor)."'";
             }
             $sql = $sql.implode(", ", $dados);
-            echo $sql;
+            //echo $sql;
             try {
                 return $this->pdo->query($sql);
             } catch (PDOException $exc) {
@@ -75,14 +115,15 @@ class model {
             }
             $sql = $sql.implode(", ", $dados);
             if (count($where) > 0) {
-                $dados = array();
-                foreach ($where as $chave => $valor) {
-                    $dados[] = $chave." = '".addslashes($valor)."'";
-                }
+                //$dados = array();
+                //foreach ($where as $chave => $valor) {
+                //    $dados[] = $chave." = '".addslashes($valor)."'";
+                //}
+                $dados = $this->montarWhere($where);
                 $sql = $sql." WHERE ";
                 $sql = $sql.implode(" ".$where_cond." ", $dados);
             }
-            echo $sql;
+            //echo $sql;
             try {
                 return $this->pdo->query($sql);
             } catch (PDOException $exc) {
@@ -97,14 +138,15 @@ class model {
         if (!empty($table) && is_array($where)){
             $sql = "DELETE FROM ".$table;
             if (count($where) > 0) {
-                $dados = array();
-                foreach ($where as $chave => $valor) {
-                    $dados[] = $chave." = '".addslashes($valor)."'";
-                }
+                //$dados = array();
+                //foreach ($where as $chave => $valor) {
+                //    $dados[] = $chave." = '".addslashes($valor)."'";
+                //}
+                $dados = $this->montarWhere($where);
                 $sql = $sql." WHERE ";
                 $sql = $sql.implode(" ".$where_cond." ", $dados);
             }
-            echo $sql;
+            //echo $sql;
             try {
                 return $this->pdo->query($sql);
             } catch (PDOException $exc) {
@@ -121,10 +163,11 @@ class model {
             $sql = $sql.implode(", ", $colunas);
             $sql = $sql." FROM ".$tabela." ";
             if (count($where) > 0) {
-                $dados = array();
-                foreach ($where as $chave => $valor) {
-                    $dados[] = $chave." = '".addslashes($valor)."'";
-                }
+                //$dados = array();
+                //foreach ($where as $chave => $valor) {
+                //    $dados[] = $chave." = '".addslashes($valor)."'";
+                //}
+                $dados = $this->montarWhere($where);
                 $sql = $sql."WHERE ";
                 $sql = $sql.implode(" ".$where_cond." ", $dados);
             }

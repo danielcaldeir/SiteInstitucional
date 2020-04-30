@@ -5,7 +5,7 @@
     </div>
     
     <?php if ( !empty($id) ) : ?>
-        <form action="<?php echo BASE_URL; ?>painel/sisExcluirPagina/" method="POST">
+        <form action="<?php echo BASE_URL; ?>pagina/excluirPaginaAction/" method="GET">
             <div class="form-group">
                 <label>Tem certeza que deseja excluir essa pagina?</label>
             </div>
@@ -27,10 +27,10 @@
         </table>
             <input type="hidden" name="id" value="<?php echo($id); ?>"/>
             <input type="submit" class="btn btn-success" value="SIM"/>
-            <a href="<?php echo BASE_URL; ?>painel/paginas/" class="btn btn-danger">NÃO</a>
+            <a href="<?php echo BASE_URL; ?>pagina/" class="btn btn-danger">NÃO</a>
         </form>
     <?php else : ?>
-    <form action="<?php echo BASE_URL; ?>painel/paginas/" method="GET">
+    <form action="<?php echo BASE_URL; ?>pagina/" method="GET">
         <div class="form-group">
             <label>Não foi informado um identificador.</label>
         </div>

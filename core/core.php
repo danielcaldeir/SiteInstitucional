@@ -12,8 +12,8 @@
  * @author Daniel_Caldeira
  */
 
-require_once ('./core/controller.php');
-require_once ('./models/Menu.php');
+//require_once ('./core/controller.php');
+//require_once ('./models/Menu.php');
 
 class Core {
     //put your code here
@@ -37,7 +37,7 @@ class Core {
             //echo ("<br>");
             
             $this->currentController = $url[0].'Controller';
-        //    $this->currentController = 'homeController';
+            //$this->currentController = 'homeController';
             array_shift($url);
             
             //print_r($url);//variaveis da URL
@@ -61,7 +61,7 @@ class Core {
             $param = array();
         }
         
-		if (!file_exists('controllers/'.$this->currentController.'.php')){
+        if (!file_exists('controllers/'.$this->currentController.'.php')){
             $pNome = explode("Controller", $this->currentController);
             $this->currentController = 'homeController';
             $currentAction = $pNome[0];
@@ -76,16 +76,16 @@ class Core {
         //echo ("<br>");//Qual os Parametros
         
         $c = new $this->currentController();
-		
-		if(!method_exists($c, $currentAction)){
-			$pNome = $currentAction;
-			$menu = new Menu("menu");
-			$menu->selecionarMenuURL($pNome);
+        
+        if(!method_exists($c, $currentAction)){
+            $pNome = $currentAction;
+            $menu = new Menu("menu");
+            $menu->selecionarMenuURL($pNome);
             $currentAction = $menu->getTipo();
             //$param = array();
-			$param[] = $pNome;
+            $param[] = $pNome;
         }
-		//print_r ($param);
+        //print_r ($param);
         //$c->$currentAction();
         call_user_func_array(array($c, $currentAction), $param);
     }
