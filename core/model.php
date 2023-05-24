@@ -16,7 +16,8 @@ class Model {
     
     protected $pdo;
     protected $numRows;
-    protected $array;
+    protected $sql;
+	protected $array;
     
     //put your code here
     public function __construct() {
@@ -95,7 +96,8 @@ class Model {
                 $dados[] = $chave." = '".addslashes($valor)."'";
             }
             $sql = $sql.implode(", ", $dados);
-            //echo $sql;
+            // echo $sql;
+			$this->sql = $sql;
             try {
                 return $this->pdo->query($sql);
             } catch (PDOException $exc) {
@@ -123,7 +125,8 @@ class Model {
                 $sql = $sql." WHERE ";
                 $sql = $sql.implode(" ".$where_cond." ", $dados);
             }
-            //echo $sql;
+            // echo $sql;
+			$this->sql = $sql;
             try {
                 return $this->pdo->query($sql);
             } catch (PDOException $exc) {
@@ -146,7 +149,8 @@ class Model {
                 $sql = $sql." WHERE ";
                 $sql = $sql.implode(" ".$where_cond." ", $dados);
             }
-            //echo $sql;
+            // echo $sql;
+			$this->sql = $sql;
             try {
                 return $this->pdo->query($sql);
             } catch (PDOException $exc) {
@@ -174,7 +178,8 @@ class Model {
             if (count($groupBy) > 0) {
                 $sql = $sql.implode(" ", $groupBy);
             }
-            //echo $sql;
+            // echo $sql;
+			$this->sql = $sql;
             $this->query($sql);
         }
     }
@@ -185,5 +190,9 @@ class Model {
     
     public function result(){
         return $this->array;
+    }
+	
+	public function viewSQL(){
+        return $this->sql;
     }
 }

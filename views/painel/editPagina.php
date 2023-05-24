@@ -5,8 +5,8 @@
         <small><?php echo($mensagem);?></small>
       </h1>
       <ol class="breadcrumb">
-        <li><a href="<?php echo(BASE_URL); ?>"><i class="fa fa-dashboard"></i> home</a></li>
-        <li class="active"><a href="<?php echo(BASE_URL."pagina/"); ?>"><i class="fa fa-link"></i>Pagina</a></li>
+        <li><a href="<?php echo(BASE_URL); ?>painel/"><i class="fa fa-dashboard"></i> home</a></li>
+        <li class="active"><a href="<?php echo(BASE_URL); ?>pagina/"><i class="fa fa-link"></i>Pagina</a></li>
         <li class="active"><i class="fa fa-anchor"></i>Editar Pagina</li>
       </ol>
     </section>
@@ -20,14 +20,17 @@
         -------------------------->
         
         <div class="box">
-            <div class="box-header">
-                <h3 class="box-title">Editar Pagina</h3>
-                
-            </div>
-            <div class="box-body">
-                <hr class="headline">
-                <?php foreach ($pagina as $item) :?>
-                <form action="<?php echo BASE_URL; ?>pagina/editAction/" method="POST" enctype="multipart/form-data">
+			<?php foreach ($pagina as $item) :?>
+			<form action="<?php echo BASE_URL; ?>pagina/editAction/" method="POST" enctype="multipart/form-data">
+                <div class="box-header">
+                    <div class="box-title">
+                        <h3 class="h3">Editar Pagina</h3>
+                    </div>
+                    <div class="box-tools">
+                        <input type="submit" id="botaoEnviarForm" value="Editar" class="btn btn-success" />
+                    </div>
+                </div>
+                <div class="box-body">
                     <div class="form-group">
                         <label for="url">URL:</label>
                         <input type="text" name="url" id="url" class="form-control" value="<?php echo($item['url']);?>" required/>
@@ -41,27 +44,28 @@
                         <textarea name="corpo" id="corpo" class="form-control"><?php echo($item['corpo']);?></textarea>
                     </div>
                     <input type="hidden" id="id" name="id" value="<?php echo $id; ?>" />
-                    <input type="submit" id="botaoEnviarForm" value="Editar" class="btn btn-success" />
-                </form>
-                <?php endforeach; ?>
-            </div>
+                </div>
+			</form>
+			<?php endforeach;?>
         </div>
         
         <script>
-            var now = new Date(); 
-            var hrs = now.getHours(); 
-            var msg = ""; 
-            if (hrs > 0) msg = "Mornin' Sunshine!"; 
-            // REALLY early 
-            if (hrs > 6) msg = "Good morning"; 
-            // After 6am 
-            if (hrs > 12) msg = "Good afternoon"; 
-            // After 12pm 
-            if (hrs > 17) msg = "Good evening"; 
-            // After 5pm 
-            if (hrs > 22) msg = "Go to bed!"; 
-            // After 10pm 
-            alert(msg);
+            function verificarDataHora() {
+                var now = new Date(); 
+                var hrs = now.getHours(); 
+                var msg = ""; 
+                if (hrs > 0) msg = "Mornin' Sunshine!"; 
+                // REALLY early 
+                if (hrs > 6) msg = "Good morning"; 
+                // After 6am 
+                if (hrs > 12) msg = "Good afternoon"; 
+                // After 12pm 
+                if (hrs > 17) msg = "Good evening"; 
+                // After 5pm 
+                if (hrs > 22) msg = "Go to bed!"; 
+                // After 10pm 
+                alert(msg);
+            }
             
             function verificarStatus() {
                 var status = document.getElementById('status');
@@ -82,16 +86,17 @@
             };
         </script>
     </section>
-    <!--<hr/>-->
-    <!--<br/>-->
+    
   <?php else : ?>
         <div class="container">
             <h3 class="h3">Não foi informado um identificador.</h3>
             <a href="<?php echo BASE_URL; ?>menu/" class="btn btn-info">VOLTAR</a>
         </div>
   <?php endif; ?>
+<br/><br/><br/><br/>
 
 
+<!--<hr/>
 <!--<div class="container-fluid">
 <!--    <div class="navbar topnav">
 <!--        <h2 class="logo">Editar Pagina</h2>
@@ -138,5 +143,7 @@
 <!--</div>
 -->
 <script type="text/javascript">
-    //window.onload = function(){ CKEDITOR.replace("corpo"); };
+    //window.onload = function(){
+    //    CKEDITOR.replace("corpo_painel");
+    //};
 </script>

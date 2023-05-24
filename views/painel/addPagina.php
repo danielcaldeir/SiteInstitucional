@@ -5,8 +5,8 @@
         <small><?php echo($mensagem);?></small>
       </h1>
       <ol class="breadcrumb">
-        <li><a href="<?php echo(BASE_URL); ?>"><i class="fa fa-dashboard"></i> home</a></li>
-        <li class="active"><a href="<?php echo(BASE_URL."pagina/"); ?>"><i class="fa fa-link"></i>Pagina</a></li>
+        <li><a href="<?php echo(BASE_URL); ?>painel/"><i class="fa fa-dashboard"></i> home</a></li>
+        <li class="active"><a href="<?php echo(BASE_URL); ?>pagina/"><i class="fa fa-link"></i>Pagina</a></li>
         <li class="active"><i class="fa fa-anchor"></i>Adicionar Menu</li>
       </ol>
     </section>
@@ -32,8 +32,8 @@
                     </div>
                     <div class="box-body">
                         <div class="form-group">
-                            <label for="url">URL:</label>
-                            <select name="url" id="url" class="form-control" required>
+                            <label for="url" id="url_label">URL:</label>
+                            <select name="url" id="url_select" class="form-control" required>
                                 <?php foreach ($menuItem as $item) :?>
                                 <option value="<?php echo($item); ?>"><?php echo($item); ?></option>
                                 <?php endforeach;?>
@@ -42,7 +42,7 @@
                         </div>
                         <div class="form-group">
                             <label for="menu">Criar menu automiticamente:</label>
-                            <input type="checkbox" name="add_menu" id="add_menu" class="form-inline" value="TRUE"/>
+                            <input type="checkbox" name="add_menu" id="add_menu" class="form-inline" value="TRUE" onchange="verificarStatus()"/>
                         </div>
                         <div class="form-group">
                             <label for="titulo">Titulo:</label>
@@ -66,37 +66,44 @@
                 </div>
             </form>
         <!--</div>-->
-        <pre>
-            <?php print_r($menuItem);?>
-        </pre>
-        
+        <!--<pre>
+        <!--    <?php //print_r($menuItem);?>
+        <!--</pre>
+        -->
         <script>
-            var now = new Date(); 
-            var hrs = now.getHours(); 
-            var msg = ""; 
-            if (hrs > 0) msg = "Mornin' Sunshine!"; 
-            // REALLY early 
-            if (hrs > 6) msg = "Good morning"; 
-            // After 6am 
-            if (hrs > 12) msg = "Good afternoon"; 
-            // After 12pm 
-            if (hrs > 17) msg = "Good evening"; 
-            // After 5pm 
-            if (hrs > 22) msg = "Go to bed!"; 
-            // After 10pm 
-            alert(msg);
+            function verificarDataHora() {
+                var now = new Date(); 
+                var hrs = now.getHours(); 
+                var msg = ""; 
+                if (hrs > 0) msg = "Mornin' Sunshine!"; 
+                // REALLY early 
+                if (hrs > 6) msg = "Good morning"; 
+                // After 6am 
+                if (hrs > 12) msg = "Good afternoon"; 
+                // After 12pm 
+                if (hrs > 17) msg = "Good evening"; 
+                // After 5pm 
+                if (hrs > 22) msg = "Go to bed!"; 
+                // After 10pm 
+                alert(msg);
+            }
+            
             
             function verificarStatus() {
-                var status = document.getElementById('status');
-                var select = document.getElementById('permissao_select');
-                var label = document.getElementById('permissao_label');
-                //alert('Verificar Status: '+status.value);
-                if (status.value === '2'){
-                    select.style.display = 'block';
-                    label.style.display = 'block';
-                } else {
+                var status = document.getElementById('add_menu');
+                var select = document.getElementById('url_select');
+                var label = document.getElementById('url_label');
+                //alert('Verificar Status: '+status.checked);
+                if (status.checked === true){
                     select.style.display = 'none';
+                    select.removeAttribute('required');
+                    select.disabled = true;
                     label.style.display = 'none';
+                } else {
+                    select.style.display = 'block';
+                    select.required = 'true';
+                    select.removeAttribute('disabled');
+                    label.style.display = 'block';
                 }
             }
             
@@ -105,8 +112,10 @@
             };
         </script>
     </section>
+<br/><br/><br/><br/>
 
 
+<!--<hr/>
 <!--<div class="container-fluid">
 <!--    <div class="navbar topnav">
 <!--        <h2 class="logo">Cadastrar Pagina</h2>

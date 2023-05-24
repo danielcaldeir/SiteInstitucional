@@ -44,10 +44,14 @@ class permissaoController extends controller{
         
         $this->arrayInfo["menuActive"] = "permissao";
         $this->arrayInfo["user"] = $this->user;
+        $empresa = new Empresa();
+        $empresa->selecionarEmpresaID(md5($this->user->getIdEmpresa()));
+        $this->arrayInfo["empresa"] = $empresa;
+        $this->arrayInfo["permissao"] = $this->user->getPermissoes();
         
         //global $config;
         //$this->config = $config;
-        //parent::__construct();
+        parent::__construct();
     }
     
     //put your code here
@@ -56,39 +60,35 @@ class permissaoController extends controller{
         $perItens = new PermissaoItem();
         
         //$this->arrayInfo['permissao'] = ($permissao);
-        //$IDEmpresa = $this->user->getIdEmpresa();
-        $this->arrayInfo['permitido'] = $permissao->getAllPermissaoGrupo();//($IDEmpresa);
-        $this->arrayInfo['permissaoItens'] = $perItens->selecionarALLPermissaoItem(); //$perItens->selecionarPermissaoItemIDEmpresa($IDEmpresa);
+        $IDEmpresa = $this->user->getIdEmpresa();
+        $this->arrayInfo['permitido'] = $permissao->getAllPermissaoGrupo($IDEmpresa);
+        $this->arrayInfo['permissaoItens'] = $perItens->selecionarPermissaoItemIDEmpresa($IDEmpresa);
         $this->arrayInfo['mensagem'] = $mensagem;
-        //echo ("<pre>");
-        //print_r($this->permissao);
-        //echo ("</pre>");
         
         $this->loadPainel("selPermissao", $this->arrayInfo);
     }
     
-    public function itemPermissao($mensagem = "") {
-        //$dados = array();
-        $perItens = new PermissaoItem();
-        
-        $permissao = new Permissao();
-        $this->arrayInfo['permissao'] = ($permissao);
-        $this->arrayInfo['permitido'] = ($permissao->getAllPermissaoGrupo());
-        $this->arrayInfo['mensagem'] = $mensagem;
-        $this->arrayInfo['permissaoItens'] = $perItens->selecionarALLPermissaoItem();
-        //$dados['sidebar'] = FALSE;
-        
-        $this->loadAdminLTE("permissaoItem", $this->arrayInfo);
-    }
+    // public function itemPermissao($mensagem = "") {
+    //     //$dados = array();
+    //     $perItens = new PermissaoItem();
+    //     $permissao = new Permissao();
+    //     //$this->arrayInfo['permissao'] = ($permissao);
+    //     $IDEmpresa = $this->user->getIdEmpresa();
+    //     $this->arrayInfo['permitido'] = $permissao->getAllPermissaoGrupo($IDEmpresa);
+    //     $this->arrayInfo['mensagem'] = $mensagem;
+    //     $this->arrayInfo['permissaoItens'] = $perItens->selecionarPermissaoItemIDEmpresa($IDEmpresa);
+    //     //$dados['sidebar'] = FALSE;
+    //     $this->loadPainel("permissaoItem", $this->arrayInfo);
+    // }
     
     public function del($id){
         $permissao = new Permissao();
         $perGrupo = new PermissaoGrupo();
-        //$IDEmpresa = $this->user->getIdEmpresa();
+        $IDEmpresa = $this->user->getIdEmpresa();
         
         $perGrupo->selecionarPermissaoGrupoID($id);
         $id_grupo = $perGrupo->getID();
-        if ($permissao->validarDelPermissao($id_grupo)){ //($IDEmpresa, $id_grupo)){
+        if ($permissao->validarDelPermissao($id_grupo, $IDEmpresa)){ //($IDEmpresa, $id_grupo)){
             $this->index("Permissao Deletada com Sucesso!");
         } else {
             $this->index("Nao tem permissao para deletar!");
@@ -98,11 +98,11 @@ class permissaoController extends controller{
     public function delItem($id){
         $permissao = new Permissao();
         $perItem = new PermissaoItem();
-        //$IDEmpresa = $this->user->getIdEmpresa();
+        $IDEmpresa = $this->user->getIdEmpresa();
         
         $perItem->selecionarPermissaoItemID($id);
         $id_item = $perItem->getID();
-        if ($permissao->validatePermissaoItem($id_item)){//($IDEmpresa, $id_item)){
+        if ($permissao->validatePermissaoItem($id_item, $IDEmpresa)){//($IDEmpresa, $id_item)){
             $permissao->delPermissaoIDItem($id_item);
             $perItem->delPermissaoItemID($id_item);
             $this->index("Permissao Deletada com Sucesso!");
@@ -116,22 +116,22 @@ class permissaoController extends controller{
         $perItens = new PermissaoItem();
         $permissao = new Permissao();
         
-        //$IDEmpresa = $this->user->getIdEmpresa();
+        $IDEmpresa = $this->user->getIdEmpresa();
         //$this->arrayInfo['permissao'] = ($permissao);
-        $this->arrayInfo['permitido'] = $permissao->getAllPermissaoGrupo();//($IDEmpresa);
-        $this->arrayInfo['permissaoItens'] = $perItens->selecionarALLPermissaoItem(); //$perItens->selecionarPermissaoItemIDEmpresa($IDEmpresa);
+        $this->arrayInfo['permitido'] = $permissao->getAllPermissaoGrupo($IDEmpresa);
+        $this->arrayInfo['permissaoItens'] = $perItens->selecionarPermissaoItemIDEmpresa($IDEmpresa);
         $this->arrayInfo['mensagem'] = $mensagem;
         
-        $this->loadAdminLTE("addPermissao", $this->arrayInfo);
+        $this->loadPainel("addPermissao", $this->arrayInfo);
     }
     
     private function addPermissaoItem($id_grupo, $items, $allItens = array()) {
         $permissao = new Permissao();
         $perItens = new PermissaoItem();
-        //$IDEmpresa = $this->user->getIdEmpresa();
+        $IDEmpresa = $this->user->getIdEmpresa();
         
         if (count($allItens) == 0){
-            $allItens = $perItens->selecionarALLPermissaoItem(); //$perItens->selecionarPermissaoItemIDEmpresa($IDEmpresa);
+            $allItens = $perItens->selecionarPermissaoItemIDEmpresa($IDEmpresa);
         }
         //echo ("<pre>");
         foreach ($allItens as $item) {
@@ -139,9 +139,9 @@ class permissaoController extends controller{
             //echo ("<br>in_array: ");
             //print_r(in_array($id_item, $items));
             if (in_array($id_item, $items)){
-                $permissao->addPermissao($id_grupo, $id_item, '1');
+                $permissao->addPermissao($id_grupo, $id_item, '1', $IDEmpresa);
             } else {
-                $permissao->addPermissao($id_grupo, $id_item, '0');
+                $permissao->addPermissao($id_grupo, $id_item, '0', $IDEmpresa);
             }
         }
         //echo ("</pre>");
@@ -155,8 +155,8 @@ class permissaoController extends controller{
         
         if (!empty($_POST['nome'])){
             $nome = addslashes($_POST['nome']);
-            //$IDEmpresa = $this->user->getIdEmpresa();
-            $array = $perGrupo->addPermissaoGrupo($nome);//($IDEmpresa, $nome);
+            $IDEmpresa = $this->user->getIdEmpresa();
+            $array = $perGrupo->addPermissaoGrupo($nome, $IDEmpresa);//($IDEmpresa, $nome);
             if (count($array) > 0){
                 foreach ($array as $item) {
                     $id_grupo = $item['ID'];
@@ -185,12 +185,12 @@ class permissaoController extends controller{
         $permissao = new Permissao();
         
         //$this->arrayInfo['permissao'] = ($permissao);
-        //$IDEmpresa = $this->user->getIdEmpresa();
-        $this->arrayInfo['permitido'] = $permissao->getAllPermissaoGrupo(); //($IDEmpresa);
-        $this->arrayInfo['permissaoItens'] = $perItens->selecionarALLPermissaoItem(); //$perItens->selecionarPermissaoItemIDEmpresa($IDEmpresa);
+        $IDEmpresa = $this->user->getIdEmpresa();
+        $this->arrayInfo['permitido'] = $permissao->getAllPermissaoGrupo($IDEmpresa);
+        $this->arrayInfo['permissaoItens'] = $perItens->selecionarPermissaoItemIDEmpresa($IDEmpresa);
         $this->arrayInfo['mensagem'] = $mensagem;
         
-        $this->loadAdminLTE("addPermissaoItem", $this->arrayInfo);
+        $this->loadPainel("addPermissaoItem", $this->arrayInfo);
     }
     
     public function addItemAction($mensagem = "") {
@@ -202,8 +202,8 @@ class permissaoController extends controller{
         if (!empty($_POST['nome']) && !empty($_POST['slug'])){
             $nome = addslashes($_POST['nome']);
             $slug = addslashes($_POST['slug']);
-            //$IDEmpresa = $this->user->getIdEmpresa();
-            $perItens->addPermissaoItem($nome, $slug);//($IDEmpresa, $nome, $slug);
+            $IDEmpresa = $this->user->getIdEmpresa();
+            $perItens->addPermissaoItem($nome, $slug, $IDEmpresa);//($IDEmpresa, $nome, $slug);
             $mensagem = "Item Adicionado com Sucesso!";
         } else{
             $mensagem = "Nao foi vinculado uma permissao!";
@@ -232,11 +232,6 @@ class permissaoController extends controller{
             $this->index($mensagem);
             exit();
         }
-        
-        //$IDEmpresa = $this->user->getIdEmpresa();
-        //$this->arrayInfo['permitido'] = $permissao->getAllPermissaoGrupo($IDEmpresa);
-        //$where['id_empresa'] = $IDEmpresa;
-        //$this->arrayInfo['permissaoItens'] = $perItens->selecionarALLPermissaoItem($where);
         $this->arrayInfo['mensagem'] = $mensagem;
         
         $this->loadPainel("editPermissaoItem", $this->arrayInfo);
@@ -267,7 +262,7 @@ class permissaoController extends controller{
         $perItens = new PermissaoItem();
         $perGrupo = new PermissaoGrupo();
         $permissao = new Permissao();
-        //$IDEmpresa = $this->user->getIdEmpresa();
+        $IDEmpresa = $this->user->getIdEmpresa();
         
         if (!empty($id)){
             $perGrupo->selecionarPermissaoGrupoID($id);
@@ -286,8 +281,8 @@ class permissaoController extends controller{
         }
         
         $this->arrayInfo['permitido'] = $permissao->getAllPermissaoGrupo();//($IDEmpresa);
-        //$where['id_empresa'] = $IDEmpresa;
-        $this->arrayInfo['permissaoItens'] = $perItens->selecionarALLPermissaoItem();//($where);
+        $where['id_empresa'] = $IDEmpresa;
+        $this->arrayInfo['permissaoItens'] = $perItens->selecionarALLPermissaoItem($where);
         $this->arrayInfo['mensagem'] = $mensagem;
         
         $this->loadPainel("editPermissao", $this->arrayInfo);
@@ -296,10 +291,10 @@ class permissaoController extends controller{
     private function editPermissaoItem($id_grupo, $items) {
         $permissao = new Permissao();
         $perItens = new PermissaoItem();
-        //$IDEmpresa = $this->user->getIdEmpresa();
+        $IDEmpresa = $this->user->getIdEmpresa();
         
-        $verificar = $permissao->selecionarPermissaoIDEmpresa($id_grupo);//($IDEmpresa, $id_grupo);
-        $allItens = $perItens->selecionarALLPermissaoItem(); //$perItens->selecionarPermissaoItemIDEmpresa($IDEmpresa);
+        $verificar = $permissao->selecionarPermissaoIDEmpresa($id_grupo, $IDEmpresa);//($IDEmpresa, $id_grupo);
+        $allItens = $perItens->selecionarPermissaoItemIDEmpresa($IDEmpresa);
         //echo ("<br>Todos os Itens:<pre>");
         //print_r($allItens);
         //echo ("</pre>IDGrupo<pre>");
@@ -318,7 +313,7 @@ class permissaoController extends controller{
                 }
             }
         } else {
-            $permissao->delPermissaoIDGrupo($id_grupo);//($IDEmpresa, $id_grupo);
+            $permissao->delPermissaoIDGrupo($id_grupo, $IDEmpresa);//($IDEmpresa, $id_grupo);
             $this->addPermissaoItem($id_grupo, $items, $allItens);
             //foreach ($allItens as $item) {
             //    $id_item = $item['id'];

@@ -1,12 +1,34 @@
+<?php 
+    $add = FALSE;
+    $edit = null;
+    $del = FALSE;
+    foreach ($permissao as $perItem) {
+        if (!strcmp($perItem, "add_portfolio")){
+            $add = TRUE;
+        }
+        if (!strcmp($perItem, "edit_portfolio")){
+            $edit = TRUE;
+        }
+        if (!strcmp($perItem, "del_portfolio")){
+            $del = TRUE;
+        }
+    }
+?>
     <!-- Content Header (Page header) -->
+	<pre>
+        <?php echo ("ADD: ");echo (($add)?'Verdadeiro':(is_null($add)?'Nao se Aplica':'Falso'));?>
+        <?php echo ("EDIT: ");echo (($edit)?'Verdadeiro':(is_null($edit)?'Nao se Aplica':'Falso'));?>
+        <?php echo ("DEL: ");echo (($del)?'Verdadeiro':(is_null($del)?'Nao se Aplica':'Falso'));?>
+    </pre>
+	
     <section class="content-header">
       <h1>
         Portfolio
         <small><?php echo($mensagem);?></small>
       </h1>
       <ol class="breadcrumb">
-        <li><a href="<?php echo(BASE_URL); ?>"><i class="fa fa-dashboard"></i> home</a></li>
-        <li class="active"><a href="<?php echo(BASE_URL."portfolio/"); ?>"><i class="fa fa-address-book"></i>Portfolio</a></li>
+        <li><a href="<?php echo(BASE_URL); ?>painel/"><i class="fa fa-dashboard"></i> home</a></li>
+        <li class="active"><a href="<?php echo(BASE_URL); ?>portfolio/"><i class="fa fa-address-book"></i>Portfolio</a></li>
       </ol>
     </section>
 
@@ -21,17 +43,21 @@
             <div class="box-header">
                 <h3 class="box-title">Grupos</h3>
                 <div class="box-tools">
-                    <a href="#AddPortfolio" class="btn btn-success" data-toggle="collapse">
-                        <i class="fa fa-plus"></i>
-                    </a>
-                    <!--<a href="<?php echo BASE_URL; ?>menu/addMenu/" class="btn btn-success">
+					<?php if($add):?>
+                    <!--<a href="#AddPortfolio" class="btn btn-success" data-toggle="collapse">
                     <!--    <i class="fa fa-plus"></i>
                     <!--</a>
-                    -->
+					-->
+                    <a href="<?php echo BASE_URL; ?>portfolio/add/" class="btn btn-success">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                    
+					<?php endif;?>
                 </div>
             </div>
+	<?php if($add):?>
     <div id="AddPortfolio" class="collapse panel-collapse">
-        <form action="<?php echo(BASE."portfolio/addPortfolio"); ?>" method="POST" enctype="multipart/form-data">
+        <form action="<?php echo(BASE_URL); ?>portfolio/addPortfolio" method="POST" enctype="multipart/form-data">
             <div class="box">
                 <div class="box-header">
                     <div class="box-title">
@@ -86,11 +112,14 @@
         <!--    </form>
         -->
     </div>
+	<?php endif;?>
             <div class="box-body">
                 <?php foreach ($portfolio as $item): ?>
 		<div class="portfolio-painel">
-			<img src="<?php echo BASE; ?>imagem/portfolio/<?php echo($item['imagem']); ?>" border="0" width="200" height="150">
-			<a href="<?php echo(BASE."portfolio/delPortfolio/".$item['id']); ?>">Excluir Imagem</a> <br/>
+			<img src="<?php echo BASE_URL; ?>imagem/portfolio/<?php echo($item['imagem']); ?>" border="0" width="200" height="150">
+			<?php if($del):?>
+			<a href="<?php echo(BASE_URL); ?>portfolio/delPortfolio/<?php echo($item['id']); ?>">Excluir Imagem</a> <br/>
+			<?php endif;?>
 		</div>
                 <?php endforeach; ?>
                 <!--<table class="table table-condensed">
@@ -126,20 +155,22 @@
         
         
         <script>
-            var now = new Date(); 
-            var hrs = now.getHours(); 
-            var msg = ""; 
-            if (hrs > 0) msg = "Mornin' Sunshine!"; 
-            // REALLY early 
-            if (hrs > 6) msg = "Good morning"; 
-            // After 6am 
-            if (hrs > 12) msg = "Good afternoon"; 
-            // After 12pm 
-            if (hrs > 17) msg = "Good evening"; 
-            // After 5pm 
-            if (hrs > 22) msg = "Go to bed!"; 
-            // After 10pm 
-            alert(msg);
+            function verificarDataHora() {
+                var now = new Date(); 
+                var hrs = now.getHours(); 
+                var msg = ""; 
+                if (hrs > 0) msg = "Mornin' Sunshine!"; 
+                // REALLY early 
+                if (hrs > 6) msg = "Good morning"; 
+                // After 6am 
+                if (hrs > 12) msg = "Good afternoon"; 
+                // After 12pm 
+                if (hrs > 17) msg = "Good evening"; 
+                // After 5pm 
+                if (hrs > 22) msg = "Go to bed!"; 
+                // After 10pm 
+                alert(msg);
+            }
         </script>
         
     </section>
@@ -150,19 +181,19 @@
 <!--    <br>
 <!--    <div style="clear: both"></div>
 <!--    <h1 class="h1">Portfolio</h1>
-<!--    <form action="<?php echo(BASE."painel/addPortfolio"); ?>" method="POST" enctype="multipart/form-data">
+<!--    <form action="<?php echo(BASE_URL."painel/addPortfolio"); ?>" method="POST" enctype="multipart/form-data">
 <!--        <fieldset style="border: 1px solid; border-color: #000">
 <!--            <legend>Adicionar Imagem</legend>
 <!--            <input type="file" name="fotos[]" multiple />
 <!--            <input type="submit" value="Enviar" />
 <!--        </fieldset>
 <!--    </form>
-<!--    <!--<a href="<?php echo(BASE."painel/addPortfolio");?>" class="home_cta_button">Adicionar Imagem</a>-->
+<!--    <!--<a href="<?php echo(BASE_URL."painel/addPortfolio");?>" class="home_cta_button">Adicionar Imagem</a>-->
 <!--    <div style="clear: both"></div>
 <!--    <?php foreach ($portfolio as $item): ?>
 <!--        <div class="portfolio-painel">
-<!--            <img src="<?php echo BASE; ?>imagem/portfolio/<?php echo($item['imagem']); ?>" border="0" width="200" height="150">
-<!--            <a href="<?php echo(BASE."painel/delPortfolio/".$item['id']); ?>">Excluir Imagem</a> <br/>
+<!--            <img src="<?php echo BASE_URL; ?>imagem/portfolio/<?php echo($item['imagem']); ?>" border="0" width="200" height="150">
+<!--            <a href="<?php echo(BASE_URL."painel/delPortfolio/".$item['id']); ?>">Excluir Imagem</a> <br/>
 <!--        </div>
 <!--    <?php endforeach; ?>
 <!--    <div style="clear: both"></div>

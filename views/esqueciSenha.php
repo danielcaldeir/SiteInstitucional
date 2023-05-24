@@ -1,7 +1,7 @@
 
 <div class="container-fluid">
     <div class="jumbotron">
-        <label>Esqueci Senha</label>
+        <h2>Página Esqueci Senha</h2>
     </div>
     <?php if (isset($_GET['sucess']) && !empty($_GET['sucess'])) :?>
             <div class="alert-success">

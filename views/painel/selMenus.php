@@ -1,12 +1,34 @@
+<?php 
+    $add = FALSE;
+    $edit = FALSE;
+    $del = FALSE;
+    foreach ($permissao as $perItem) {
+        if (!strcmp($perItem, "add_menu")){
+            $add = TRUE;
+        }
+        if (!strcmp($perItem, "edit_menu")){
+            $edit = TRUE;
+        }
+        if (!strcmp($perItem, "del_menu")){
+            $del = TRUE;
+        }
+    }
+?>
     <!-- Content Header (Page header) -->
+    <pre>
+        <?php echo ("ADD: ");echo (($add)?'Verdadeiro':'Falso');?>
+        <?php echo ("EDIT: ");echo (($edit)?'Verdadeiro':'Falso');?>
+        <?php echo ("DEL: ");echo (($del)?'Verdadeiro':'Falso');?>
+    </pre>
+    
     <section class="content-header">
       <h1>
         Tela de Menu
         <small><?php echo($mensagem);?></small>
       </h1>
       <ol class="breadcrumb">
-        <li><a href="<?php echo(BASE_URL); ?>"><i class="fa fa-dashboard"></i> home</a></li>
-        <li class="active"><a href="<?php echo(BASE_URL."menu/"); ?>"><i class="fa fa-address-book"></i>Menu</a></li>
+        <li><a href="<?php echo(BASE_URL); ?>painel/"><i class="fa fa-dashboard"></i> home</a></li>
+        <li class="active"><a href="<?php echo(BASE_URL); ?>menu/"><i class="fa fa-address-book"></i>Menu</a></li>
       </ol>
     </section>
 
@@ -72,11 +94,18 @@
             <div class="box-header">
                 <h3 class="box-title">Grupos de Menus</h3>
                 <div class="box-tools">
+                    <?php if ($add):?>
+                    <!--<a href="#AddMenu" class="btn btn-success" data-toggle="collapse">
+                    <!--    <i class="fa fa-plus"></i>
+                    <!--</a>
+                    -->
                     <a href="<?php echo BASE_URL; ?>menu/addMenu/" class="btn btn-success">
                         <i class="fa fa-plus"></i>
                     </a>
+                    <?php endif;?>
                 </div>
             </div>
+	<?php if ($add):?>
     <div id="AddMenu" class="collapse panel-collapse">
         <form action="<?php echo BASE_URL; ?>menu/addAction" method="POST" enctype="multipart/form-data">
                 <div class="box">
@@ -112,32 +141,40 @@
                 </div>
             </form>
     </div>
+	<?php endif;?>
             <div class="box-body">
                 <table class="table table-condensed">
                     <tr>
                         <th>Nome</th>
                         <th>URL</th>
                         <th>Tipo</th>
-                        <th width="130">Ações</th>
+                        <?php if($edit || $del):?>
+						<th width="130">Ações</th>
+						<?php endif;?>
                     </tr>
                     <?php foreach ($menus as $item) :?>
                     <tr>    
                         <td><?php echo utf8_encode($item['nome']);?></td>
                         <td><?php echo($item['url']);?></td>
                         <td><?php echo($item['tipo']);?></td>
-                        <td>
+                        <?php if($edit || $del):?>
+						<td>
                             <div class="btn-group">
-                                <a href="<?php echo BASE_URL; ?>menu/edit/<?php echo md5($item['id']); ?>" 
+                                <?php if($edit):?>
+								<a href="<?php echo BASE_URL; ?>menu/edit/<?php echo md5($item['id']); ?>" 
                                    class="btn btn-xs btn-primary">
                                     Editar
                                 </a>
-                                
+                                <?php endif;?>
+								<?php if($del):?>
                                 <a href="<?php echo BASE_URL; ?>menu/delAction/?id=<?php echo md5($item['id']); ?>" 
                                    class="btn btn-xs btn-danger" onclick="return confirm('Tem certeza que deseja Excluir!')">
                                     Excluir
                                 </a>
+								<?php endif;?>
                             </div>
                         </td>
+						<?php endif;?>
                     </tr>
                     <?php endforeach; ?>
                 </table>
@@ -161,26 +198,29 @@
         
         
         <script>
-            var now = new Date(); 
-            var hrs = now.getHours(); 
-            var msg = ""; 
-            if (hrs > 0) msg = "Mornin' Sunshine!"; 
-            // REALLY early 
-            if (hrs > 6) msg = "Good morning"; 
-            // After 6am 
-            if (hrs > 12) msg = "Good afternoon"; 
-            // After 12pm 
-            if (hrs > 17) msg = "Good evening"; 
-            // After 5pm 
-            if (hrs > 22) msg = "Go to bed!"; 
-            // After 10pm 
-            alert(msg);
+            function verificarDataHora() {
+                var now = new Date(); 
+                var hrs = now.getHours(); 
+                var msg = ""; 
+                if (hrs > 0) msg = "Mornin' Sunshine!"; 
+                // REALLY early 
+                if (hrs > 6) msg = "Good morning"; 
+                // After 6am 
+                if (hrs > 12) msg = "Good afternoon"; 
+                // After 12pm 
+                if (hrs > 17) msg = "Good evening"; 
+                // After 5pm 
+                if (hrs > 22) msg = "Go to bed!"; 
+                // After 10pm 
+                alert(msg);
+            }
         </script>
         
     </section>
     
-<!--<br/><br/>-->
+<br/><br/><br/><br/>
 
+<!--<hr>
 <!--<div>
 <!--        <?php echo("Bom Dia ".$nome);  ?>
 <!--        <br>

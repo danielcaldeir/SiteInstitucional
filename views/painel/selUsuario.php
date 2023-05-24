@@ -1,12 +1,34 @@
+<?php 
+    $add = FALSE;
+    $edit = FALSE;
+    $del = FALSE;
+    foreach ($permissao as $perItem) {
+        if (!strcmp($perItem, "add_usuario")){
+            $add = TRUE;
+        }
+        if (!strcmp($perItem, "edit_usuario")){
+            $edit = TRUE;
+        }
+        if (!strcmp($perItem, "del_usuario")){
+            $del = TRUE;
+        }
+    }
+?>
     <!-- Content Header (Page header) -->
+    <pre>
+        <?php echo ("ADD: ");echo (($add)?'Verdadeiro':'Falso');?>
+        <?php echo ("EDIT: ");echo (($edit)?'Verdadeiro':'Falso');?>
+        <?php echo ("DEL: ");echo (($del)?'Verdadeiro':'Falso');?>
+    </pre>
+    
     <section class="content-header">
       <h1>
         Tela de Usuarios
         <small><?php echo($mensagem);?></small>
       </h1>
       <ol class="breadcrumb">
-        <li><a href="<?php echo(BASE_URL); ?>"><i class="fa fa-dashboard"></i> home</a></li>
-        <li class="active"><a href="<?php echo(BASE_URL."usuario/"); ?>"><i class="fa fa-user"></i>Usuarios</a></li>
+        <li><a href="<?php echo(BASE_URL); ?>painel/"><i class="fa fa-dashboard"></i> home</a></li>
+        <li class="active"><a href="<?php echo(BASE_URL); ?>usuario/"><i class="fa fa-user"></i>Usuarios</a></li>
       </ol>
     </section>
 
@@ -51,7 +73,7 @@
                             <label>Nivel do Grupo</label><br>
                             <select name="permissao" id="permissao_filtro" class="form-control">
                                 <option value="0"></option>
-                                <?php foreach ($permissao as $item) :?>
+                                <?php foreach ($permissaoGrupo as $item) :?>
                                 <option <?php echo ($filtro['permissao']==$item['id'])?'selected':'';?> value="<?php echo($item['id']);?>">
                                     <?php echo($item['nome']);?>
                                 </option>
@@ -71,11 +93,18 @@
             <div class="box-header">
                 <h3 class="box-title">Grupos de Usuarios</h3>
                 <div class="box-tools">
-                    <a href="#AddUsuario" class="btn btn-success" data-toggle="collapse">
+                    <?php if($add):?>
+                    <!--<a href="#AddUsuario" class="btn btn-success" data-toggle="collapse">
+                    <!--    <i class="fa fa-plus"></i>
+                    <!--</a>
+                    -->
+                    <a href="<?php echo(BASE_URL);?>usuario/add/" class="btn btn-success">
                         <i class="fa fa-plus"></i>
                     </a>
+                    <?php endif;?>
                 </div>
             </div>
+	<?php if($add):?>
     <div id="AddUsuario" class="collapse panel-collapse">
         <form action="<?php echo BASE_URL; ?>usuario/addAction" method="POST">
             <div class="box">
@@ -119,7 +148,8 @@
                 </div>
             </div>
         </form>
-    </div>        
+    </div>
+	<?php endif;?>
             <div class="box-body">
                 <table class="table table-condensed">
                     <tr>
@@ -128,7 +158,9 @@
                         <th>Status</th>
                         <th>Grupo</th>
                         <th>Telefone</th>
+						<?php if ($edit || $del):?>
                         <th width="130">Ações</th>
+						<?php endif;?>
                     </tr>
                     <?php foreach ($users as $item) :?>
                     <tr>    
@@ -143,6 +175,7 @@
                         <?php endif; ?>
                         <td><?php echo($item['permissao_nome']);?></td>
                         <td><?php echo($item['telefone']);?></td>
+						<?php if ($edit || $del):?>
                         <td>
                             <div class="btn-group">
                                 <?php if (intval($item['status']) === 0) :?>
@@ -151,18 +184,22 @@
                                     Habilitar
                                 </a>
                                 <?php else:?>
+								<?php if ($edit):?>
                                 <a href="<?php echo BASE_URL; ?>usuario/edit/<?php echo md5($item['id']); ?>" 
                                    class="btn btn-xs btn-primary">
                                     Editar
                                 </a>
-                                
+								<?php endif;?>
+                                <?php if ($del):?>
                                 <a href="<?php echo BASE_URL; ?>usuario/del/<?php echo md5($item['id']); ?>" 
                                    class="btn btn-xs btn-danger" onclick="return confirm('Tem certeza que deseja Excluir!')">
                                     Excluir
                                 </a>
+								<?php endif;?>
                                 <?php endif; ?>
                             </div>
                         </td>
+						<?php endif;?>
                     </tr>
                     <?php endforeach; ?>
                 </table>
@@ -186,20 +223,23 @@
         
         
         <script>
-            var now = new Date(); 
-            var hrs = now.getHours(); 
-            var msg = ""; 
-            if (hrs > 0) msg = "Mornin' Sunshine!"; 
-            // REALLY early 
-            if (hrs > 6) msg = "Good morning"; 
-            // After 6am 
-            if (hrs > 12) msg = "Good afternoon"; 
-            // After 12pm 
-            if (hrs > 17) msg = "Good evening"; 
-            // After 5pm 
-            if (hrs > 22) msg = "Go to bed!"; 
-            // After 10pm 
-            alert(msg);
+            function verificarDataHora() {
+                var now = new Date(); 
+                var hrs = now.getHours(); 
+                var msg = ""; 
+                if (hrs > 0) msg = "Mornin' Sunshine!"; 
+                // REALLY early 
+                if (hrs > 6) msg = "Good morning"; 
+                // After 6am 
+                if (hrs > 12) msg = "Good afternoon"; 
+                // After 12pm 
+                if (hrs > 17) msg = "Good evening"; 
+                // After 5pm 
+                if (hrs > 22) msg = "Go to bed!"; 
+                // After 10pm 
+                alert(msg);
+            }
+			
         </script>
         
     </section>

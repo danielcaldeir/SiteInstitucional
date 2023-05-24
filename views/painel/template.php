@@ -1,3 +1,15 @@
+<?php 
+    $viewConfig = FALSE;
+    $viewEmpresa = FALSE;
+    foreach ($viewData['permissao'] as $perItem) {
+        if (!strcmp($perItem, "view_config")){
+            $viewConfig = TRUE;
+        }
+        if (!strcmp($perItem, "view_empresa")){
+            $viewEmpresa = TRUE;
+        }
+    }
+?>
 <!DOCTYPE html>
 <!--
 To change this license header, choose License Headers in Project Properties.
@@ -11,27 +23,28 @@ and open the template in the editor.
         <title>Painel Administrativo AdminLTE</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-        <link rel="stylesheet" href="<?php echo BASE; ?>asserts/bootstrap/css/bootstrap.min.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo BASE_URL; ?>asserts/bootstrap/css/bootstrap.min.css" type="text/css">
         <!--<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">-->
         <!-- Font Awesome -->
-        <link rel="stylesheet" href="<?php echo BASE; ?>asserts/font-awesome/css/font-awesome.min.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo BASE_URL; ?>asserts/font-awesome/css/font-awesome.min.css" type="text/css">
         <!--<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">-->
         <!-- Ionicons -->
-        <link rel="stylesheet" href="<?php echo BASE; ?>asserts/Ionicons/css/ionicons.min.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo BASE_URL; ?>asserts/Ionicons/css/ionicons.min.css" type="text/css">
         <!--<link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">-->
         <!-- JQuery UI -->
-        <link rel="stylesheet" href="<?php echo BASE; ?>asserts/jquery-ui/css/jquery-ui.min.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo BASE_URL; ?>asserts/jquery-ui/css/jquery-ui.min.css" type="text/css">
         <!-- Jquery UI THEME -->
-        <link rel="stylesheet" href="<?php echo BASE; ?>asserts/jquery-ui/css/jquery-ui.theme.min.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo BASE_URL; ?>asserts/jquery-ui/css/jquery-ui.theme.min.css" type="text/css">
         <!-- Jquery UI STRUCTURE -->
-        <link rel="stylesheet" href="<?php echo BASE; ?>asserts/jquery-ui/css/jquery-ui.structure.min.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo BASE_URL; ?>asserts/jquery-ui/css/jquery-ui.structure.min.css" type="text/css">
         <!-- Theme style -->
-        <link rel="stylesheet" href="<?php echo BASE; ?>asserts/AdminLTE/dist/css/AdminLTE.min.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo BASE_URL; ?>asserts/AdminLTE/dist/css/AdminLTE.min.css" type="text/css">
         <!--<link rel="stylesheet" href="dist/css/AdminLTE.min.css">-->
         <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
             page. However, you can choose any other skin. Make sure you
             apply the skin class to the body tag so the changes take effect. -->
-        <link rel="stylesheet" href="<?php echo BASE; ?>asserts/AdminLTE/dist/css/skins/skin-blue.min.css" type="text/css">
+		<link rel="stylesheet" href="<?php echo BASE_URL; ?>asserts/AdminLTE/dist/css/skins/<?php echo($this->config['site_painel_color']);?>.css" type="text/css">
+        <!--<link rel="stylesheet" href="<?php echo BASE_URL; ?>asserts/AdminLTE/dist/css/skins/skin-blue.min.css" type="text/css">-->
         <!--<link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">-->
         
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -42,25 +55,35 @@ and open the template in the editor.
         <![endif]-->
         
         <!-- Template Antigo -->
-        <link rel="stylesheet" type="text/css" href="<?php echo BASE; ?>asserts/css/template.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>asserts/css/template.css" />
         
         <!-- Google Font -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     </head>
-    <body class="hold-transition skin-blue sidebar-mini">
-        
+    <body class="hold-transition <?php echo($this->config['site_painel_color']);?> sidebar-mini"><!-- skin-blue -->
+    <!--<pre><?php //print_r($viewData['user'])?></pre>-->
+	<!--<pre><?php //print_r($viewData['permissao'])?></pre>-->
 <div class="wrapper">
 
   <!-- Main Header -->
   <header class="main-header">
 
     <!-- Logo -->
-    <a href="<?php echo BASE_URL; ?>" class="logo">
+    <?php if ($viewEmpresa):?>
+    <a href="<?php echo BASE_URL; ?>config/empresa/" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b><?php echo($viewData['user']->getNome());?></b></span>
+      <span class="logo-mini"><b><?php echo($viewData['empresa']->getNome());?></b></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b><?php echo($viewData['user']->getNome());?></b></span>
+      <span class="logo-lg"><b><?php echo($viewData['empresa']->getNome());?></b></span>
     </a>
+    <?php else :?>
+    <a href="#" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b><?php echo($viewData['empresa']->getNome());?></b></span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b><?php echo($viewData['empresa']->getNome());?></b></span>
+    </a>
+    <?php endif;?>
 
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top" role="navigation">
@@ -177,7 +200,8 @@ and open the template in the editor.
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
-              <img src="<?php echo BASE; ?>asserts/AdminLte/dist/img/avatar<?php //echo $viewData['user']->getIDGrupo(); ?>1.png" class="user-image" alt="User Image">
+              <img src="<?php echo BASE_URL; ?>asserts/AdminLTE/dist/img/<?php echo($this->config['site_painel_avatar']);?>.png" class="user-image" alt="User Image">
+			  <!--<img src="<?php echo BASE_URL; ?>asserts/AdminLte/dist/img/avatar1.png" class="user-image" alt="User Image">-->
               <!--<img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">-->
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
               <span class="hidden-xs"><?php echo $viewData['user']->getNome();?></span>
@@ -185,8 +209,9 @@ and open the template in the editor.
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
-                  <img src="<?php echo BASE; ?>asserts/AdminLte/dist/img/avatar<?php //echo $viewData['user']->getIDGrupo(); ?>1.png" class="img-circle" alt="User Image">
-                <!--<img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">-->
+                  <img src="<?php echo BASE_URL; ?>asserts/AdminLTE/dist/img/<?php echo($this->config['site_painel_avatar']);?>.png" class="img-circle" alt="User Image">
+				  <!--<img src="<?php echo BASE_URL; ?>asserts/AdminLte/dist/img/avatar1.png" class="img-circle" alt="User Image">-->
+                  <!--<img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">-->
                 <p>
                   <?php echo $viewData['user']->getNome(); ?> - Web Developer
                   <small>Member since Nov. 2012</small>
@@ -210,7 +235,7 @@ and open the template in the editor.
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="<?php echo BASE_URL; ?>config/perfil/" class="btn btn-default btn-flat">Profile</a>
+                  <a href="<?php echo BASE_URL; ?>perfil/" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
                   <a href="<?php echo BASE_URL; ?>login/logout/" class="btn btn-default btn-flat">Sign out</a>
@@ -225,10 +250,12 @@ and open the template in the editor.
           <!--</li>
           <!-- Fim Control Sidebar Toggle Button -->
           <!-- Config -->
+          <?php if($viewConfig):?>
           <li>
             <a href="<?php echo BASE_URL; ?>config/"><i class="fa fa-gears"></i></a>
           </li>
           <!-- Fim Config-->
+          <?php endif; ?>
         </ul>
       </div>
     </nav>
@@ -242,7 +269,8 @@ and open the template in the editor.
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel user-body">
         <div class="pull-left image">
-            <img src="<?php echo BASE; ?>asserts/AdminLTE/dist/img/avatar<?php //echo $viewData['user']->getIDGrupo();?>1.png" class="img-circle" alt="User Image">
+            <img src="<?php echo BASE_URL; ?>asserts/AdminLTE/dist/img/<?php echo($this->config['site_painel_avatar']);?>.png" class="img-circle" alt="User Image">
+			<!--<img src="<?php echo BASE_URL; ?>asserts/AdminLTE/dist/img/avatar1.png" class="img-circle" alt="User Image">-->
             <!--<img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">-->
         </div>
         <div class="pull-left info">
@@ -277,18 +305,18 @@ and open the template in the editor.
             <a href="<?php echo(BASE_URL."vendas/"); ?>"><i class="fa fa-credit-card"></i> <span>Vendas</span></a>
         </li>
         <?php endif; ?>
-        <?php if ($viewData['user']->validarPermissao('add_menu')): ?>
+        <?php if ($viewData['user']->validarPermissao('view_menu')): ?>
         <li <?php echo ($viewData['menuActive']=='menu')?'class="active"':'class=""'; ?>>
             <a href="<?php echo(BASE_URL."menu/"); ?>"><i class="fa fa-address-book"></i> <span>Menu</span></a>
         </li>
         <?php endif; ?>
-        <?php if ($viewData['user']->validarPermissao('add_permissao')): ?>
+        <?php if ($viewData['user']->validarPermissao('view_permissao')): ?>
         <li <?php echo ($viewData['menuActive']=='permissao')?'class="active"':'class=""'; ?>>
             <a href="<?php echo(BASE_URL."permissao/"); ?>"><i class="fa fa-plane"></i> <span>Permissoes</span></a>
         </li>
         <?php endif; ?>
         <?php if ($viewData['user']->validarPermissao('view_portfolio')): ?>
-        <li <?php echo ($viewData['menuActive']=='compra')?'class="active"':'class=""'; ?>>
+        <li <?php echo ($viewData['menuActive']=='portfolio')?'class="active"':'class=""'; ?>>
             <a href="<?php echo(BASE_URL."portfolio/"); ?>"><i class="fa fa-cart-plus"></i> <span>Portfolio</span></a>
         </li>
         <?php endif; ?>
@@ -297,7 +325,7 @@ and open the template in the editor.
             <a href="<?php echo(BASE_URL."relatorio/"); ?>"><i class="fa fa-book"></i> <span>Relatorios</span></a>
         </li>
         <?php endif; ?>
-        <?php if ($viewData['user']->validarPermissao('edit_pagina')): ?>
+        <?php if ($viewData['user']->validarPermissao('view_pagina')): ?>
         <li <?php echo ($viewData['menuActive']=='pagina')?'class="active"':'class=""'; ?>>
             <a href="<?php echo(BASE_URL."pagina/"); ?>"><i class="fa fa-link"></i> <span>Paginas</span></a>
         </li>
@@ -312,9 +340,14 @@ and open the template in the editor.
             <a href="<?php echo(BASE_URL."produto/"); ?>"><i class="fa fa-archive"></i> <span>Produtos</span></a>
         </li>
         <?php endif; ?>
-        <?php if ($viewData['user']->validarPermissao('add_usuario')): ?>
+        <?php if ($viewData['user']->validarPermissao('view_usuario')): ?>
         <li <?php echo ($viewData['menuActive']=='usuario')?'class="active"':'class=""'; ?>>
             <a href="<?php echo(BASE_URL."usuario/"); ?>"><i class="fa fa-user"></i> <span>Usuarios</span></a>
+        </li>
+        <?php endif; ?>
+		<?php if ($viewData['user']->validarPermissao('view_empresa')): ?>
+        <li <?php echo ($viewData['menuActive']=='empresa')?'class="active"':'class=""'; ?>>
+            <a href="<?php echo(BASE_URL."empresas/"); ?>"><i class="fa fa-archive"></i> <span>Empresas</span></a>
         </li>
         <?php endif; ?>
         <!-- Item Menu -->
@@ -436,35 +469,35 @@ and open the template in the editor.
 <!--        <nav class="navbar navbar-inverse">
 <!--            <div class="container-fluid">
 <!--                <div class="navbar-header">
-<!--                    <a class="navbar-brand" href="<?php echo BASE; ?>">Site Institucional</a>
+<!--                    <a class="navbar-brand" href="<?php echo BASE_URL; ?>">Site Institucional</a>
 <!--                </div>
 <!--                <ul class="nav navbar-nav navbar-right">
 <!--                    <?php if ( !empty($_SESSION['user']) ): ?>
-<!--                    <li><a href="<?php echo BASE; ?>cadastrar/gerenciaUsuario/">Gerenciar Usuario</a></li>
-<!--                    <li><a href="<?php echo BASE; ?>pagina/">Gerenciar Página</a></li>
-<!--                    <li><a href="<?php echo BASE; ?>menu/">Gerenciar Menu</a></li>
-<!--                    <li><a href="<?php echo BASE; ?>sair/">Sair</a></li>
+<!--                    <li><a href="<?php echo BASE_URL; ?>usuario/gerenciaUsuario/">Gerenciar Usuario</a></li>
+<!--                    <li><a href="<?php echo BASE_URL; ?>pagina/">Gerenciar Página</a></li>
+<!--                    <li><a href="<?php echo BASE_URL; ?>menu/">Gerenciar Menu</a></li>
+<!--                    <li><a href="<?php echo BASE_URL; ?>sair/">Sair</a></li>
 <!--                    <?php else : ?>
-<!--                    <li><a href="<?php echo BASE; ?>cadastrar/">Cadastra-se</a></li>
-<!--                    <li><a href="<?php echo BASE; ?>login/">Login</a></li>
+<!--                    <li><a href="<?php echo BASE_URL; ?>cadastrar/">Cadastra-se</a></li>
+<!--                    <li><a href="<?php echo BASE_URL; ?>login/">Login</a></li>
 <!--                    <?php endif; ?>
 <!--                </ul>
 <!--            </div>
 <!--        </nav>
--->	
+	
 <!--        <div class="topo">
 <!--            <div class="topo1"></div>
 <!--            <div class="banner"></div>
 <!--        </div>
--->
+
 <!--        <div class="menu">
 <!--            <?php //$this->loadMenuPainel()?>
 <!--        </div>
--->
+
 <!--        <div class="container-site">
 <!--            <?php //$this->loadViewInPainel($viewName, $viewData); ?>
 <!--        </div>
--->
+
 <!--        <div class="rodape">
 <!--    <nav class="navbar navbar-right navbar-fixed-bottom">
 <!--        <div class="container-fluid">
@@ -479,24 +512,42 @@ and open the template in the editor.
 <!-- REQUIRED JS SCRIPTS -->
 
 <!-- jQuery 3 -->
-<!--<script src="<?php echo BASE; ?>asserts/js/jquery.min.js"></script>-->
-<script src="<?php echo BASE; ?>asserts/js/jquery.js"></script>
+<!--<script src="<?php echo BASE_URL; ?>asserts/JQuery/jquery-3.2.1.min.js"></script>-->
+<script src="<?php echo BASE_URL; ?>asserts/JQuery/jquery-3.2.1.js"></script>
 <!-- jQuery UI 1.12 -->
-<script src="<?php echo BASE; ?>asserts/Jquery-UI/js/jquery-ui.min.js"></script>
+<script src="<?php echo BASE_URL; ?>asserts/Jquery-UI/js/jquery-ui.min.js"></script>
 <!--<script src="bower_components/jquery/dist/jquery.min.js"></script>-->
 <!-- Bootstrap 3.3.7 -->
-<script src="<?php echo BASE; ?>asserts/bootstrap/js/bootstrap.min.js"></script>
+<script src="<?php echo BASE_URL; ?>asserts/bootstrap/js/bootstrap.min.js"></script>
 <!--<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
 <!-- jQuery Mask 1.14.0 -->
-<script src="<?php echo BASE; ?>asserts/js/jquery.mask.js"></script>
-<!--<script src="<?php echo BASE; ?>asserts/js/jquery.mask.min.js"></script>-->
+<script src="<?php echo BASE_URL; ?>asserts/jquery-mask-plugin/dist/jquery.mask.js"></script>
+<!--<script src="<?php echo BASE_URL; ?>asserts/jquery-mask-plugin/dist/jquery.mask.min.js"></script>-->
 <!-- AdminLTE App -->
-<script src="<?php echo BASE; ?>asserts/adminLTE/dist/js/adminlte.min.js"></script>
+<script src="<?php echo BASE_URL; ?>asserts/adminLTE/dist/js/adminlte.min.js"></script>
 <!--<script src="dist/js/adminlte.min.js"></script>-->
 <!-- CKEditor App -->
-<script type="text/javascript" src="<?php echo(BASE);?>asserts/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="<?php echo(BASE_URL);?>asserts/ckeditor/ckeditor.js"></script>
 <!-- Script App -->
-<script src="<?php echo BASE; ?>asserts/js/script.js"></script>
+<script src="<?php echo BASE_URL; ?>asserts/js/script.js"></script>
+<script type="text/javascript">
+    var BASE_URL = '<?php echo BASE_URL; ?>';    
+    
+    function verificarCNPJ(obj) {
+        if(validarCNPJ(obj.value)){
+            obj.style.backgroundColor = 'white';
+        }else{
+            obj.style.backgroundColor = 'red';
+        }
+    };
+    function verificarCPF(obj) {
+        if(validaCPF(obj.value)){
+            obj.style.backgroundColor = 'white';
+        }else{
+            obj.style.backgroundColor = 'red';
+        }
+    };
+</script>
 
     </body>
 </html>

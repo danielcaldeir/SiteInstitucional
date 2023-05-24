@@ -1,5 +1,5 @@
-<div class="home-sobre">
-    <h1 class="h1"><?php echo($titulo);?></h1>
+<div class="container">
+    <h1 class="h1" id="<?php echo($url);?>"><?php echo($titulo);?></h1>
     <?php echo($corpo);?>
 </div>
         

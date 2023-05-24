@@ -18,7 +18,7 @@ class paginaController extends controller{
     public function __construct() {
         $this->user = new Usuario();
         $this->arrayInfo = array();
-        
+		
         if (!empty($_SESSION['token'])){
             //print_r($_SESSION['token']);
             if (!$this->user->isLogado($_SESSION['token'])){
@@ -27,7 +27,7 @@ class paginaController extends controller{
                 exit();
             }
             //$this->permissao->getPermissaoIDGrupo($this->user->getIDGrupo());
-            
+			
             if (!$this->user->validarPermissao('edit_pagina')){
                 $filtro = array('permission'=>1);
                 //loginController::login($filtro);
@@ -44,6 +44,10 @@ class paginaController extends controller{
         
         $this->arrayInfo["menuActive"] = "pagina";
         $this->arrayInfo["user"] = $this->user;
+        $empresa = new Empresa();
+        $empresa->selecionarEmpresaID(md5($this->user->getIdEmpresa()));
+        $this->arrayInfo["empresa"] = $empresa;
+        $this->arrayInfo["permissao"] = $this->user->getPermissoes();
         
         //if (isset($_SESSION['user'])){
         //    $this->user['nome'] = $_SESSION['user']['nome'];
@@ -59,13 +63,36 @@ class paginaController extends controller{
         
         //global $config;
         //$this->config = $config;
-        //parent::__construct();
+        parent::__construct();
     }
-    
     //put your code here
+	public static function pagina($param=null) {
+        $pag = new Paginas();
+        //$IDEmpresa = $this->user->getIDEmpresa();
+        $dados = array();
+        if (!(is_null($param))){
+			if (is_array($param)){
+				$url = $param[0];
+			} else {
+				$url = $param;
+			}
+            // $url = $param[0];
+            $pag->selecionarPaginasURL($url);
+            $dados["url"] = $pag->getURL();
+            $dados["titulo"] = $pag->getTitulo();
+            $dados["corpo"] = $pag->getCorpo();
+        }
+        //echo ("<pre>");
+        //print_r($param);
+        //echo ("</pre>");
+        
+        return $dados;
+    }
+	
     public function index($confirme = null) {
         $pag = new Paginas();
         $menu = new Menu('Menu');
+		$IDEmpresa = $this->user->getIDEmpresa();
         
         if (!empty($_GET['pagAtual'])){
             $paginaAtual = intval($_GET['pagAtual']);
@@ -78,11 +105,11 @@ class paginaController extends controller{
         //$dados['nome'] = "Administrador: ".$this->user['nome'];
         //$dados['paginas'] = $pag->selecionarALLPaginas();
         
-        $arrayMenu = $menu->selecionarALLMenu();
-        $arrayPaginas = $pag->selecionarALLPaginas();
+        $arrayMenu = $menu->getALLMenuIDEmpresa($IDEmpresa);
+        $arrayPaginas = $pag->getALLPaginasIDEmpresa($IDEmpresa);
         $TotalItems = count($arrayPaginas);
         
-        //$menuItem = array();
+        $menuItem = array();
         foreach ($arrayMenu as $item) {
             $pag->selecionarPaginasURL($item['url']);
             if ($pag->numRows()==0) {
@@ -98,24 +125,6 @@ class paginaController extends controller{
         $this->arrayInfo['numeroPaginas'] = ceil($TotalItems/$limit);
         
         $this->loadPainel("selPaginas", $this->arrayInfo);
-        
-            
-        //if (is_null($url)){
-        //    //$dados['nome'] = "Administrador: ".$this->user['nome'];
-        //    //$dados['paginas'] = $pag->selecionarALLPaginas();
-        //    $this->arrayInfo['nome'] = "Administrador: ".$this->user->getNome();
-        //    $this->arrayInfo['paginas'] = $pag->selecionarALLPaginas();
-        //    $this->loadPainel("selPaginas", $this->arrayInfo);
-        //} else {
-        //    $pag->selecionarPaginasURL($url);
-        //    $dados['nome'] = "Administrador: ".$this->user['nome'];
-        //    $id = $pag->getID();
-        //    $dados["id"] = $id;
-        //    $dados['confirme'] = "";
-        //    $dados['pagina'] = $pag->selecionarPaginasID($id);
-        //    $this->loadPainel("editPagina", $dados);
-        //}
-        //$this->loadPainel("selPaginas", $dados);
     }
     
     public function addPagina($confirme = ""){
@@ -174,12 +183,14 @@ class paginaController extends controller{
     
     public function addAction() {
         $pagina = new Paginas();
-        $url = addslashes($_POST['url']);
+        if (isset($_POST['url']) && !empty($_POST['url']) ){
+            $url = addslashes($_POST['url']);
+        } else {
+            $url = addslashes($_POST['titulo']);
+        }
+        //$url = addslashes($_POST['url']);
         $titulo = addslashes($_POST['titulo']);
         $corpo = addslashes($_POST['corpo']);
-        echo ("<pre>");
-        print_r($_POST);
-        echo ("</pre>");
         
         if (!empty($url) && !empty($titulo)){
             $pagina->incluirPaginaURLTituloCorpo($url, $titulo, $corpo);
@@ -191,12 +202,9 @@ class paginaController extends controller{
             $confirme = "Pagina Incluida com Sucesso";
             $this->addPagina($confirme);
         } else {
-            //header("Location: ".BASE_URL."painel/addPagina/error");
-            $confirme = "Nao foi informado a UR ou Titulo na pagina";
+            $confirme = "Nao foi informado a URL ou Titulo na pagina";
             $this->addPagina($confirme);
         }
-        
-        //$this->addMenu($confirme);
     }
     
     public function addPaginaAction() {
@@ -213,42 +221,34 @@ class paginaController extends controller{
                 $menu->incluirMenu($titulo, $url, $tipo);
             }
             $confirme = "success";
-            //header("Location: ".BASE_URL."painel/addPagina/success");
             $this->addPagina($confirme);
         } else {
-            //header("Location: ".BASE_URL."painel/addPagina/error");
             $confirme = "error";
             $this->addPagina($confirme);
         }
-        
-        //$this->addMenu($confirme);
     }
     
     public function editAction(){
-        if (isset($_POST['id']) && !empty($_POST['id'])){
-            $id = addslashes($_POST['id']);
-            $url = addslashes($_POST['url']);
-            $titulo = utf8_decode(addslashes($_POST['titulo']) );
-            $corpo = addslashes($_POST['corpo']);
-            
-            if (!empty($titulo) && !empty($url) ){
-                $pagina = new Paginas();
-                $pagina->atualizarPaginaURLTituloCorpo($id, $url, $titulo, $corpo);
-                
-                //header("Location: ".BASE_URL."painel/editPagina/".$id."/sucess");
-                $confirme = "Pagina Editada com Sucesso";
-                $this->editPagina($id, $confirme);
+		$pagina = new Paginas();
+		$id = addslashes($_POST['id']);
+		$url = addslashes($_POST['url']);
+		$titulo = utf8_decode(addslashes($_POST['titulo']) );
+		$corpo = addslashes($_POST['corpo']);
+        
+		if (!empty($titulo) && !empty($url) ){
+            $pagina->selecionarPaginasID($id);
+            if ($pagina->numRows() > 0){
+                $idPagina =$pagina->getID();
+                $pagina->atualizarPaginaURLTituloCorpo($idPagina, $url, $titulo, $corpo);
+                $confirme = "Registro Editado com Sucesso.";
+                $this->edit($id, $confirme);
             } else {
-                //header("Location: ../index.php?pag=editarAnuncio&error=true&id=".$id);
-                //header("Location: ".BASE_URL."painel/editPagina/".$id."/error");
-                $confirme = "Nao foi Informado uma URL ou Titulo valido";
-                $this->editPagina($id, $confirme);
+                $confirme = "Nao foi encontrado um Identificador valido";
+                $this->edit($id, $confirme);
             }
-        } else{
-            //header("Location: ../index.php?pag=editarAnuncio&error=true&id=".$id);
-            //header("Location: ".BASE_URL."painel/editPagina/".$id."/error");
-            $confirme = "Nao foi informado um ID valido.";
-            $this->editPagina($id, $confirme);
+        } else {
+            $confirme = "Nao foi encontrada um URL valida";
+            $this->edit($id, $confirme);
         }
     }
     
@@ -262,7 +262,6 @@ class paginaController extends controller{
             if (!empty($titulo) && !empty($url) ){
                 $pagina = new Paginas();
                 $pagina->atualizarPaginaURLTituloCorpo($id, $url, $titulo, $corpo);
-                
                 //header("Location: ".BASE_URL."painel/editPagina/".$id."/sucess");
                 $confirme = "Pagina Editada com Sucesso";
                 $this->editPagina($id, $confirme);
@@ -300,7 +299,6 @@ class paginaController extends controller{
             //header("Location: ".BASE_URL."painel/paginas/error");
             $this->index($confirme);
         }
-        //$this->menus($confirme);
     }
     
     public function excluirPaginaAction() {
@@ -320,6 +318,5 @@ class paginaController extends controller{
             //header("Location: ".BASE_URL."painel/paginas/error");
             $this->index($confirme);
         }
-        //$this->menus($confirme);
     }
 }

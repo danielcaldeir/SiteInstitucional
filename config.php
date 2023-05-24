@@ -11,13 +11,14 @@ require ('./enviroment.php');
 global $config;
 $config = array();
 if (ENVIROMENT == "development"){
-    define("BASE_URL", "http://localhost/SiteInstitucional/index.php/");
-    define("BASE", "http://localhost/SiteInstitucional/");
+    define("BASE_URL", "http://localhost:8123/SiteInstitucional/");
+    define("BASE", "http://localhost:8123/SiteInstitucional/");
     $config['dbname'] = "cms";
     $config['host'] = "localhost";
     $config['dbuser'] = "root";
     $config['dbpass'] = "root";
     $config['connect'] = "connect";
+	$config['idEmpresa'] = "1";
 } else {
     define("BASE_URL", "http://www.meusite.com.br/");
     $config['dbname'] = "blog";
@@ -25,4 +26,5 @@ if (ENVIROMENT == "development"){
     $config['dbuser'] = "root";
     $config['dbpass'] = "root";
     $config['connect'] = "connect";
+	$config['idEmpresa'] = "1";
 }

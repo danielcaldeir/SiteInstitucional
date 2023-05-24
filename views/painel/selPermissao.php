@@ -1,12 +1,43 @@
+<?php 
+    $addPermissao = FALSE;
+    $editPermissao = FALSE;
+    $delPermissao = FALSE;
+    $viewItem = FALSE;
+    $addItem = FALSE;
+    $editItem = FALSE;
+    $delItem = FALSE;
+    foreach ($permissao as $perItem) {
+        if (!strcmp($perItem, "add_permissao")){
+            $addPermissao = TRUE;  }
+        if (!strcmp($perItem, "edit_permissao")){ $editPermissao = TRUE; }
+        if (!strcmp($perItem, "del_permissao")){  $delPermissao = TRUE;  }
+        if (!strcmp($perItem, "view_item")){      $viewItem = TRUE;      }
+        if (!strcmp($perItem, "add_item")){       $addItem = TRUE;       }
+        if (!strcmp($perItem, "edit_item")){      $editItem = TRUE;      }
+        if (!strcmp($perItem, "del_item")){       $delItem = TRUE;       }
+    }
+?>
     <!-- Content Header (Page header) -->
+    <pre>
+        <?php echo ("ADD Permissao: ");echo (($addPermissao)?'Verdadeiro':'Falso');?>
+        <?php echo ("EDIT Permissao: ");echo (($editPermissao)?'Verdadeiro':'Falso');?>
+        <?php echo ("DEL Permissao: ");echo (($delPermissao)?'Verdadeiro':'Falso');?>
+    </pre>
+    
+    <pre>
+        <?php echo ("ADD Item: ");echo (($addItem)?'Verdadeiro':'Falso');?>
+        <?php echo ("EDIT Item: ");echo (($editItem)?'Verdadeiro':'Falso');?>
+        <?php echo ("DEL Item: ");echo (($delItem)?'Verdadeiro':'Falso');?>
+    </pre>
+    
     <section class="content-header">
       <h1>
         Permissao
         <small><?php echo($mensagem);?></small>
       </h1>
       <ol class="breadcrumb">
-        <li><a href="<?php echo(BASE_URL); ?>"><i class="fa fa-dashboard"></i>Home</a></li>
-        <li class="active"><a href="<?php echo(BASE_URL."permissao/"); ?>"><i class="fa fa-plane"></i>Permissao</a></li>
+        <li><a href="<?php echo(BASE_URL); ?>painel/"><i class="fa fa-dashboard"></i>Home</a></li>
+        <li class="active"><a href="<?php echo(BASE_URL); ?>permissao/"><i class="fa fa-plane"></i>Permissao</a></li>
       </ol>
     </section>
 
@@ -32,20 +63,29 @@
                         <li class="active btn btn-primary">
                             <a href="#tabs1" data-toggle="tab" aria-expanded="true">Grupo de Permissao</a>
                         </li>
+						<?php if($viewItem):?>
                         <li class="btn btn-primary">
                             <a href="#tabs2" data-toggle="tab" aria-expanded="false">Itens de Permissao</a>
                         </li>
+						<?php endif;?>
                     </ul>
                     <div class="tab-content">
                         <div id="tabs1" class="tab-pane active">
                             <div class="box">
                                 <div class="box-header">
                                     <div class="box-tools">
-                                        <a href="#AddPermissao" class="btn btn-success" data-toggle="collapse">
+                                        <?php if($addPermissao):?>
+                                        <!--<a href="#AddPermissao" class="btn btn-success" data-toggle="collapse">
+                                        <!--    <i class="fa fa-plus"></i>
+                                        <!--</a>
+                                        -->
+                                        <a href="<?php echo BASE_URL; ?>permissao/add/" class="btn btn-success">
                                             <i class="fa fa-plus"></i>
                                         </a>
+                                        <?php endif;?>
                                     </div>
                                 </div>
+				<?php if($addPermissao):?>
                 <div id="AddPermissao" class="collapse panel-collapse">
                     <form action="<?php echo BASE_URL; ?>permissao/addAction" method="POST">
                         <div class="box">
@@ -73,46 +113,63 @@
                         </div>
                     </form>
                 </div>
+				<?php endif;?>
                                 <div class="box-body">
                                     <table class="table table-condensed">
                                         <tr>
                                             <th>Nome Permissao</th>
                                             <th width="150">QTD de Ativos</th>
-                                            <th width="130">Ações</th>
+                                            <?php if ($editPermissao || $delPermissao):?>
+											<th width="130">Ações</th>
+											<?php endif;?>
                                         </tr>
                                         <?php foreach ($permitido as $item) :?>
                                         <tr>    
                                             <td><?php echo($item['nome']);?></td>
                                             <td><?php echo($item['total_user']);?></td>
-                                            <td>
+                                            <?php if ($editPermissao || $delPermissao):?>
+											<td>
                                                 <div class="btn-group">
-                                                    <a href="<?php echo BASE_URL; ?>permissao/edit/<?php echo md5($item['id']); ?>" 
+                                                    <?php if($editPermissao):?>
+													<a href="<?php echo BASE_URL; ?>permissao/edit/<?php echo md5($item['id']); ?>" 
                                                        class="btn btn-xs btn-primary">
                                                         Editar
                                                     </a>
+													<?php endif;?>
+													<?php if($delPermissao):?>
                                                     <?php if (($item['total_user'] == 0)): ?>
                                                     <a href="<?php echo BASE_URL; ?>permissao/del/<?php echo md5($item['id']); ?>" 
                                                        class="btn btn-xs btn-danger" <?php echo(($item['total_user']!=0)?'disabled':'');?> onclick="return confirm('Tem certeza que deseja Excluir!')">
                                                         Excluir
                                                     </a>
                                                     <?php endif; ?>
+													<?php endif;?>
                                                 </div>
                                             </td>
+											<?php endif;?>
                                         </tr>
                                         <?php endforeach; ?>
                                     </table>
                                 </div>
                             </div>
                         </div>
+						<?php if($viewItem):?>
                         <div id="tabs2" class="tab-pane">
                             <div class="box">
                                 <div class="box-header">
                                     <div class="box-tools">
-                                        <a href="#AddPermissaoItem" class="btn btn-success" data-toggle="collapse">
+                                        <?php if($addItem):?>
+                                        <!--<a href="#AddPermissaoItem" class="btn btn-success" data-toggle="collapse">
+                                        <!--    <i class="fa fa-plus"></i>
+                                        <!--</a>
+                                        -->
+                                        <a href="<?php echo BASE_URL; ?>permissao/addItem/" class="btn btn-success">
                                             <i class="fa fa-plus"></i>
                                         </a>
+                                        <?php endif;?>
                                     </div>
                                 </div>
+				<?php if($addItem):?>
                 <div id="AddPermissaoItem" class="collapse panel-collapse">
                     <form action="<?php echo BASE_URL; ?>permissao/addItemAction" method="POST">
                         <div class="box">
@@ -138,61 +195,73 @@
                         </div>
                     </form>
                 </div>
+				<?php endif;?>
                                 <div class="box-body">
                                     <table class="table table-condensed">
                                         <tr>
                                             <th>Nome Item</th>
                                             <th width="150">SLUG</th>
-                                            <th width="130">Ações</th>
+                                            <?php if($editItem || $delItem):?>
+											<th width="130">Ações</th>
+											<?php endif;?>
                                         </tr>
                                         <?php foreach ($permissaoItens as $item) :?>
                                         <tr>    
                                             <td><?php echo($item['nome']);?></td>
                                             <td><?php echo($item['slug']);?></td>
-                                            <td>
+                                            <?php if($editItem || $delItem):?>
+											<td>
                                                 <div class="btn-group">
-                                                    <a href="<?php echo BASE_URL; ?>permissao/editItem/<?php echo md5($item['id']); ?>" 
+                                                    <?php if($editItem):?>
+													<a href="<?php echo BASE_URL; ?>permissao/editItem/<?php echo md5($item['id']); ?>" 
                                                        class="btn btn-xs btn-primary">
                                                         Editar
                                                     </a>
+													<?php endif;?>
+													<?php if($delItem):?>
                                                     <a href="<?php echo BASE_URL; ?>permissao/delItem/<?php echo md5($item['id']); ?>" 
                                                        class="btn btn-xs btn-danger" onclick="return confirm('Tem certeza que deseja Excluir!')">
                                                         Excluir
                                                     </a>
+													<?php endif;?>
                                                 </div>
                                             </td>
+											<?php endif;?>
                                         </tr>
                                         <?php endforeach; ?>
                                     </table>
                                 </div>
                             </div>
                         </div>
+						<?php endif;?>
                     </div>
                 </div>
             <!--</div>-->
         <!--</div>-->
         
-        <script>
-            //$(function() {
-            //    $("#tabs").tabs();
-            //});
-        </script>
+        
         
         <script>
-            var now = new Date(); 
-            var hrs = now.getHours(); 
-            var msg = ""; 
-            if (hrs > 0) msg = "Mornin' Sunshine!"; 
-            // REALLY early 
-            if (hrs > 6) msg = "Good morning"; 
-            // After 6am 
-            if (hrs > 12) msg = "Good afternoon"; 
-            // After 12pm 
-            if (hrs > 17) msg = "Good evening"; 
-            // After 5pm 
-            if (hrs > 22) msg = "Go to bed!"; 
-            // After 10pm 
-            alert(msg);
+            function verificarDataHora() {
+                var now = new Date(); 
+                var hrs = now.getHours(); 
+                var msg = ""; 
+                if (hrs > 0) msg = "Mornin' Sunshine!"; 
+                // REALLY early 
+                if (hrs > 6) msg = "Good morning"; 
+                // After 6am 
+                if (hrs > 12) msg = "Good afternoon"; 
+                // After 12pm 
+                if (hrs > 17) msg = "Good evening"; 
+                // After 5pm 
+                if (hrs > 22) msg = "Go to bed!"; 
+                // After 10pm 
+                alert(msg);
+            }
+            
+            $(function() {
+                $("#tabs").tabs();
+            });
         </script>
         
     </section>

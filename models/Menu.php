@@ -13,7 +13,8 @@
  */
 class Menu extends Model{
     private $id;
-    private $nome;
+    private $id_empresa;
+	private $nome;
     private $url;
     private $tipo;
     private $tabela;
@@ -22,7 +23,8 @@ class Menu extends Model{
         if (count($elementos) == 1){
             foreach ($elementos as $item) {
                 $this->setID($item['id']);
-                $this->setNome($item['nome']);
+                $this->setIDEmpresa($item['id_empresa']);
+				$this->setNome($item['nome']);
                 $this->setURL($item['url']);
                 $this->setTipo($item['tipo']);
             }
@@ -37,7 +39,7 @@ class Menu extends Model{
     
     public function selecionarMenuID($id){
         $tabela = $this->tabela;
-        $colunas = array ("id", "nome", "url", "tipo");
+        $colunas = array ("id", "id_empresa", "nome", "url", "tipo");
         $where = array();
             $where["md5(id)"] = $id;
         //);
@@ -59,7 +61,7 @@ class Menu extends Model{
     
     public function selecionarMenuURL($url){
         $tabela = $this->tabela;
-        $colunas = array ("id", "nome", "url", "tipo");
+        $colunas = array ("id", "id_empresa", "nome", "url", "tipo");
         $where = array();
             $where["url"] = $url;
         //);
@@ -81,7 +83,7 @@ class Menu extends Model{
 	
     public function selecionarALLMenu($where = array()){
         $tabela = $this->tabela;
-        $colunas = array ("id", "nome", "url", "tipo");
+        $colunas = array ("id", "id_empresa", "nome", "url", "tipo");
         $where_cond = "AND";
         $groupBy = array();
         $this->selectTable($tabela, $colunas, $where, $where_cond, $groupBy);
@@ -93,25 +95,45 @@ class Menu extends Model{
         return $array;
     }
     
-    public function incluirMenu($nome, $url, $tipo){
-        $tabela = $this->tabela;
+	public function getALLMenuIDEmpresa($idEmpresa){
+        $where = array();
+        $where['id_empresa'] = $idEmpresa;
+        return $this->selecionarALLMenu($where);
+    }
+	
+    public function incluirMenu($nome, $url, $tipo=null, $idEmpresa=null){
+        if (is_null($tipo)){
+            $tipo = 'pagina';
+        }
+        if (is_null($idEmpresa)){
+            $idEmpresa = 0;
+        }
+		$tabela = $this->tabela;
         $dados = array();
             $dados["nome"] = $nome;
             $dados["url"] = $url;
             $dados["tipo"] = $tipo;
-        //);
+			$dados["id_empresa"] = $idEmpresa;
+		//);
         $this->insert($tabela, $dados);
         $this->query("SELECT LAST_INSERT_ID() as ID");
         return $this->array;
     }
     
-    public function atualizarMenuNomeURL($id, $nome, $url, $tipo){
-        $tabela = $this->tabela;
+    public function atualizarMenuNomeURL($id, $nome, $url, $tipo=null, $idEmpresa=null){
+        if (is_null($tipo)){
+            $tipo = 'pagina';
+        }
+        if (is_null($idEmpresa)){
+            $idEmpresa = 0;
+        }
+		$tabela = $this->tabela;
         $dados = array();
             $dados["nome"] = $nome;
             $dados["url"] = $url;
             $dados["tipo"] = $tipo;
-        //);
+			$dados["id_empresa"] = $idEmpresa;
+		//);
         $where = array();
             $where["md5(id)"] = $id;
         //);
@@ -129,6 +151,9 @@ class Menu extends Model{
     public function setID($id) { $this->id = $id; }
     public function getID() { return $this->id; }
     
+	public function setIDEmpresa($id_empresa) { $this->id_empresa = $id_empresa; }
+    public function getIDEmpresa() { return $this->id_empresa; }
+	
     public function setNome($nome) { $this->nome = $nome; }
     public function getNome() { return $this->nome; }
     

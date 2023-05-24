@@ -61,6 +61,12 @@ class Core {
             $param = array();
         }
         
+		//if (!file_exists('controllers/'.$this->currentController.'.php')){
+        //    $this->currentController = 'notFoundController';
+        //    $currentAction = 'index';
+        //    $param = array();
+        //}
+		
         if (!file_exists('controllers/'.$this->currentController.'.php')){
             $pNome = explode("Controller", $this->currentController);
             $this->currentController = 'homeController';
@@ -84,6 +90,12 @@ class Core {
             $currentAction = $menu->getTipo();
             //$param = array();
             $param[] = $pNome;
+			if (!method_exists($c, $currentAction)){
+				$this->currentController = 'notFoundController';
+				$currentAction = 'index';
+				$param = array();
+				$c = new $this->currentController();
+			}
         }
         //print_r ($param);
         //$c->$currentAction();

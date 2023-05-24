@@ -5,8 +5,8 @@
         <small><?php echo($mensagem);?></small>
       </h1>
       <ol class="breadcrumb">
-        <li><a href="<?php echo(BASE_URL); ?>"><i class="fa fa-dashboard"></i> home</a></li>
-        <li class="active"><a href="<?php echo(BASE_URL."usuario/"); ?>"><i class="fa fa-user"></i>Usuarios</a></li>
+        <li><a href="<?php echo(BASE_URL); ?>painel/"><i class="fa fa-dashboard"></i> home</a></li>
+        <li class="active"><a href="<?php echo(BASE_URL); ?>usuario/"><i class="fa fa-user"></i>Usuarios</a></li>
         <li class="active"><i class="fa fa-anchor"></i>Editar Usuarios</li>
       </ol>
     </section>
@@ -36,10 +36,11 @@
                         <label for="email">E-Mail:</label>
                         <input type="email" name="email" id="email" class="form-control" value="<?php echo($item['email']);?>" required/>
                     </div>
-                    <div class="form-group">
-                        <label for="senha">Senha:</label>
-                        <input type="password" name="senha" id="senha" class="form-control" value="<?php echo($item['senha']);?>" required/>
-                    </div>
+                    <!--<div class="form-group">
+                    <!--    <label for="senha">Senha:</label>
+                    <!--    <input type="password" name="senha" id="senha" class="form-control" value="<?php echo($item['senha']);?>" required/>
+                    <!--</div>
+					-->
                     <div class="form-group">
                         <label for="telefone">Telefone:</label>
                         <input type="text" name="telefone" id="telefone" class="form-control" value="<?php echo($item['telefone']);?>" required/>
@@ -63,7 +64,7 @@
                         <label for="permissao" id="permissao_label" >Grupo:</label>
                         <select name="permissao" id="permissao_select" class="form-control">
                             <option value="0"></option>
-                            <?php foreach ($permissao as $per) :?>
+                            <?php foreach ($permissaoGrupo as $per) :?>
                             <option <?php echo ($item['id_grupo']==$per['id'])?'selected':'';?> value="<?php echo($per['id']);?>">
                                 <?php echo($per['nome']);?>
                             </option>
@@ -78,20 +79,22 @@
         </div>
         
         <script>
-            var now = new Date(); 
-            var hrs = now.getHours(); 
-            var msg = ""; 
-            if (hrs > 0) msg = "Mornin' Sunshine!"; 
-            // REALLY early 
-            if (hrs > 6) msg = "Good morning"; 
-            // After 6am 
-            if (hrs > 12) msg = "Good afternoon"; 
-            // After 12pm 
-            if (hrs > 17) msg = "Good evening"; 
-            // After 5pm 
-            if (hrs > 22) msg = "Go to bed!"; 
-            // After 10pm 
-            alert(msg);
+            function verificarDataHora() {
+                var now = new Date(); 
+                var hrs = now.getHours(); 
+                var msg = ""; 
+                if (hrs > 0) msg = "Mornin' Sunshine!"; 
+                // REALLY early 
+                if (hrs > 6) msg = "Good morning"; 
+                // After 6am 
+                if (hrs > 12) msg = "Good afternoon"; 
+                // After 12pm 
+                if (hrs > 17) msg = "Good evening"; 
+                // After 5pm 
+                if (hrs > 22) msg = "Go to bed!"; 
+                // After 10pm 
+                alert(msg);
+            }
             
             function verificarStatus() {
                 var status = document.getElementById('status');
@@ -108,10 +111,8 @@
             }
         </script>
     </section>
-    <br/><br/>
-<hr/>
+    <br/><br/><br/><br/>
     
-    <br/><br/><br/>
   <?php else : ?>
         <div class="container">
             <h3 class="h3">Não foi informado um identificador.</h3>
@@ -121,7 +122,7 @@
         
   <?php endif; ?>
 
-
+<!--<hr/>
 <!--<div class="container-fluid">
 <!--	<div style="clear: both"></div>
 <!--    <h1 class="h1">Editar Usuário</h1>

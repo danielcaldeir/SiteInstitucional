@@ -33,4 +33,5 @@
             </form>
             <a href="<?php echo BASE_URL; ?>login/esqueciSenha/">Esqueceu a senha!</a><br>
             <!--<a href="<?php echo BASE_URL; ?>cadastrar/gerenciaUsuario/">Gerenciamento de Usuarios</a>-->
+			<a href="<?php echo BASE_URL; ?>login/cadastrar/">Cadastrar Usuarios</a>
         </div>

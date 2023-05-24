@@ -1,7 +1,7 @@
 <?php 
-//echo("<pre>");
-//print_r ($paginas);
-//echo ("</pre>");
+// echo("<pre>");
+// print_r ($paginas);
+// echo ("</pre>");
 ?>
 
 <?php foreach ($paginas as $item): ?>

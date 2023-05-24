@@ -15,40 +15,37 @@ class homeController extends controller{
     //put your code here
     
     public function index() {
-        $dados = array ();
-        //$dados['nome'] = "Daniel Caldeira";
-        
-        $portfolio = new Portfolio();
-        $dados['portfolio'] = $portfolio->getTrabalhos(4);
-        
-        $pag = new Paginas();
-        $dados['paginas'] = $pag->selecionarPaginasURL('home');
-        
+		// $usuario = new Usuario();
         $depo = new Depoimentos();
+		$portfolio = new Portfolio();
+		$pag = new Paginas();
+		global $config;
+		// $usuario->setNome("Daniel Caldeira");
+        $dados = array ();
+        // $dados["nome"] = $usuario->getNome();
+        $dados["config"] = $config;
+        $dados['portfolio'] = $portfolio->getTrabalhos(4);
+        $dados['paginas'] = $pag->selecionarPaginasURL('home');
         $dados['depoimentos'] = $depo->selecionarALLDepoimentos();
         
         $this->loadTemplate("home", $dados);
     }
     
     public function portfolio() {
-        $dados = array ();
-        
         $portfolio = new Portfolio();
+		$dados = array ();
         $dados['portfolio'] = $portfolio->getTrabalhos();
         
         $this->loadTemplate("portfolio", $dados);
     }
     
-    public function pagina($url){
-        $pag = new Paginas();
-        $pag->selecionarPaginasURL($url);
-        
-        $dados = array();
-        $dados["url"] = $pag->getURL();
-        $dados["titulo"] = $pag->getTitulo();
-        $dados["corpo"] = $pag->getCorpo();
-        
-        $this->loadTemplate("paginas", $dados);
+    public function pagina($param){
+        $dados = paginaController::pagina($param);
+        if (count($dados)>0){
+            $this->loadTemplate("paginas", $dados);
+        } else {
+            $this->loadTemplate("home");
+        }
     }
     
     public function formulario($titulo){
@@ -106,16 +103,14 @@ class homeController extends controller{
                               'X-Mailer: PHP/'.phpversion();
                 
             mail($email, $assunto, $mensagem, $headers);
-			
-			
                 
                 echo ("<h2>OK! ".utf8_decode($assunto)."</h2>");
                 echo ("<br>");
                 echo ("<br>");
                 echo ("<h2>E-Mail: ".$email."</h2>");
                 //echo ("<a href=".$link.">Clique aqui para redefinir senha</a>");
-                
                 echo $mensagem;
+			
             exit();    
                 //$dados = array();
 				//$dados["redefinir"] = "true";
@@ -125,17 +120,13 @@ class homeController extends controller{
     }
 	
     public function indexClassificados() {
-        
         $refat = 1;
-        
         if (isset($_GET['refat']) && !empty($_GET['refat'])){
             $refat = $_GET['refat'];
         }
         
         $qtdPag = 2;
-        
         $anuncio = new anuncios();
-        
         $filtros = array(
             'categoria' => '',
             'preco' => '',
@@ -173,10 +164,8 @@ class homeController extends controller{
         $usuario = new usuario();
         $usuario->selecionarALLUser();
         $totUsuarios = $usuario->numRows();
-        
         $resultQTD = $anuncio->getQTDAnuncios();
         $totAnuncios = $resultQTD['qtd'];
-        
         $totalPag = ceil($totAnuncios / $qtdPag);
         
         $dados = array (
@@ -192,22 +181,17 @@ class homeController extends controller{
         $this->loadTemplate("inicial", $dados);
     }
     
-    public function sair() {
-        session_destroy();
-        global $config;
-        $config['connect'] = "desconnect";
-        
-        //exit();
-        header("Location: ".BASE_URL);
-        //$home = new homeController();
-        //$home->index();
-    }
+    // public function sair() {
+    //     session_destroy();
+    //     global $config;
+    //     $config['connect'] = "desconnect";
+    //     header("Location: ".BASE_URL);
+    // }
     
-    public function senha($url) {
-        echo ("<br>Vamos trocar a senha!!");
-        echo ("<br>Nova senha a ser informada: ".$url);
-        
-    }
+    // public function senha($url) {
+    //     echo ("<br>Vamos trocar a senha!!");
+    //     echo ("<br>Nova senha a ser informada: ".$url);
+    // }
     
     public function posts() {
         $posts = new posts();

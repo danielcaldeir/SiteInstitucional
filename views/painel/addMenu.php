@@ -5,8 +5,8 @@
         <small><?php echo($mensagem);?></small>
       </h1>
       <ol class="breadcrumb">
-        <li><a href="<?php echo(BASE_URL); ?>"><i class="fa fa-dashboard"></i> home</a></li>
-        <li class="active"><a href="<?php echo(BASE_URL."menu/"); ?>"><i class="fa fa-address-book"></i>Menu</a></li>
+        <li><a href="<?php echo(BASE_URL); ?>painel/"><i class="fa fa-dashboard"></i> home</a></li>
+        <li class="active"><a href="<?php echo(BASE_URL); ?>menu/"><i class="fa fa-address-book"></i>Menu</a></li>
         <li class="active"><i class="fa fa-anchor"></i>Adicionar Menu</li>
       </ol>
     </section>
@@ -58,20 +58,22 @@
         
         
         <script>
-            var now = new Date(); 
-            var hrs = now.getHours(); 
-            var msg = ""; 
-            if (hrs > 0) msg = "Mornin' Sunshine!"; 
-            // REALLY early 
-            if (hrs > 6) msg = "Good morning"; 
-            // After 6am 
-            if (hrs > 12) msg = "Good afternoon"; 
-            // After 12pm 
-            if (hrs > 17) msg = "Good evening"; 
-            // After 5pm 
-            if (hrs > 22) msg = "Go to bed!"; 
-            // After 10pm 
-            alert(msg);
+            function verificarDataHora() {
+                var now = new Date(); 
+                var hrs = now.getHours(); 
+                var msg = ""; 
+                if (hrs > 0) msg = "Mornin' Sunshine!"; 
+                // REALLY early 
+                if (hrs > 6) msg = "Good morning"; 
+                // After 6am 
+                if (hrs > 12) msg = "Good afternoon"; 
+                // After 12pm 
+                if (hrs > 17) msg = "Good evening"; 
+                // After 5pm 
+                if (hrs > 22) msg = "Go to bed!"; 
+                // After 10pm 
+                alert(msg);
+            }
             
             function verificarStatus() {
                 var status = document.getElementById('status');
@@ -89,13 +91,10 @@
         </script>
     </section>
     
-    <hr/>
-    
-    <br/>
-    <br/>
-    
-    <hr>
-    
+    <br/><br/>
+    <br/><br/>
+
+<!--<hr>
 <!--<div class="container-fluid">
 <!--    <div class="navbar topnav">
 <!--        <h2 class="logo">Cadastrar Menu</h2>
@@ -108,7 +107,7 @@
 <!--    <?php if ( $confirme == "success" ) :?>
 <!--            <div class="alert-success">
 <!--                <label>Registro inserido com sucesso</label>
-<!--                <a href="<?php echo(BASE."menu/"); ?>">
+<!--                <a href="<?php echo(BASE_URL); ?>menu/">
 <!--                    Acesse o Link para visualizar.
 <!--                </a>
 <!--            </div>
@@ -139,9 +138,6 @@
 <!--        <input type="submit" id="botaoEnviarForm" value="Adicionar" class="home_cta_button"/>
 <!--    </form>
 <!--    <?php endif; ?>
-<!--    <br/>
-<!--    <br/>
-<!--    <br/>
-<!--    <br/>
+<!--    <br/><br/><br/><br/>
 <!--</div>
 -->

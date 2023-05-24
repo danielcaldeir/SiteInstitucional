@@ -28,7 +28,7 @@ class usuarioController extends controller{
             }
             //$this->permissao->getPermissaoIDGrupo($this->user->getIDGrupo());
             
-            if (!$this->user->validarPermissao('add_usuario')){
+            if (!$this->user->validarPermissao('view_usuario')){
                 $filtro = array('permission'=>1);
                 //loginController::login($filtro);
                 $login = new loginController();
@@ -44,6 +44,10 @@ class usuarioController extends controller{
         
         $this->arrayInfo["menuActive"] = "usuario";
         $this->arrayInfo["user"] = $this->user;
+        $empresa = new Empresa();
+        $empresa->selecionarEmpresaID(md5($this->user->getIdEmpresa()));
+        $this->arrayInfo["empresa"] = $empresa;
+        $this->arrayInfo["permissao"] = $this->user->getPermissoes();
         
         //if (isset($_SESSION['user'])){
         //    $this->user['nome'] = $_SESSION['user']['nome'];
@@ -59,14 +63,15 @@ class usuarioController extends controller{
         
         //global $config;
         //$this->config = $config;
-        //parent::__construct();
+        parent::__construct();
     }
 	
     //put your code here
     public function index($confirme = ""){
         $user = new Usuario();
-        $per = new PermissaoGrupo();
-        //$IDEmpresa = $this->user->getIdEmpresa();
+        $per = new Permissao();
+		// $per = new PermissaoGrupo();
+        $IDEmpresa = $this->user->getIdEmpresa();
         
         if (!empty($_GET['pagAtual'])){ $paginaAtual = intval($_GET['pagAtual']); } 
         else { $paginaAtual = 1; }
@@ -74,8 +79,8 @@ class usuarioController extends controller{
         $limit = 10;
         $offset = ($paginaAtual * $limit) - $limit;
         
-        //$filtro = array("empresa"=>$IDEmpresa,"permissao"=>NULL, "status"=>NULL, "nome"=>NULL, "email"=>NULL);
-        $filtro = array("permissao"=>NULL, "status"=>NULL, "nome"=>NULL, "email"=>NULL);
+        $filtro = array("empresa"=>$IDEmpresa,"permissao"=>NULL, "status"=>NULL, "nome"=>NULL, "email"=>NULL);
+        // $filtro = array("permissao"=>NULL, "status"=>NULL, "nome"=>NULL, "email"=>NULL);
         if (!empty($_GET['permissao']))
             { $filtro['permissao'] = $_GET['permissao']; }
         if (!empty($_GET['status']))
@@ -85,8 +90,8 @@ class usuarioController extends controller{
         if (!empty($_GET['email']))
             { $filtro['email'] = $_GET['email']; }
         $this->arrayInfo['users'] = $user->getAllUsuarios($filtro, $offset, $limit);
-        //$where['id_empresa'] = $IDEmpresa;
-        $this->arrayInfo['permissao'] = $per->getAllPermissaoGrupo();
+        // $where['id_empresa'] = $IDEmpresa;
+        $this->arrayInfo['permissaoGrupo'] = $per->getAllPermissaoGrupo($IDEmpresa);
         $this->arrayInfo['mensagem'] = $confirme;
         
         $TotalItems = count($user->getTotalUser($filtro));
@@ -106,15 +111,14 @@ class usuarioController extends controller{
     public function gerenciaUsuario(){
         // put your code here
         $user = new usuario();
-        $user->selecionarALLUser();
+        $array = $user->selecionarALLUser();
         if ($user->numRows() == 1){
             $usuarios = $user->result();
         }
-        
-        $dados = array();
-        $dados["usuarios"] = $usuarios;
-        
-        $this->loadPainel("gerenciaUsuario", $dados);
+        // $dados = array();
+		// $dados["usuarios"] = $usuarios;
+        $this->arrayInfo["usuarios"] = $array;
+        $this->loadPainel("gerenciaUsuario", $this->arrayInfo);
     }
     
     public function excluirUser($id){
@@ -125,7 +129,7 @@ class usuarioController extends controller{
         $dados['id'] = $id;
         $dados['usuario'] = $menu->selecionarUser();
         
-        $this->loadPainel("excluirMenu", $dados);
+        $this->loadPainel("excluirUser", $dados);
     }
 	
     public function editAction(){
@@ -134,7 +138,7 @@ class usuarioController extends controller{
         $id = addslashes($_POST['id']);
         $nome = addslashes($_POST['nome']);
         $email = addslashes($_POST['email']);
-        $senha = addslashes($_POST['senha']);
+        // $senha = addslashes($_POST['senha']);
         $telefone = addslashes($_POST['telefone']);
         $status = intval($_POST['status']);
         $permissao = intval($_POST['permissao']);
@@ -169,7 +173,7 @@ class usuarioController extends controller{
                 if (($user->numRows() > 0) && (!empty($_POST['nome']))){
                     $idUser = $user->getID();
                     $user->atualizarNomeEmail($idUser, $nome, $email, $telefone);
-                    $user->atualizarSenha($idUser,$senha);
+                    // $user->atualizarSenha($idUser,$senha);
                     $user->atualizarPermissao($idUser, $permissao);
                     $user->atualizarStatus($id,$status);
                     $mensagem = "O Usuario ".$nome." foi Editado com Sucesso!";
@@ -190,9 +194,21 @@ class usuarioController extends controller{
         }
     }
     
-    public function addAction($mensagem = "") {
+    public function add($confirme = "") {
+        //$user = new Usuarios();
+        //$per = new PermissaoGrupo();
+        $per = new Permissao();
+        $IDEmpresa = $this->user->getIDEmpresa();
+        
+        $this->arrayInfo['permissaoGrupo'] = $per->getAllPermissaoGrupo($IDEmpresa);
+        $this->arrayInfo['mensagem'] = $confirme;
+        
+        $this->loadPainel("addUsuario", $this->arrayInfo);
+    }
+	
+	public function addAction($mensagem = "") {
         $user = new Usuario();
-        //$IDEmpresa = $this->user->getIdEmpresa();
+        $IDEmpresa = $this->user->getIdEmpresa();
         
         if (!empty($_POST['nome'])){
             $nome = addslashes($_POST['nome']);
@@ -203,7 +219,7 @@ class usuarioController extends controller{
             
             $user->selecionarEmail($email);
             if ($user->numRows() == 0){
-                $array = $user->incluirNomeEmailSenha($nome, $email, $senha, $telefone);
+                $array = $user->incluirNomeEmailSenha($nome, $email, $senha, $telefone, $IDEmpresa);
                 foreach ($array as $item) {
                     $id = $item['ID'];
                     $user->atualizarPermissao(md5($id), $idGrupo);
@@ -317,13 +333,14 @@ class usuarioController extends controller{
     public function edit($id, $confirme = ""){
         $user = new Usuario();
         $per = new Permissao();
+		$IDEmpresa = $this->user->getIDEmpresa();
         
         if (!empty($id)){
             $user->setID($id);
             $user->selecionarUser($id);
             if ($user->numRows() > 0) {
                 $this->arrayInfo['selectedUser'] = $user->result();
-                $this->arrayInfo['permissao'] = $per->getAllPermissaoGrupo();
+                $this->arrayInfo['permissaoGrupo'] = $per->getAllPermissaoGrupo($IDEmpresa);
                 $this->arrayInfo['id'] = $user->getID();
                 $this->arrayInfo['mensagem'] = $confirme;
                 //$userSelected = $user->result();
@@ -354,7 +371,8 @@ class usuarioController extends controller{
         $user->selecionarUser($id);
         if ($user->getStatus() == 0){
             $idUser = $user->getID();
-            $user->confirmarEmail(md5($idUser));
+            // $user->confirmarEmail(md5($idUser));
+			$user->atualizarStatus(md5($idUser), 1);
             $this->index("Usuario Habilitado com Sucesso!");
         } else {
             $this->index("Nao foi possivel Habilitar o usuario!");

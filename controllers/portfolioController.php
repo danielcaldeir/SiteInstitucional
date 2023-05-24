@@ -44,10 +44,14 @@ class portfolioController extends controller{
         
         $this->arrayInfo["menuActive"] = "portfolio";
         $this->arrayInfo["user"] = $this->user;
+        $empresa = new Empresa();
+        $empresa->selecionarEmpresaID(md5($this->user->getIdEmpresa()));
+        $this->arrayInfo["empresa"] = $empresa;
+        $this->arrayInfo["permissao"] = $this->user->getPermissoes();
         
         //global $config;
         //$this->config = $config;
-        //parent::__construct();
+        parent::__construct();
     }
     
     //put your code here
@@ -61,6 +65,17 @@ class portfolioController extends controller{
         $this->loadPainel("selPortfolio", $this->arrayInfo);
     }
     
+	public function add($confirme = "") {
+        // $user = new Usuarios();
+        // $per = new Permissao();
+        $IDEmpresa = $this->user->getIDEmpresa();
+        
+        // $this->arrayInfo['permissaoGrupo'] = $per->getAllPermissaoGrupo($IDEmpresa);
+        $this->arrayInfo['mensagem'] = $confirme;
+        
+        $this->loadPainel("addPortfolio", $this->arrayInfo);
+    }
+	
     public function addPortfolio(){
         if (isset($_FILES['fotos'])) {
             $fotos = $_FILES['fotos'];

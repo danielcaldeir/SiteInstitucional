@@ -44,6 +44,10 @@ class menuController extends controller{
         
         $this->arrayInfo["menuActive"] = "menu";
         $this->arrayInfo["user"] = $this->user;
+        $empresa = new Empresa();
+        $empresa->selecionarEmpresaID(md5($this->user->getIdEmpresa()));
+        $this->arrayInfo["empresa"] = $empresa;
+        $this->arrayInfo["permissao"] = $this->user->getPermissoes();
         
         //if (isset($_SESSION['user'])){
         //    $this->user['nome'] = $_SESSION['user']['nome'];
@@ -59,12 +63,13 @@ class menuController extends controller{
         
         //global $config;
         //$this->config = $config;
-        //parent::__construct();
+        parent::__construct();
     }
     
     //put your code here
     public function index($confirme = "") {
         $menus = new Menu("menu");
+		$IDEmpresa = $this->user->getIDEmpresa();
         
         //$dados = array();
         //$dados['nome'] = "Administrador: ".$this->user['nome'];
@@ -77,7 +82,7 @@ class menuController extends controller{
         $limit = 10;
         $offset = ($paginaAtual * $limit) - $limit;
         
-        $arrayMenus = $menus->selecionarALLMenu();
+        $arrayMenus = $menus->getALLMenuIDEmpresa($IDEmpresa);
         $TotalItems = count($arrayMenus);
         
         $this->arrayInfo['nome'] = "Administrador: ".$this->user->getNome();
@@ -108,20 +113,13 @@ class menuController extends controller{
         $this->loadPainel("editMenu", $this->arrayInfo);
     }
     
-    public function editMenu($id, $confirme = ""){
-        $menu = new Menu("menu");
-        
-        //$dados = array();
-        //$dados['confirme'] = $confirme;
-        //$dados['id'] = $id;
-        //$dados['menu'] = $menu->selecionarMenuID($id);
-        
-        $this->arrayInfo['mensagem'] = $confirme;
-        $this->arrayInfo['id'] = $id;
-        $this->arrayInfo['menu'] = $menu->selecionarMenuID($id);
-        
-        $this->loadPainel("editMenu", $this->arrayInfo);
-    }
+    // public function editMenu($id, $confirme = ""){
+    //     $menu = new Menu("menu");
+    //     $this->arrayInfo['mensagem'] = $confirme;
+    //     $this->arrayInfo['id'] = $id;
+    //     $this->arrayInfo['menu'] = $menu->selecionarMenuID($id);
+    //     $this->loadPainel("editMenu", $this->arrayInfo);
+    // }
     
     public function excluirMenu($id){
         $dados = array();
@@ -134,19 +132,24 @@ class menuController extends controller{
     
     public function addAction() {
         $menu = new Menu("menu");
+		$IDEmpresa = $this->user->getIDEmpresa();
         $nome = addslashes($_POST['nome']);
         $url = addslashes($_POST['url']);
-        $tipo = addslashes($_POST['tipo']);
+        if (isset($_POST['tipo']) && !empty($_POST['tipo']) ){
+            $tipo = addslashes($_POST['tipo']);
+        } else {
+            $tipo = NULL;
+        }
         
         if (!empty($nome) && !empty($url)){
             $menu->selecionarMenuURL($url);
             if ($menu->numRows() == 0){
-                $menu->incluirMenu($nome, $url, $tipo);
+                $menu->incluirMenu($nome, $url, $tipo, $IDEmpresa);
                 $confirme = "Registro Incluido com Sucesso.";
                 //header("Location: ".BASE_URL."painel/addMenu/success");
                 $this->addMenu($confirme);
             } else {
-                $menu->incluirMenu($nome, $url, $tipo);
+                $menu->incluirMenu($nome, $url, $tipo, $IDEmpresa);
                 $confirme = "Ja existe a url solicitada.";
                 //header("Location: ".BASE_URL."painel/addMenu/success");
                 $this->addMenu($confirme);
@@ -156,40 +159,38 @@ class menuController extends controller{
             $confirme = "Nao foi possivel incluir o registro";
             $this->addMenu($confirme);
         }
-        //$this->addMenu($confirme);
     }
     
-    public function addMenuAction() {
-        $menu = new Menu("menu");
-        $nome = addslashes($_POST['nome']);
-        $url = addslashes($_POST['url']);
-        $tipo = addslashes($_POST['tipo']);
-        
-        if (!empty($nome) && !empty($url)){
-            $menu->incluirMenu($nome, $url, $tipo);
-            
-            $confirme = "success";
-            //header("Location: ".BASE_URL."painel/addMenu/success");
-            $this->addMenu($confirme);
-        } else {
-            //header("Location: ".BASE_URL."painel/addMenu/error");
-            $confirme = "error";
-            $this->addMenu($confirme);
-        }
-        //$this->addMenu($confirme);
-    }
+    // public function addMenuAction() {
+    //     $menu = new Menu("menu");
+    //     $nome = addslashes($_POST['nome']);
+    //     $url = addslashes($_POST['url']);
+    //     $tipo = addslashes($_POST['tipo']);
+    //     if (!empty($nome) && !empty($url)){
+    //         $menu->incluirMenu($nome, $url, $tipo);
+    //         $confirme = "success";
+    //         $this->addMenu($confirme);
+    //     } else {
+    //         $confirme = "error";
+    //         $this->addMenu($confirme);
+    //     }
+    // }
     
     public function editAction(){
+		$IDEmpresa = $this->user->getIDEmpresa();
         if (isset($_POST['id']) && !empty($_POST['id'])){
             $id = addslashes($_POST['id']);
             $nome = utf8_decode(addslashes($_POST['nome']) );
             $url = addslashes($_POST['url']);
-            $tipo = addslashes($_POST['tipo']);
+            if (isset($_POST['tipo']) && !empty($_POST['tipo']) ){
+                $tipo = addslashes($_POST['tipo']);
+            } else {
+                $tipo = NULL;
+            }
             
             if (!empty($nome) && !empty($url) ){
                 $menu = new Menu("menu");
-                $menu->atualizarMenuNomeURL($id, $nome, $url, $tipo);
-                
+                $menu->atualizarMenuNomeURL($id, $nome, $url, $tipo, $IDEmpresa);
                 //header("Location: ".BASE_URL."painel/editMenu/".$id."/sucess");
                 $confirme = "Registro Editado com Sucesso";
                 $this->editMenu($id, $confirme);
@@ -224,7 +225,6 @@ class menuController extends controller{
             //header("Location: ".BASE_URL."painel/menus/error");
             $this->index($confirme);
         }
-        //$this->menus($confirme);
     }
     
     public function delAction() {
@@ -245,6 +245,5 @@ class menuController extends controller{
             //header("Location: ".BASE_URL."painel/menus/error");
             $this->index($confirme);
         }
-        //$this->menus($confirme);
     }
 }

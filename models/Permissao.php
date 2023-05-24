@@ -13,6 +13,7 @@
  */
 class Permissao extends Model{
     private $id;
+	private $id_empresa;
     private $id_grupo;
     private $id_item;
     private $permitido;
@@ -21,7 +22,7 @@ class Permissao extends Model{
         if (count($elementos) == 1){
             foreach ($elementos as $item) {
                 $this->setID($item['id']);
-                //$this->setIDEmpresa($item['id_empresa']);
+                $this->setIDEmpresa($item['id_empresa']);
                 $this->setIDGrupo($item['id_grupo']);
                 $this->setIDItem($item['id_item']);
                 $this->setPermitido($item['permitido']);
@@ -30,12 +31,12 @@ class Permissao extends Model{
     }
     //put your code here
     
-    public function validarDelPermissao($id_grupo){//($id_empresa, $id_grupo) {
+    public function validarDelPermissao($id_grupo, $id_empresa=null){//($id_empresa, $id_grupo) {
         $user = new Usuario();
         $permissaoGrupo = new PermissaoGrupo();
         
         if ($user->validatePermissaoGrupo($id_grupo)){
-            $this->delPermissaoIDGrupo($id_grupo);
+            $this->delPermissaoIDGrupo($id_grupo, $id_empresa);
             $permissaoGrupo->delPermissaoGrupoID($id_grupo);
             return TRUE;
         }else{
@@ -54,11 +55,11 @@ class Permissao extends Model{
     //    }
     //}
     
-    public function validatePermissaoItem($id_item){//($id_empresa, $id_item) {
+    public function validatePermissaoItem($id_item, $id_empresa=null){//($id_empresa, $id_item) {
         $tabela = "permissao";
-        $colunas = array ("id", "id_grupo", "id_item", "permitido");
+        $colunas = array ("id", "id_empresa", "id_grupo", "id_item", "permitido");
         $where = array();
-            //$where['id_empresa'] = $id_empresa;
+            $where['id_empresa'] = $id_empresa;
             $where['id_item'] = $id_item;
             $where['permitido'] = 1;
         
@@ -72,7 +73,7 @@ class Permissao extends Model{
     
     public function selecionarALLPermissao($where = array()){
         $tabela = "permissao";
-        $colunas = array("id","id_grupo","id_item","permitido");
+        $colunas = array("id", "id_empresa", "id_grupo", "id_item", "permitido");
         //$where_cond = "AND";
         //$groupBy = array("group by user.id_grupo");
         //$this->selecionarTabelas($tabela, $colunas, $where, $where_cond, $groupBy);
@@ -90,7 +91,7 @@ class Permissao extends Model{
     
     public function selecionarPermissaoID($id) {
         $tabela = "permissao";
-        $colunas = array("id","id_grupo","id_item","permitido");
+        $colunas = array("id", "id_empresa", "id_grupo", "id_item", "permitido");
         $where = array();
             $where["id"] = $id;
         //);
@@ -106,12 +107,12 @@ class Permissao extends Model{
         //return $this->returnElementos($arrPermissao);
     }
     
-    public function selecionarPermissaoIDEmpresa($id_grupo) {//(%id_empresa, $id_grupo)
+    public function selecionarPermissaoIDEmpresa($id_grupo, $id_empresa=null) {//(%id_empresa, $id_grupo)
         $tabela = "permissao";
-        $colunas = array("id","id_grupo","id_item","permitido");
+        $colunas = array("id", "id_empresa", "id_grupo", "id_item", "permitido");
         $where = array();
             $where["id_grupo"] = $id_grupo;
-            //$where["id_empresa"] = $id_empresa;
+            $where["id_empresa"] = $id_empresa;
         //);
         //$arrPermissao = $this->selecionarTabelas($tabela, $colunas, $where);
         $this->selectTable($tabela, $colunas, $where);
@@ -127,7 +128,7 @@ class Permissao extends Model{
     
     public function selectIDGrupo($id_grupo, $permitido = 1) {
         $tabela = "permissao";
-        $colunas = array("id","id_grupo","id_item","permitido");
+        $colunas = array("id", "id_empresa", "id_grupo", "id_item", "permitido");
         $where = array();
             $where["id_grupo"] = $id_grupo;
             $where["permitido"] = $permitido;
@@ -167,15 +168,15 @@ class Permissao extends Model{
         return $slugs;
     }
     
-    public function getAllPermissaoGrupo(){//($id_empresa = 0) {
+    public function getAllPermissaoGrupo($id_empresa = 0){//($id_empresa = 0) {
         $per = new PermissaoGrupo();
-        //if ($id_empresa == 0){
-        //    $per->getAllPermissaoGrupo();
-        //} else {
-        //    $where['id_empresa'] = $id_empresa;
-        //    $per->getAllPermissaoGrupo($where);
-        //}
-        $per->getAllPermissaoGrupo();
+        if ($id_empresa == 0){
+            $per->getAllPermissaoGrupo();
+        } else {
+            $where['id_empresa'] = $id_empresa;
+            $per->getAllPermissaoGrupo($where);
+        }
+        // $per->getAllPermissaoGrupo();
         
         $array = array();
         foreach ($per->result() as $item) {
@@ -189,11 +190,11 @@ class Permissao extends Model{
         return $array;
     }
     
-    public function delPermissaoIDGrupo($id_grupo) {//($id_empresa, $id_grupo)
+    public function delPermissaoIDGrupo($id_grupo, $id_empresa=null) {//($id_empresa, $id_grupo)
         $tabela = "permissao";
         $where = array ();
             $where["id_grupo"] = $id_grupo;
-            //$where["id_empresa"] = $id_empresa;
+            $where["id_empresa"] = $id_empresa;
         $this->delete($tabela, $where);
         return null;    
     }
@@ -206,10 +207,10 @@ class Permissao extends Model{
         return null;    
     }
     
-    public function addPermissao($id_grupo, $id_item, $permitido) {//($id_empresa, $id_grupo, $id_item, $permitido)
+    public function addPermissao($id_grupo, $id_item, $permitido, $id_empresa=null) {//($id_empresa, $id_grupo, $id_item, $permitido)
         $tabela = "permissao";
         $dados = array ();
-            //$dados["id_empresa"] = $id_empresa;
+            $dados["id_empresa"] = $id_empresa;
             $dados["id_grupo"] = $id_grupo;
             $dados["id_item"] = $id_item;
             $dados["permitido"] = $permitido;
@@ -234,8 +235,8 @@ class Permissao extends Model{
     public function setID($id) { $this->id = $id; } 
     public function getID() { return $this->id; }
     
-    //public function setIDEmpresa($id_empresa){ $this->id_empresa = $id_empresa; }
-    //public function getIDEmpresa(){ return $this->id_empresa; }
+    public function setIDEmpresa($id_empresa){ $this->id_empresa = $id_empresa; }
+    public function getIDEmpresa(){ return $this->id_empresa; }
     
     public function setIDGrupo($id_grupo) { $this->id_grupo = $id_grupo; }
     public function getIDGrupo() { return $this->id_grupo; }

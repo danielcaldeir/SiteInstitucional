@@ -42,6 +42,10 @@ class painelController extends controller{
         
         $this->arrayInfo["menuActive"] = "home";
         $this->arrayInfo["user"] = $this->user;
+        $empresa = new Empresa();
+        $empresa->selecionarEmpresaID(md5($this->user->getIdEmpresa()));
+        $this->arrayInfo["empresa"] = $empresa;
+        $this->arrayInfo["permissao"] = $this->user->getPermissoes();
         
         //$this->user = array();
         //if (isset($_SESSION['user'])){
@@ -56,7 +60,9 @@ class painelController extends controller{
         //    $login->index();
         //    exit();
         //}
-        
+        //global $config;
+        //$this->config = $config;
+        parent::__construct();
     }
     
     //put your code here
@@ -72,53 +78,8 @@ class painelController extends controller{
         $this->arrayInfo['nome'] = "Administrador: ".$this->user->getNome();
         $this->arrayInfo['menus'] = $menu->selecionarALLMenu();
         
-        
         $this->loadPainel("home", $this->arrayInfo);
     }
-    
-    //public function menus($confirme = "") {
-    //    $menus = new Menu("menu");
-    //    
-    //    $dados = array();
-    //    $dados['nome'] = "Administrador: ".$this->user['nome'];
-    //    $dados['menus'] = $menus->selecionarALLMenu();
-    //    $dados['excluir'] = $confirme;
-    //    
-    //    $this->loadPainel("selMenus", $dados);
-    //}
-    
-    //public function pagina($url = null) {
-    //    //$paginas = new Paginas();
-    //    $pag = new Paginas();
-    //    $dados = array();
-    //    if (is_null($url)){
-    //        $dados['nome'] = "Administrador: ".$this->user['nome'];
-    //        //$dados['paginas'] = $paginas->selecionarALLPaginas();
-    //        $dados['paginas'] = $pag->selecionarALLPaginas();
-    //        $this->loadPainel("selPaginas", $dados);
-    //    } else {
-    //        $pag->selecionarPaginasURL($url);
-    //        $dados['nome'] = "Administrador: ".$this->user['nome'];
-    //        $id = $pag->getID();
-    //        $dados["id"] = $id;
-    //        $dados['confirme'] = "";
-    //        $dados['pagina'] = $pag->selecionarPaginasID($id);
-    //        $this->loadPainel("editPagina", $dados);
-    //    }
-    //}
-    
-    //public function portfolio() {
-    //    //$dados = array ();
-    //    $portfolio = new Portfolio();
-    //    
-    //    //$dados['portfolio'] = $portfolio->getTrabalhos();
-    //    //$dados['nome'] = "Administrador: ".$this->user->getNome();
-    //    
-    //    $this->arrayInfo['portfolio'] = $portfolio->getTrabalhos();
-    //    $this->arrayInfo['nome'] = "Administrador: ".$this->user->getNome();
-    //    
-    //    $this->loadPainel("selPortfolio", $this->arrayInfo);
-    //}
     
     //public function sobre() {
     //    $dados = array ();
@@ -135,214 +96,6 @@ class painelController extends controller{
         
         $this->loadPainel("selFormulario", $dados);
     }
-    
-    //public function addMenu($confirme = ""){
-    //    $dados = array();
-    //    $dados['confirme'] = $confirme;
-    //    $this->loadPainel("addMenu", $dados);
-    //}
-    
-    //public function editMenu($id, $confirme = ""){
-    //    $dados = array();
-    //    $menu = new Menu("menu");
-    //    $dados['confirme'] = $confirme;
-    //    $dados['id'] = $id;
-    //    $dados['menu'] = $menu->selecionarMenuID($id);
-    //    
-    //    $this->loadPainel("editMenu", $dados);
-    //}
-    
-    //public function excluirMenu($id){
-    //    $dados = array();
-    //    $menu = new Menu("menu");
-    //    $dados['id'] = $id;
-    //    $dados['menu'] = $menu->selecionarMenuID($id);
-    //    
-    //    $this->loadPainel("excluirMenu", $dados);
-    //}
-    
-    //public function sisAddMenu() {
-    //    $menu = new Menu("menu");
-    //    $nome = addslashes($_POST['nome']);
-    //    $url = addslashes($_POST['url']);
-    //    $tipo = addslashes($_POST['tipo']);
-    //    
-    //    if (!empty($nome) && !empty($url)){
-    //        $menu->incluirMenu($nome, $url, $tipo);
-    //        //$confirme = "success";
-    //        header("Location: ".BASE_URL."painel/addMenu/success");
-    //    } else {
-    //        header("Location: ".BASE_URL."painel/addMenu/error");
-    //        //$confirme = "error";
-    //    }
-    //    
-    //    //$this->addMenu($confirme);
-    //}
-    
-    //public function sisEditarMenu(){
-    //    if (isset($_POST['id']) && !empty($_POST['id'])){
-    //        $id = addslashes($_POST['id']);
-    //        $nome = utf8_decode(addslashes($_POST['nome']) );
-    //        $url = addslashes($_POST['url']);
-    //        $tipo = addslashes($_POST['tipo']);
-    //        
-    //        if (!empty($nome) && !empty($url) ){
-    //            $menu = new Menu("menu");
-    //            $menu->atualizarMenuNomeURL($id, $nome, $url, $tipo);
-    //            
-    //            header("Location: ".BASE_URL."painel/editMenu/".$id."/sucess");
-    //        } else {
-    //            //header("Location: ../index.php?pag=editarAnuncio&error=true&id=".$id);
-    //            header("Location: ".BASE_URL."painel/editMenu/".$id."/error");
-    //        }
-    //    } else{
-    //        //header("Location: ../index.php?pag=editarAnuncio&error=true&id=".$id);
-    //        header("Location: ".BASE_URL."painel/editMenu/".$id."/error");
-    //    }
-    //}
-    
-    //public function sisExcluirMenu() {
-    //    $menu = new Menu("menu");
-    //    if (count($_POST) > 0){
-    //        $id = $_POST['id'];
-    //    } else {
-    //        $id = $_GET['id'];
-    //    }
-    //    $menu->selecionarMenuID($id);
-    //    if ($menu->numRows() > 0){
-    //        $menu->deletarMenuID($id);
-    //        //$confirme = "success";
-    //        header("Location: ".BASE_URL."painel/menus/success");
-    //    } else {
-    //        //$confirme = "error";
-    //        header("Location: ".BASE_URL."painel/menus/error");
-    //    }
-    //    //$this->menus($confirme);
-    //}
-    
-    //public function addPagina($confirme = ""){
-    //    $dados = array();
-    //    $dados['confirme'] = $confirme;
-    //    $this->loadPainel("addPagina", $dados);
-    //}
-    
-    //public function editPagina($id, $confirme = ""){
-    //    $dados = array();
-    //    $pagina = new Paginas();
-    //    $dados['confirme'] = $confirme;
-    //    $dados['id'] = $id;
-    //    $dados['pagina'] = $pagina->selecionarPaginasID($id);
-    //    
-    //    $this->loadPainel("editPagina", $dados);
-    //}
-    
-    //public function excluirPagina($id){
-    //    $dados = array();
-    //    $pagina = new Paginas();
-    //    $dados['id'] = $id;
-    //    $dados['pagina'] = $pagina->selecionarPaginasID($id);
-    //    
-    //    $this->loadPainel("excluirPagina", $dados);
-    //}
-    
-    //public function sisAddPagina() {
-    //    $pagina = new Paginas();
-    //    $url = addslashes($_POST['url']);
-    //    $titulo = addslashes($_POST['titulo']);
-    //    $corpo = addslashes($_POST['corpo']);
-    //    
-    //    if (!empty($url) && !empty($titulo)){
-    //        $pagina->incluirPaginaURLTituloCorpo($url, $titulo, $corpo);
-    //        //$confirme = "success";
-    //        header("Location: ".BASE_URL."painel/addPagina/success");
-    //    } else {
-    //        header("Location: ".BASE_URL."painel/addPagina/error");
-    //        //$confirme = "error";
-    //    }
-    //    
-    //    //$this->addMenu($confirme);
-    //}
-    
-    //public function sisEditarPagina(){
-    //    if (isset($_POST['id']) && !empty($_POST['id'])){
-    //        $id = addslashes($_POST['id']);
-    //        $url = addslashes($_POST['url']);
-    //        $titulo = utf8_decode(addslashes($_POST['titulo']) );
-    //        $corpo = addslashes($_POST['corpo']);
-    //        
-    //        if (!empty($titulo) && !empty($url) ){
-    //            $pagina = new Paginas();
-    //            $pagina->atualizarPaginaURLTituloCorpo($id, $url, $titulo, $corpo);
-    //            
-    //            header("Location: ".BASE_URL."painel/editPagina/".$id."/sucess");
-    //        } else {
-    //            //header("Location: ../index.php?pag=editarAnuncio&error=true&id=".$id);
-    //            header("Location: ".BASE_URL."painel/editPagina/".$id."/error");
-    //        }
-    //    } else{
-    //        //header("Location: ../index.php?pag=editarAnuncio&error=true&id=".$id);
-    //        header("Location: ".BASE_URL."painel/editPagina/".$id."/error");
-    //    }
-    //}
-    
-    //public function sisExcluirPagina() {
-    //    $pagina = new Paginas();
-    //    if (count($_POST) > 0){
-    //        $id = $_POST['id'];
-    //    } else {
-    //        $id = $_GET['id'];
-    //    }
-    //    $pagina->selecionarPaginasID($id);
-    //    if ($pagina->numRows() > 0){
-    //        $pagina->deletarPaginaID($id);
-    //        //$confirme = "success";
-    //        header("Location: ".BASE_URL."painel/paginas/success");
-    //    } else {
-    //        //$confirme = "error";
-    //        header("Location: ".BASE_URL."painel/paginas/error");
-    //    }
-    //    //$this->menus($confirme);
-    //}
-    
-    //public function addPortfolio($confirme = ""){
-    //    if (isset($_FILES['fotos'])) {
-    //        $fotos = $_FILES['fotos'];
-    //    } else {
-    //        $fotos = array();
-    //    }
-    //    print_r($fotos);
-    //    //exit();
-    //    
-    //    $fotoCTRL = new fotoController();
-    //    $fotoCTRL->addPortfolio($fotos);
-    //    
-    //    $dados = array();
-    //    $dados['sucess'] = TRUE;
-    //    $this->loadPainel("addPortfolio", $dados);
-    //}
-    
-    //public function delPortfolio($id){
-    //    $portfolio = new Portfolio;
-    //    $fotoCTRL = new fotoController();
-    //    $dados = array();
-    //    $portfolio->getPortfolioID($id);
-    //    $dados['id'] = $portfolio->getID();
-    //    $dados['imagem'] = $portfolio->getImagem();
-    //    $destino = (".\\imagem\\portfolio\\");
-    //    if (file_exists($destino.$portfolio->getImagem())){
-    //        $destinoFinal = $destino.$portfolio->getImagem();
-    //        print ('Verdadeiro');
-    //        print ('<br/>');
-    //        $fotoCTRL->delPortfolio($portfolio->getImagem(), $destinoFinal);
-    //    } else{
-    //        print ($portfolio->getImagem());
-    //        print ('<br/>');
-    //        print ('Falso');
-    //    }
-    //    //$dados['portfolio'] = $portfolio->deletarPortfolio($id);
-    //    //exit();
-    //    $this->loadPainel("delPortfolio", $dados);
-    //}
     
     public function addFormulario($confirme = ""){
         $formulario = new Formulario();
@@ -384,33 +137,70 @@ class painelController extends controller{
     
     public function sisEditPropriedade() {
         $config = new Config();
+		$IDEmpresa = $this->user->getIDEmpresa();
         if (isset($_POST['site_title']) && !empty($_POST['site_title'])){
             $title = addslashes($_POST['site_title']);
-            $config->setConfigPropriedade('site_title',$title);
+            $config->setConfigPropriedade($IDEmpresa,'site_title',$title);
+			$this->setConfig('site_title', $title);
         }
         if (isset($_POST['site_template']) && !empty($_POST['site_template'])){
             $template = addslashes($_POST['site_template']);
-            $config->setConfigPropriedade('site_template',$template);
+            $config->setConfigPropriedade($IDEmpresa,'site_template',$template);
+			$this->setConfig('site_template', $template);
         }
         if (isset($_POST['site_welcome']) && !empty($_POST['site_welcome'])){
             $welcome = addslashes($_POST['site_welcome']);
-            $config->setConfigPropriedade('site_welcome',$welcome);
+            $config->setConfigPropriedade($IDEmpresa,'site_welcome',$welcome);
+			$this->setConfig('site_welcome', $welcome);
         }
         if (isset($_POST['site_color']) && !empty($_POST['site_color'])){
             $color = addslashes($_POST['site_color']);
-            $config->setConfigPropriedade('site_color',$color);
+            $config->setConfigPropriedade($IDEmpresa,'site_color',$color);
+			$this->setConfig('site_color', $color);
         }
         header("Location: ".BASE_URL."painel");
         exit();
-        //$config->setConfigPropriedade('site_template',$template);
-        //if ($pagina->numRows() > 0){
-        //    $pagina->deletarPaginaID($id);
-        //    //$confirme = "success";
-        //    header("Location: ".BASE_URL."painel/paginas/success");
-        //} else {
-        //    //$confirme = "error";
-        //    header("Location: ".BASE_URL."painel/paginas/error");
-        //}
-        //$this->menus($confirme);
+		// $this->index();
+    }
+	
+	public function sisEditPropriedadeADMIN() {
+        $config = new Config();
+        $IDEmpresa = $this->user->getIDEmpresa();
+        $sql = null;
+        if (isset($_POST['site_painel_title']) && !empty($_POST['site_painel_title'])){
+            $title = addslashes($_POST['site_painel_title']);
+            $sql = $config->setConfigPropriedade($IDEmpresa,'site_painel_title',$title);
+            $this->setConfig('site_painel_title', $title);
+        }
+        if (isset($_POST['site_painel']) && !empty($_POST['site_painel'])){
+            $template = addslashes($_POST['site_painel']);
+            $sql = $config->setConfigPropriedade($IDEmpresa,'site_painel',$template);
+            $this->setConfig('site_painel', $template);
+        }
+        if (isset($_POST['site_painel_welcome']) && !empty($_POST['site_painel_welcome'])){
+            $welcome = addslashes($_POST['site_painel_welcome']);
+            $sql = $config->setConfigPropriedade($IDEmpresa,'site_painel_welcome',$welcome);
+            $this->setConfig('site_painel_welcome', $welcome);
+        }
+        if (isset($_POST['site_painel_color']) && !empty($_POST['site_painel_color'])){
+            $color = addslashes($_POST['site_painel_color']);
+            $sql = $config->setConfigPropriedade($IDEmpresa,'site_painel_color',$color);
+            $this->setConfig('site_painel_color', $color);
+        }
+        if (isset($_POST['site_painel_avatar']) && !empty($_POST['site_painel_avatar'])){
+            $avatar = addslashes($_POST['site_painel_avatar']);
+            $sql = $config->setConfigPropriedade($IDEmpresa,'site_painel_avatar',$avatar);
+            $this->setConfig('site_painel_color', $color);
+        }
+        //header("Location: ".BASE_URL."painel");
+        //echo ("<pre>");
+        //echo ("SQL: ");
+        //print_r($sql);
+        //echo ("<pre>");
+        //print_r($this->user);
+        //echo ("<pre>");
+        //print_r($this->arrayInfo);
+        //exit();
+        $this->index();
     }
 }

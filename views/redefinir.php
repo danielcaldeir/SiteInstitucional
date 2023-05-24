@@ -1,7 +1,7 @@
 
-<div class="container">
+<div class="container-fluid">
     <div class="jumbotron">
-        <label>Redefinir Senha</label>
+        <h2>Página Redefinir Senha</h2>
     </div>
     <?php if ( !empty($senha) ) :?>
             <div class="alert-warning">

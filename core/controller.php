@@ -15,11 +15,16 @@ class Controller {
     private $config;
     
     //put your code here
-    
     public function __construct() {
+		global $config;
         $this->config = array();
         $cfg = new Config();
-        $array = $cfg->selecionarALLConfig();
+		if (!empty($_SESSION['token'])){
+            $array = $cfg->getALLConfigIDEmpresa($_SESSION['idEmpresa']);
+        } else {
+            $array = $cfg->getALLConfigIDEmpresa($config['idEmpresa']);
+        }
+        // $array = $cfg->selecionarALLConfig();
         foreach ($array as $item) {
             $this->config[$item['nome']] = $item['valor'];
         }
@@ -31,14 +36,24 @@ class Controller {
     }
     
     public function loadTemplate($viewName, $viewData = array()) {
-        //print_r($this->config);
-        include ("views/template/".$this->config['site_template'].".php");
+        // print_r($this->config);
+		if (!file_exists('views/templates/'.$this->config['site_template'].'.php')){
+            include ("views/templates/default.php");
+        } else {
+            include ("views/templates/". $this->config['site_template'].".php");
+        }
+        // include ("views/template/".$this->config['site_template'].".php");
     }
     
     public function loadPainel($viewName, $viewData = array()) {
-        //echo ("<br>Nome: ".$viewName);
-        //include ("views/painel/". $this->config['site_painel'].".php");
-	include ("views/painel/template.php");
+        // echo ("<br>Nome: ".$viewName);
+        if (!file_exists('views/painel/'.$this->config['site_painel'].'.php')){
+            include ("views/painel/template.php");
+        } else {
+            include ("views/painel/". $this->config['site_painel'].".php");
+        }
+        // include ("views/painel/". $this->config['site_painel'].".php");
+		// include ("views/painel/template.php");
     }
     
     public function loadViewInPainel($viewName, $viewData = array()) {
@@ -47,16 +62,27 @@ class Controller {
     }
     
     public function loadMenu() {
-        $menu = new Menu("menu");
+		$menu = new Menu("menu");
+		global $config;
         $viewMenu = array();
-        $viewMenu['menu'] = $menu->selecionarALLMenu();
+		$viewMenu['menu'] = $menu->getALLMenuIDEmpresa($config['idEmpresa']);
+        // $viewMenu['menu'] = $menu->selecionarALLMenu();
         $this->loadView('menu', $viewMenu);
     }
     
-    public function loadMenuPainel() {
-        $menu = new Menu("menu");
-        $viewMenu = array();
-        $viewMenu['menu'] = $menu->selecionarALLMenu();
+    public function loadMenuPainel($menuActive = "") {
+        $menu = new Menu("menuadmin");
+		global $config;
+		$viewMenu = array();
+		$viewMenu['menu'] = $menu->getALLMenuIDEmpresa($config['idEmpresa']);
+        // $viewMenu['menu'] = $menu->selecionarALLMenu();
+		$viewMenu['menuActive'] = $menuActive;
         $this->loadViewInPainel('menu', $viewMenu);
+    }
+	
+	public function setConfig($nome=null, $valor=null) {
+        if (!(is_null($nome)) && !(is_null($valor)) ){
+            $this->config[$nome] = $valor;
+        }
     }
 }
