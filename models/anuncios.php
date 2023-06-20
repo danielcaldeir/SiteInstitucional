@@ -1,5 +1,5 @@
 <?php
-require_once ('conexao.php');
+// require_once ('conexao.php');
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -11,8 +11,9 @@ require_once ('conexao.php');
  *
  * @author Daniel_Caldeira
  */
-class anuncios extends conexao{
+class anuncios extends Model{
     private $id;
+    private $id_empresa;
     private $id_usuario;
     private $id_categoria;
     private $titulo;
@@ -25,6 +26,7 @@ class anuncios extends conexao{
         $dados = array (
             "id_usuario" => $this->id_usuario,
             "id_categoria" => $this->id_categoria,
+            "id_empresa" => $this->id_empresa,
             "titulo" => $this->titulo,
             "descricao" => $this->descricao,
             "valor" => $this->valor,
@@ -111,7 +113,7 @@ class anuncios extends conexao{
         $tabela = "anuncios";
         $colunas = array ("count(*) as qtd");
         $where = $this->gerenciaWhere();
-        $this->selecionarTabelasDifWhere($tabela, $colunas, $where);
+        $this->selectTable($tabela, $colunas, $where);
         return $this->result();
     }
     
@@ -124,12 +126,19 @@ class anuncios extends conexao{
             "(SELECT imagem.url FROM anuncios_imagens as imagem WHERE imagem.id_anuncio = anuncios.id limit 1) as url");
         $where = $this->gerenciaWhere();
         
-        $groupBy = array(
-            " ORDER BY anuncios.id DESC ",
-            "LIMIT $offSet, $qtdPag"
-        );
-        $this->selecionarTabelasDifWhere($tabela, $colunas, $where, "AND", $groupBy);
-        return $this->result();
+        $groupBy = array();
+        $groupBy[] = " ORDER BY anuncios.id DESC ";
+        $groupBy[] = "LIMIT $offSet, $qtdPag";
+        // );
+        $where_cond = "AND";
+        // $groupBy = array();
+        $this->selectTable($tabela, $colunas, $where, $where_cond, $groupBy);
+        if($this->numRows() > 0){
+            $array = $this->result();
+        } else {
+            $array = array();
+        }
+        return $array;
     }
     
     public function selecionarAnuncios(){
@@ -140,8 +149,13 @@ class anuncios extends conexao{
         $where = array(
             "id_usuario" => $this->id_usuario
         );
-        $this->selecionarTabelas($tabela, $colunas, $where);
-        return $this->result();
+        $this->selectTable($tabela, $colunas, $where);
+        if($this->numRows() > 0){
+            $array = $this->result();
+        } else {
+            $array = array();
+        }
+        return $array;
     }
     
     public function selecionarAnunciosID(){
@@ -151,10 +165,15 @@ class anuncios extends conexao{
         //$colunas = array ("id", "id_usuario", "id_categoria", "titulo", "descricao", "valor", "estado",
         //    "(SELECT imagem.url FROM anuncios_imagens as imagem WHERE imagem.id_anuncio = anuncios.id limit 1) as url");
         $where = array(
-            "anuncios.id" => $this->id
+            "md5(anuncios.id)" => $this->id
         );
-        $this->selecionarTabelas($tabela, $colunas, $where);
-        return $this->result();
+        $this->selectTable($tabela, $colunas, $where);
+        if($this->numRows() > 0){
+            $array = $this->result();
+        } else {
+            $array = array();
+        }
+        return $array;
     }
     
     public function deletarAnuncios(){
@@ -170,16 +189,20 @@ class anuncios extends conexao{
         $tabela = "anuncios";
         $dados = array (
             "id_categoria" => $this->id_categoria,
+            "id_empresa" => $this->id_empresa,
             "titulo" => $this->titulo,
             "descricao" => $this->descricao,
             "valor" => $this->valor,
             "estado" => $this->estado
         );
-        $where = array (
-            "id" => $this->id,
-            "id_usuario" => $this->id_usuario
-        );
-        $this->update($tabela, $dados, $where);
+        $where = array ();
+            $where["md5(id)"] = $this->id;
+            $where["id_usuario"] = $this->id_usuario;
+        // $where = array (
+        //     "id" => $this->id,
+        //     "id_usuario" => $this->id_usuario
+        // );
+        return $this->update($tabela, $dados, $where);
     }
     
     //put your code here
@@ -197,7 +220,13 @@ class anuncios extends conexao{
         return $this->id_usuario;
     }
     
-    
+    public function setIDEmpresa($id_empresa) {
+        $this->id_empresa = $id_empresa;
+    }
+    public function getIDEmpresa() {
+        return $this->id_empresa;
+    }
+
     public function setIDCategoria($id_categoria) {
         $this->id_categoria = $id_categoria;
     }

@@ -1,4 +1,4 @@
-<?php if (isset($_SESSION['id']) && !empty($_SESSION['id'])): ?>
+<?php //if (isset($_SESSION['id']) && !empty($_SESSION['id'])): ?>
 <div class="container-fluid">
     <div class="small jumbotron">
         <h4>Meus Anuncios - Adicionar Anuncio</h4>
@@ -13,6 +13,7 @@
                 <strong>Parabens Anuncio Realizado!</strong>
             </div>
     <?php endif; ?>
+        <div class="alert"><small><?php echo($mensagem);?></small></div>
     <form action="<?php echo BASE_URL; ?>produto/adicionarAnuncio/" method="POST" enctype="multpart/form-data">
         <div class="form-group">
             <label for="categoria">Categoria:</label>
@@ -58,6 +59,6 @@
     <br/>
     <br/>
 </div>
-<?php else: ?>
-<script type="text/javascript" >window.location.href="./index.php?pag=login"; </script>
-<?php endif; ?>
+<?php //else: ?>
+<!--<script type="text/javascript" >window.location.href="./index.php?pag=login"; </script>-->
+<?php //endif; ?>

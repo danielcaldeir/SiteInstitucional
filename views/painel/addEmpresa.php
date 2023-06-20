@@ -6,7 +6,7 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="<?php echo(BASE_URL); ?>painel/"><i class="fa fa-dashboard"></i> home</a></li>
-        <li class="active"><a href="<?php echo(BASE_URL); ?>empresas/"><i class="fa fa-address-book"></i>Empresas</a></li>
+        <li class="active"><a href="<?php echo(BASE_URL); ?>empresas/"><i class="fa fa-building"></i>Empresas</a></li>
         <li class="active"><i class="fa fa-anchor"></i>Adicionar Empresa</li>
       </ol>
     </section>

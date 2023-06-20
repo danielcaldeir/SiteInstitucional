@@ -347,7 +347,7 @@ and open the template in the editor.
         <?php endif; ?>
 		<?php if ($viewData['user']->validarPermissao('view_empresa')): ?>
         <li <?php echo ($viewData['menuActive']=='empresa')?'class="active"':'class=""'; ?>>
-            <a href="<?php echo(BASE_URL."empresas/"); ?>"><i class="fa fa-archive"></i> <span>Empresas</span></a>
+            <a href="<?php echo(BASE_URL."empresas/"); ?>"><i class="fa fa-building"></i> <span>Empresas</span></a>
         </li>
         <?php endif; ?>
         <!-- Item Menu -->
@@ -467,47 +467,44 @@ and open the template in the editor.
         
         
 <!--        <nav class="navbar navbar-inverse">
-<!--            <div class="container-fluid">
-<!--                <div class="navbar-header">
-<!--                    <a class="navbar-brand" href="<?php echo BASE_URL; ?>">Site Institucional</a>
-<!--                </div>
-<!--                <ul class="nav navbar-nav navbar-right">
-<!--                    <?php if ( !empty($_SESSION['user']) ): ?>
-<!--                    <li><a href="<?php echo BASE_URL; ?>usuario/gerenciaUsuario/">Gerenciar Usuario</a></li>
-<!--                    <li><a href="<?php echo BASE_URL; ?>pagina/">Gerenciar Página</a></li>
-<!--                    <li><a href="<?php echo BASE_URL; ?>menu/">Gerenciar Menu</a></li>
-<!--                    <li><a href="<?php echo BASE_URL; ?>sair/">Sair</a></li>
-<!--                    <?php else : ?>
-<!--                    <li><a href="<?php echo BASE_URL; ?>cadastrar/">Cadastra-se</a></li>
-<!--                    <li><a href="<?php echo BASE_URL; ?>login/">Login</a></li>
-<!--                    <?php endif; ?>
-<!--                </ul>
+<!--          <div class="container-fluid">
+<!--            <div class="navbar-header">
+<!--                <a class="navbar-brand" href="<?php echo BASE_URL; ?>">Site Institucional</a>
 <!--            </div>
+<!--            <ul class="nav navbar-nav navbar-right">
+<!--                <?php if ( !empty($_SESSION['user']) ): ?>
+<!--                <li><a href="<?php echo BASE_URL; ?>usuario/gerenciaUsuario/">Gerenciar Usuario</a></li>
+<!--                <li><a href="<?php echo BASE_URL; ?>pagina/">Gerenciar Página</a></li>
+<!--                <li><a href="<?php echo BASE_URL; ?>menu/">Gerenciar Menu</a></li>
+<!--                <li><a href="<?php echo BASE_URL; ?>sair/">Sair</a></li>
+<!--                <?php else : ?>
+<!--                <li><a href="<?php echo BASE_URL; ?>cadastrar/">Cadastra-se</a></li>
+<!--                <li><a href="<?php echo BASE_URL; ?>login/">Login</a></li>
+<!--                <?php endif; ?>
+<!--            </ul>
+<!--          </div>
 <!--        </nav>
-	
 <!--        <div class="topo">
-<!--            <div class="topo1"></div>
-<!--            <div class="banner"></div>
+<!--          <div class="topo1"></div>
+<!--          <div class="banner"></div>
 <!--        </div>
-
 <!--        <div class="menu">
 <!--            <?php //$this->loadMenuPainel()?>
 <!--        </div>
-
 <!--        <div class="container-site">
 <!--            <?php //$this->loadViewInPainel($viewName, $viewData); ?>
 <!--        </div>
-
 <!--        <div class="rodape">
-<!--    <nav class="navbar navbar-right navbar-fixed-bottom">
-<!--        <div class="container-fluid">
-<!--            <div class="navbar-text navbar-default">
+<!--          <nav class="navbar navbar-right navbar-fixed-bottom">
+<!--            <div class="container-fluid">
+<!--              <div class="navbar-text navbar-default">
 <!--                <h3>Página produzida para Analise de Programação</h3>
+<!--              </div>
 <!--            </div>
-<!--        </div>
-<!--    </nav>
+<!--          </nav>
 <!--        </div>
 -->
+
         
 <!-- REQUIRED JS SCRIPTS -->
 

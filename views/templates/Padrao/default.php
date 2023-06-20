@@ -8,15 +8,15 @@ and open the template in the editor.
     <head>
         <meta charset="UTF-8">
         <title><?php echo (empty($this->config['site_title'])?'@site_title':$this->config['site_title']); ?></title>
-        <link type="text/css" rel="stylesheet" href="<?php echo(BASE_URL);?>asserts/css/style.css"/>
+        <link type="text/css" rel="stylesheet" href="<?php echo(BASE_URL);?>asserts/css/<?php echo($this->config['site_template']);?>/style.css"/>
         <link type="text/css" rel="stylesheet" href="<?php echo(BASE_URL);?>asserts/bootstrap/css/bootstrap.css"/>
         <link type="text/css" rel="stylesheet" href="<?php echo(BASE_URL);?>asserts/bootstrap/css/bootstrap-theme.css"/>
-        <link type="text/css" rel="stylesheet" href="<?php echo(BASE_URL); ?>asserts/AdminLTE_300/dist/css/adminlte.min.css" />
+        <link type="text/css" rel="stylesheet" href="<?php echo(BASE_URL); ?>asserts/AdminLTE/dist/css/adminlte.min.css" />
         <link type="text/css" rel="stylesheet" href="<?php echo(BASE_URL); ?>asserts/iCheck/skins/square/blue.css" />
         
         <script type="text/javascript" src="<?php echo(BASE_URL);?>asserts/jquery/dist/jquery.js"></script>
         <script type="text/javascript" src="<?php echo(BASE_URL);?>asserts/bootstrap/js/bootstrap.js"></script>
-        <script type="text/javascript" src="<?php echo(BASE_URL); ?>asserts/AdminLTE_300/dist/js/adminlte.min.js"></script>
+        <script type="text/javascript" src="<?php echo(BASE_URL); ?>asserts/AdminLTE/dist/js/adminlte.min.js"></script>
     </head>
     <body>
         <?php //echo("<pre>"); print_r($this->config); echo("</pre>"); ?>
@@ -72,7 +72,8 @@ and open the template in the editor.
             
             <div class="container">
                 <?php
-                    $this->loadViewInTemplate($viewName, $viewData);
+                    // $this->loadViewInTemplate($viewName, $viewData);
+                    $this->loadView($viewName, $viewData);
                 ?>
             </div>
             

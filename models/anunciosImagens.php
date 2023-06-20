@@ -1,5 +1,5 @@
 <?php
-require_once ('conexao.php');
+// require_once ('conexao.php');
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -11,8 +11,9 @@ require_once ('conexao.php');
  *
  * @author Daniel_Caldeira
  */
-class anunciosImagens extends conexao{
+class anunciosImagens extends Model{
     private $id;
+    private $id_empresa;
     private $id_anuncio;
     private $url;
     
@@ -20,6 +21,7 @@ class anunciosImagens extends conexao{
         $tabela = "anuncios_imagens";
         $dados = array (
             "id_anuncio" => $this->id_anuncio,
+            "id_empresa" => $this->id_empresa,
             "url" => $this->url
         );
         $this->insert($tabela, $dados);
@@ -29,22 +31,32 @@ class anunciosImagens extends conexao{
     
     public function selecionarAnunciosID(){
         $tabela = "anuncios_imagens";
-        $colunas = array ("id", "id_anuncio", "url");
+        $colunas = array ("id", "id_empresa", "id_anuncio", "url");
         $where = array(
             "id" => $this->id
         );
-        $this->selecionarTabelas($tabela, $colunas, $where);
-        return $this->result();
+        $this->selectTable($tabela, $colunas, $where);
+        if($this->numRows() > 0){
+            $array = $this->result();
+        } else {
+            $array = array();
+        }
+        return $array;
     }
     
     public function selecionarAnunciosImagens(){
         $tabela = "anuncios_imagens";
-        $colunas = array ("id", "id_anuncio", "url");
+        $colunas = array ("id", "id_empresa", "id_anuncio", "url");
         $where = array(
-            "id_anuncio" => $this->id_anuncio
+            "md5(id_anuncio)" => $this->id_anuncio
         );
-        $this->selecionarTabelas($tabela, $colunas, $where);
-        return $this->result();
+        $this->selectTable($tabela, $colunas, $where);
+        if($this->numRows() > 0){
+            $array = $this->result();
+        } else {
+            $array = array();
+        }
+        return $array;
     }
     
     public function deletarAnunciosID(){
@@ -77,24 +89,15 @@ class anunciosImagens extends conexao{
     }
     
     //put your code here
-    public function setID($id) {
-        $this->id = $id;
-    }
-    public function getID() {
-        return $this->id;
-    }
+    public function setID($id) { $this->id = $id; }
+    public function getID() { return $this->id; }
     
-    public function setIDAnuncio($id_anuncio) {
-        $this->id_anuncio = $id_anuncio;
-    }
-    public function getIDAnuncio() {
-        return $this->id_anuncio;
-    }
+    public function setIDEmpresa($idEmpresa) { $this->id_empresa = $idEmpresa; }
+    public function getIDEmpresa() { return $this->id_empresa; }
+
+    public function setIDAnuncio($id_anuncio) { $this->id_anuncio = $id_anuncio; }
+    public function getIDAnuncio() { return $this->id_anuncio; }
     
-    public function setURL($url) {
-        $this->url = $url;
-    }
-    public function getURL() {
-        return $this->url;
-    }
+    public function setURL($url) { $this->url = $url; }
+    public function getURL() { return $this->url; }
 }

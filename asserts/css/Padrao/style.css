@@ -1,0 +1,92 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 30/08/2017, 16:55:34
+    Author     : Daniel_Caldeira
+*/
+
+body{
+    background-color: #FFF;
+}
+.topo{
+    height: 80px;
+    background-color: #EEE;
+}
+.menu{
+    height: 40px;
+    background-color: #DDD;
+}
+.menu ul{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.menu li{
+    height: 40px;
+    line-height: 40px;
+    float: left;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.menu li:hover{
+    background-color: black;
+    color: white;
+}
+.container{
+    min-height: 200px;
+    background-color: #FFF;
+}
+.rodape{
+    height: 80px;
+    background-color: #DDD;
+}
+.home_banner{
+    height: 500px;
+    background-size: cover;
+    background-position: center;
+}
+.home_txt{
+    height: 500px;
+    line-height: 200px;
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    background-color: rgba(0,0,0,0.4);
+    margin-top: -500px;
+    color: white;
+}
+.home_cta{
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+.home_cta a{
+    text-decoration: none;
+    color: black;
+}
+.home_cta_button{
+    width: 200px;
+    height: 40px;
+    line-height: 40px;
+    padding-left: 30px;
+    padding-right: 30px;
+    background-color: orange;
+    border-radius: 5px;
+    margin: auto;
+}
+.home_depo{
+    width: 400px;
+    margin: auto;
+    margin-top: 20px;
+}
+.button {
+    background-color:#59b210;
+    color: #FFF;
+    font-weight: bold;
+    padding:10px;
+    border:0;
+    border-radius:5px;
+}

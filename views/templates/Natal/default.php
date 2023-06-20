@@ -8,31 +8,31 @@ and open the template in the editor.
     <head>
         <meta charset="UTF-8">
         <title><?php echo ($this->config['site_title']); ?></title>
-        <link type="text/css" rel="stylesheet" href="<?php echo(BASE_URL);?>asserts/css/styleNatal.css"/>
-        <link type="text/css" rel="stylesheet" href="<?php echo(BASE_URL);?>asserts/css/bootstrap.css"/>
-        <link type="text/css" rel="stylesheet" href="<?php echo(BASE_URL);?>asserts/css/bootstrap-theme.css"/>
+        <link type="text/css" rel="stylesheet" href="<?php echo(BASE_URL);?>asserts/css/style.css"/>
+        <link type="text/css" rel="stylesheet" href="<?php echo(BASE_URL);?>asserts/css/template.css"/>
+        <link type="text/css" rel="stylesheet" href="<?php echo(BASE_URL);?>asserts/bootstrap/css/bootstrap.css"/>
+        <link type="text/css" rel="stylesheet" href="<?php echo(BASE_URL);?>asserts/bootstrap/css/bootstrap-theme.css"/>
         
         <style>
             body{
                 color: <?php echo ($this->config['site_color']); ?>;
-                background-color: yellow;
+                background-color: red;
             }
         </style>
     </head>
     <body>
         <div class="panel">
-            
-        
-        In Default Natal!!
-        <div class="panel-title"><?php echo ($this->config['site_title']); ?></div>
-        <div class="panel-heading"><?php $this->loadMenu(); ?></div>
-        <div class="container">
-            <?php
-                $this->loadViewInTemplate($viewName, $viewData)
-            ?>
-        </div>
-        <div class="panel-footer">Footer</div>
-        <br><br>
+            In Default Natal!!
+            <div class="panel-title"><?php echo ($this->config['site_title']); ?></div>
+            <div class="panel-heading"><?php $this->loadMenu(); ?></div>
+            <div class="container">
+                <?php
+                    // $this->loadViewInTemplate($viewName, $viewData);
+                    $this->loadView($viewName, $viewData);
+                ?>
+            </div>
+            <div class="panel-footer">Footer</div>
+            <br/><br/>
         </div>
     </body>
 </html>

@@ -1,4 +1,4 @@
-<?php if (isset($_SESSION['id']) && !empty($_SESSION['id'])): ?>
+<?php if (isset($_SESSION['token']) && !empty($_SESSION['token'])): ?>
 <div class="container-fluid">
     <div class="small jumbotron">
         <h4>Meus Anuncios - Adicionar Anuncio</h4>

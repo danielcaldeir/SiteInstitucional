@@ -25,13 +25,17 @@
                        <label>Template</label>
                     <select name="site_template" class="form-control">
                         <option 
-                            value="default" 
-                            <?php echo( ($this->config['site_template'] == 'default')?('selected'):('') ); ?>
+                            value="Padrao" 
+                            <?php echo( ($this->config['site_template'] == 'Padrao')?('selected'):('') ); ?>
                             >Padrao</option>
                         <option 
-                            value="defaultNatal" 
-                            <?php echo( ($this->config['site_template'] == 'defaultNatal')?('selected'):('') ); ?>
+                            value="Natal" 
+                            <?php echo( ($this->config['site_template'] == 'Natal')?('selected'):('') ); ?>
                             >Padrao Natal</option>
+                        <option 
+                            value="Institucional" 
+                            <?php echo( ($this->config['site_template'] == 'Institucional')?('selected'):('') ); ?>
+                            >Institucional</option>
                     </select>
                     </div>
                     <div class="form-group">

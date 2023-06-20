@@ -32,16 +32,30 @@ class Controller {
     
     public function loadView($viewName, $viewData = array()) {
         extract($viewData);
-        include ("views/".$viewName.".php");
+        // echo ("<pre>"); print_r($viewName); echo ("</pre>");
+        if (file_exists("views/templates/".$this->config['site_template']."/".$viewName.".php")){
+            include ("views/templates/". $this->config['site_template']."/".$viewName.".php");
+        } else {
+            include ("views/".$viewName.".php");
+            // include ("views/templates/default.php");
+        }
+        // include ("views/".$viewName.".php");
     }
     
     public function loadTemplate($viewName, $viewData = array()) {
-        // print_r($this->config);
-		if (!file_exists('views/templates/'.$this->config['site_template'].'.php')){
-            include ("views/templates/default.php");
+        // echo ("<pre>");print_r($this->config); echo ("</pre>");
+        if (file_exists('views/templates/'.$this->config['site_template'].'/default.php')){
+            include ("views/templates/". $this->config['site_template']."/default.php");
+            // include ("views/templates/default.php");
         } else {
-            include ("views/templates/". $this->config['site_template'].".php");
+            include ("views/templates/default.php");
+            // include ("views/templates/". $this->config['site_template'].".php");
         }
+		// if (!file_exists('views/templates/'.$this->config['site_template'].'.php')){
+        //     include ("views/templates/default.php");
+        // } else {
+        //     include ("views/templates/". $this->config['site_template'].".php");
+        // }
         // include ("views/template/".$this->config['site_template'].".php");
     }
     

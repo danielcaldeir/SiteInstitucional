@@ -108,6 +108,14 @@ class usuarioController extends controller{
         $this->loadPainel("selUsuario", $this->arrayInfo);
     }
     
+    public function adicionarUser($confirme = ""){
+        $this->arrayInfo['confirme'] = $confirme;
+        // $dados = array(
+        //     "confirme" => $confirme
+        // );
+        $this->loadPainel("cadastrar", $this->arrayInfo);
+    }
+
     public function gerenciaUsuario(){
         // put your code here
         $user = new usuario();
@@ -126,15 +134,18 @@ class usuarioController extends controller{
         $user = new usuario();
 		
 		$user->setID($id);
-        $dados['id'] = $id;
-        $dados['usuario'] = $menu->selecionarUser();
+        $this->arrayInfo['id'] = $id;
+        $this->arrayInfo['usuario'] = $user->selecionarUser();
+        // $dados['id'] = $id;
+        // $dados['usuario'] = $user->selecionarUser();
         
-        $this->loadPainel("excluirUser", $dados);
+        $this->loadPainel("excluirUser", $this->arrayInfo);
     }
 	
     public function editAction(){
         // put your code here
         $user = new Usuario();
+        $IDEmpresa = $this->user->getIdEmpresa();
         $id = addslashes($_POST['id']);
         $nome = addslashes($_POST['nome']);
         $email = addslashes($_POST['email']);
@@ -172,7 +183,7 @@ class usuarioController extends controller{
                 $user->selecionarUser($id);
                 if (($user->numRows() > 0) && (!empty($_POST['nome']))){
                     $idUser = $user->getID();
-                    $user->atualizarNomeEmail($idUser, $nome, $email, $telefone);
+                    $user->atualizarNomeEmail($idUser, $nome, $email, $telefone, $IDEmpresa);
                     // $user->atualizarSenha($idUser,$senha);
                     $user->atualizarPermissao($idUser, $permissao);
                     $user->atualizarStatus($id,$status);
@@ -194,6 +205,32 @@ class usuarioController extends controller{
         }
     }
     
+    public function editarUser($id, $confirme = ""){
+        $user = new usuario();
+        $user->setID($id);
+        $usuarios = $user->selecionarUser($id);
+        // $daoUser = new UsuariosDao();
+        // $usuarios = $daoUser->selecionarUser($user);
+        if (count($usuarios) > 0) {
+            // $dado = $user->result();
+            $this->arrayInfo['dado'] = $usuarios;
+            $this->arrayInfo['confirme'] = $confirme;
+            // $dados = array(
+            //     "dado" => $usuarios,
+            //     "confirme" => $confirme
+            // );
+        }else{
+            // header("Location: gerenciaUsuario.php");
+            $this->arrayInfo['dado'] = "";
+            $this->arrayInfo['confirme'] = $confirme;
+            // $dados = array(
+            //     "dado" => "",
+            //     "confirme" => $confirme
+            // );
+        }
+        $this->loadPainel("editarUser", $this->arrayInfo);
+    }
+
     public function add($confirme = "") {
         //$user = new Usuarios();
         //$per = new PermissaoGrupo();
@@ -222,7 +259,7 @@ class usuarioController extends controller{
                 $array = $user->incluirNomeEmailSenha($nome, $email, $senha, $telefone, $IDEmpresa);
                 foreach ($array as $item) {
                     $id = $item['ID'];
-                    $user->atualizarPermissao(md5($id), $idGrupo);
+                    $user->atualizarPermissao($id, $idGrupo);
                     $user->selecionarUser(md5($id));
                     $mensagem = "O item ".$user->getNome()." foi incluido com sucesso!!";
                 }

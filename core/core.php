@@ -26,8 +26,8 @@ class Core {
         $urlExplode = explode("index.php", $_SERVER['PHP_SELF']);
         $url = end($urlExplode);
         
-        //print_r($url);//visualizador de URL
-        //echo ("<br>");
+        // print_r($url); echo ("<br>");//visualizador de URL
+        // print_r($urlExplode); echo ("<br>");
         
         if (!empty($url) && !($url == '/')){
             $url = explode('/', $url);
@@ -75,11 +75,11 @@ class Core {
             //$param[] = $pNome;
         }
 		
-        //echo ("Controller: ".$this->currentController."<br>");//Qual o Controller
-        //echo ("Action: ".$currentAction."<br>");//Qual a Action
-        //echo ("Param: ");
-        //print_r($param);
-        //echo ("<br>");//Qual os Parametros
+        // echo ("Controller: ".$this->currentController."<br>");//Qual o Controller
+        // echo ("Action: ".$currentAction."<br>");//Qual a Action
+        // echo ("Param: ");
+        // print_r($param);
+        // echo ("<br>");//Qual os Parametros
         
         $c = new $this->currentController();
         

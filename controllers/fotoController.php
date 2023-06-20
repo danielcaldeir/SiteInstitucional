@@ -25,24 +25,24 @@ class fotoController extends controller{
         $this->loadTemplate("erro", $dados);
     }
     
-    public function addFoto($fotos = array()) {
-        //print "<br><br>Quantidade: ".count($fotos['tmp_name']);
+    public function addFoto($id = null, $fotos = array()) {
+        // print "<br><br>Quantidade: ".count($fotos['tmp_name']);
         if (count($fotos['tmp_name']) > 0){
-            $destino = (".\\upload\\");
-        //    print "<br><br>";
-        //    print_r($destino);
+            $destino = (".\\imagem\\produto\\");
+            // print "<br><br>";
+            // print_r($destino);
             
             for ($q=0; $q<count($fotos['tmp_name']); $q++){
                 $tipo = $fotos['type'][$q];
-        //        print "<br><br>";
-        //        print_r($tipo);
+                // print "<br><br>";
+                // print_r($tipo);
                 
                 if (in_array($tipo, array('image/jpg','image/png','image/jpeg'))) {
                     $nomeFoto = time().rand("0","0.99").$fotos['name'][$q];
                     move_uploaded_file($fotos['tmp_name'][$q], $destino.$nomeFoto);
-        //            print "<br><br>";
-        //            print_r($nomeFoto);
-        //            print "<br><br>";
+                    // print "<br><br>";
+                    // print_r($nomeFoto);
+                    // print "<br><br>";
                     
                     list($larguraOriginal, $alturaOriginal) = getimagesize($destino.$nomeFoto);
                     $ratio = $larguraOriginal / $alturaOriginal;

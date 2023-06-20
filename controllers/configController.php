@@ -98,59 +98,9 @@ class configController extends controller{
         $this->loadPainel("selConfig", $this->arrayInfo);
     }
     
-    //public function addEmpresa($confirme = ""){
-    //    if (!$this->user->validarPermissao('add_empresa')){
-    //            //header("Location: ".BASE_URL."adminLTE");
-    //            $filtro = array('permission'=>1);
-    //            //loginController::login($filtro);
-    //            $login = new loginController();
-    //            $login->index($filtro);
-    //            //$adminLTE->index();
-    //            exit();
-    //        }
-    //    //$cliente = new Clientes();
-    //    $estado = new Estado();
-    //    $cnae = new Cnae();
-    //    //$IDEmpresa = $this->user->getIdEmpresa();
-    //    $this->arrayInfo['mensagem'] = $confirme;
-    //    $this->arrayInfo['estados'] = $estado->selecionarALLEstado();
-    //    $this->arrayInfo['cnae'] = $cnae->getFiltroSecao();
-    //    //$where['classe'] = $empresa->getCNAE();
-    //    //$this->arrayInfo['empresa_cnae'] = $cnae->selecionarALLCnae($where);
-    //    $this->loadPainel("addEmpresa", $this->arrayInfo);
-    //}
     
-    //public function addActionEmpresa() {
-    //    if (!$this->user->validarPermissao('add_empresa')){
-    //            //header("Location: ".BASE_URL."adminLTE");
-    //            $filtro = array('permission'=>1);
-    //            //loginController::login($filtro);
-    //            $login = new loginController();
-    //            $login->index($filtro);
-    //            //$adminLTE->index();
-    //            exit();
-    //        }
-    //    $empresa = new Empresa();
-    //    $cnpj = addslashes($_POST['cnpj']);
-    //    $razao = addslashes($_POST['razao']);
-    //    $fantasia = addslashes($_POST['fantasia']);
-    //    $fundacao = addslashes($_POST['fundacao']);
-    //    $cnae = addslashes($_POST['cnae']);
-    //    $regime = addslashes($_POST['regime']);
-    //    if (!empty($cnpj) && !empty($fantasia)){
-    //        $empresa->addEmpresa($cnpj, $fantasia, $razao, $fundacao, $cnae, $regime);
-    //        //$confirme = "success";
-    //        //header("Location: ".BASE_URL."painel/addMenu/success");
-    //        $mensagem = "Inclusao da Empresa realizado com sucesso!";
-    //        $this->index($mensagem);
-    //    } else {
-    //        //header("Location: ".BASE_URL."painel/addMenu/error");
-    //        //$confirme = "error";
-    //        $mensagem = "Inclusao nao realizada!";
-    //        $this->index($mensagem);
-    //    }
-    //    //$this->addMenu($confirme);
-    //}
+    
+    
     
     //private function atualizarPrincipal($idHash, $principal = array()) {
     //    $empresa = new Empresa();
@@ -219,25 +169,7 @@ class configController extends controller{
     //    $this->empresa($mensagem);
     //}
     
-    //private function atualizarEndereco($idHash, $endereco = array()) {
-    //    $empresa = new Empresa();
-    //    if (count($empresa)>0){
-    //        if (!empty($endereco['cep'])&& !empty($endereco['endereco'])){
-    //            $empresa->selecionarEmpresaID($idHash);
-    //            if ($empresa->numRows() > 0){
-    //                $idEmpresa = $empresa->getID();
-    //                $empresa->editEmpEndereco($idEmpresa, $endereco['cep'], $endereco['endereco'], $endereco['numero'], 
-    //                        $endereco['adicional'], $endereco['bairro'], $endereco['estado'], $endereco['cidade'], 
-    //                        $endereco['pais']);
-    //                $mensagem = "Alteracao efetuada com sucesso!";
-    //            } 
-    //            else { $mensagem = "Nao foi encontrado um Identificador Valido!"; }
-    //        } 
-    //        else { $mensagem = "Nao foi possivel realizar a Alteracao!"; }
-    //    } 
-    //    else { $mensagem = "Nao ha valores para serem modificados"; }
-    //    return $mensagem;
-    //}
+    
     
     //public function editAuxiliarAction() {
     //    if (!$this->user->validarPermissao('edit_config')){
@@ -266,32 +198,7 @@ class configController extends controller{
     //    $this->index($mensagem);
     //}
     
-    //public function editEmprAuxiliarAction() {
-    //    if (!$this->user->validarPermissao('edit_empresa')){
-    //            //header("Location: ".BASE_URL."adminLTE");
-    //            $filtro = array('permission'=>1);
-    //            //loginController::login($filtro);
-    //            $login = new loginController();
-    //            $login->index($filtro);
-    //            //$adminLTE->index();
-    //            exit();
-    //        }
-    //    //$empresa = new Empresa();
-    //    $endereco = array();
-    //    $endereco['id'] = addslashes($_GET['id']);
-    //    $endereco['cep'] = addslashes($_GET['cep']);
-    //    $endereco['endereco'] = addslashes($_GET['endereco']);
-    //    $endereco['numero'] = addslashes($_GET['numero']);
-    //    $endereco['adicional'] = addslashes($_GET['adicional']);
-    //    $endereco['bairro'] = addslashes($_GET['bairro']);
-    //    $endereco['estado'] = addslashes($_GET['estado']);
-    //    $endereco['cidade'] = addslashes($_GET['cidade']);
-    //    $endereco['pais'] = addslashes($_GET['pais']);
-    //    $idHash = $endereco['id'];
-    //    
-    //    $mensagem = $this->atualizarEndereco($idHash, $endereco);
-    //    $this->empresa($mensagem);
-    //}
+    
     
     private function gerarFiltroCnae($allEmpresa = array()) {
         $cnae = new Cnae();
@@ -501,22 +408,26 @@ class configController extends controller{
         foreach ($allItensNew as $item){
             $items[] = $item['nome'];
         }
-        //echo ("<pre>");
-        //print_r($allItensNew);
-        //echo ("<pre>");
+        echo ("<pre>");
+        print_r($allItensNew);
+        echo ("</pre>");
         foreach ($allItensAnt as $item) {
             //$slug = $item['slug'];
             $nome = $item['nome'];
             //echo ("<br>in_array: ");
             //print_r(in_array($nome, $items));
             if (!in_array($nome, $items)){
-                $grupos[] = $perGrupo->addPermissaoGrupo($nome, $idEmpresa);
+                $GrupoNew = $perGrupo->addPermissaoGrupo($nome, $idEmpresa);
+                foreach ($GrupoNew as $value){
+                    $grupos[] = $perGrupo->selecionarPermissaoGrupoID(md5($value['ID']));
+                }
                 //$perItens->addPermissaoItem($nome, $slug, $idEmpresa);
                 //$permissao->addPermissao($id_grupo, $id_item, '1');
             }
         }
-        //echo ("<pre>");
-        //print_r($grupos);
+        echo ("<pre>");
+        print_r($grupos);
+        echo ("</pre>");
         return $grupos;
     }
     

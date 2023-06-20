@@ -127,13 +127,14 @@ class Model {
             }
             // echo $sql;
 			$this->sql = $sql;
-            try {
-                return $this->pdo->query($sql);
-            } catch (PDOException $exc) {
-                echo $exc->getTraceAsString();
-                echo ("<br><br>");
-                echo $exc->getMessage();
-            }
+            $this->query($sql);
+            // try {
+            //     return $this->pdo->query($sql);
+            // } catch (PDOException $exc) {
+            //     echo $exc->getTraceAsString();
+            //     echo ("<br><br>");
+            //     echo $exc->getMessage();
+            // }
         }
     }
     

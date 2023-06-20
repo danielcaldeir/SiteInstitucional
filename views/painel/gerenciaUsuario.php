@@ -22,13 +22,13 @@
                     Usuarios<span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="<?php echo BASE_URL; ?>cadastrar/">Adicionar</a></li>
-                    <li><a href="<?php echo BASE_URL; ?>cadastrar/gerenciaUsuario/">Visualizar</a></li>
+                    <li><a href="<?php echo BASE_URL; ?>usuario/adicionarUser">Adicionar</a></li>
+                    <li><a href="<?php echo BASE_URL; ?>usuario/gerenciaUsuario/">Visualizar</a></li>
                     <li><a href='#'>Voltar</a></li>
                 </ul>
             </div>
-            <a href="<?php echo BASE_URL; ?>cadastrar/">Adicionar novo Usuario</a>
-            <table border="1" width="900px" class="table-striped">
+            <a href="<?php echo BASE_URL; ?>usuario/adicionarUser">Adicionar novo Usuario</a>
+            <table border="1" width="100%" class="table-striped">
                 <tr >
                     <th class="text-uppercase text-center">Nome</th>
                     <th class="text-uppercase text-center">E-Mail</th>
@@ -53,8 +53,8 @@
                     </td>
                   <?php endif; ?>
                     <td>
-                        <button class="btn-success" onclick="window.location.href = '<?php echo BASE_URL; ?>cadastrar/editarUser/<?php echo($usuario['id']); ?>'">Editar</button>
-                        <button class="btn-danger" onclick="window.location.href = '<?php echo BASE_URL; ?>cadastrar/excluirUser/<?php echo($usuario['id']); ?>'">Excluir</button>
+                        <button class="btn-success" onclick="window.location.href = '<?php echo BASE_URL; ?>usuario/editarUser/<?php echo($usuario['id']); ?>'">Editar</button>
+                        <button class="btn-danger" onclick="window.location.href = '<?php echo BASE_URL; ?>usuario/excluirUser/<?php echo($usuario['id']); ?>'">Excluir</button>
                         <!--<a href='editarUser.php?id=<?php echo($usuario['id']); ?>'>Editar</a> 
                         - <a href='excluirUser.php?id=<?php echo($usuario['id']); ?>'>Excluir</a>-->
                     </td>

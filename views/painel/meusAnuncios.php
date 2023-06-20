@@ -1,4 +1,5 @@
-<?php if (isset($_SESSION['id']) && !empty($_SESSION['id'])): ?>
+<?php if (isset($_SESSION['token']) && !empty($_SESSION['token'])): ?>
+    <!-- <pre><?php //print_r($anuncios);?></pre> -->
 <div class="container-fluid">
     <div class="jumbotron">
         <h4>Meus Anuncios</h4>
@@ -24,7 +25,7 @@
         <tr>
             <td>
                 <?php if (!empty($anuncio['url'])) :?>
-                <img src="<?php echo BASE_URL; ?>upload/<?php echo($anuncio['url']); ?>" border="0" height="50"/>
+                <img src="<?php echo BASE_URL; ?>imagem/produto/<?php echo($anuncio['url']); ?>" border="0" height="50"/>
                 <?php else : ?>
                     <img src="<?php echo BASE_URL; ?>upload/minimagem.jpg" border="0" height="50"/>
                 <?php endif; ?>
@@ -32,10 +33,10 @@
             <td><?php echo ($anuncio['titulo']); ?></td>
             <td><?php echo (number_format($anuncio['valor'],2)); ?></td>
             <td>
-                <a href="<?php echo BASE_URL; ?>produto/editarAnuncio/<?php echo($anuncio['id']); ?>" class="btn btn-info">
+                <a href="<?php echo BASE_URL; ?>produto/editarAnuncio/<?php echo md5($anuncio['id']); ?>" class="btn btn-info">
                     Editar
                 </a>
-                <a href="<?php echo BASE_URL; ?>produto/excluirAnuncio/<?php echo($anuncio['id']); ?>" class="btn btn-danger">
+                <a href="<?php echo BASE_URL; ?>produto/excluirAnuncio/<?php echo md5($anuncio['id']); ?>" class="btn btn-danger">
                     Excluir
                 </a>
             </td>
