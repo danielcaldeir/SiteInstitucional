@@ -11,24 +11,26 @@
  *
  * @author daniel
  */
-class perfilController extends controller{
+class perfilController extends Controller
+{
     private $user;
     private $empresa;
     private $arrayInfo;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->user = new Usuario();
         $this->arrayInfo = array();
         //$adminLTE = new adminLTEController();
-        
-        if (!empty($_SESSION['token'])){
+
+        if (!empty($_SESSION['token'])) {
             //print_r($_SESSION['token']);
-            if (!$this->user->isLogado($_SESSION['token'])){
+            if (!$this->user->isLogado($_SESSION['token'])) {
                 loginController::logout();
                 exit();
             }
             //$this->permissao->getPermissaoIDGrupo($this->user->getIDGrupo());
-            
+
             //if (!$this->user->validarPermissao('view_perfil')){
             //    //header("Location: ".BASE_URL."adminLTE");
             //    $filtro = array('permission'=>1);
@@ -48,14 +50,15 @@ class perfilController extends controller{
         $this->empresa->selecionarEmpresaID(md5($this->user->getIdEmpresa()));
         $this->arrayInfo["empresa"] = $this->empresa;
         $this->arrayInfo["permissao"] = $this->user->getPermissoes();
-        
+
         //global $config;
         //$this->config = $config;
         parent::__construct();
     }
-    
+
     //put your code here
-    public function index($mensagem = "") {
+    public function index($mensagem = "")
+    {
         //$cliente = new Clientes();
         $estado = new Estado();
         $cnae = new Cnae();
@@ -63,11 +66,11 @@ class perfilController extends controller{
         //$empresa = new Empresa();
         //$empresa->selecionarEmpresaID($this->user->getIDEmpresa());
         //$this->arrayInfo["empresa"] = $empresa;
-        
+
         //$this->arrayInfo['cliente'] = $cliente->getAllCliente($filtro, $offset, $limit);
         $this->arrayInfo['permissao'] = $this->user->getPermissoes();
         $this->arrayInfo['mensagem'] = $mensagem;
-        
+
         //$TotalItems = count($cliente->getTotalCliente($filtro));
         //$this->arrayInfo['paginaAtual'] = $paginaAtual;
         $this->arrayInfo['estados'] = $estado->selecionarALLEstado();
@@ -76,10 +79,10 @@ class perfilController extends controller{
         $this->arrayInfo['empresa_cnae'] = $cnae->selecionarALLCnae($where);
         //$this->arrayInfo['numeroPaginas'] = ceil($TotalItems/$limit);
         //$this->arrayInfo['filtro'] = $filtro;
-        
+
         $this->loadPainel("selPerfil", $this->arrayInfo);
     }
-    
+
     //public function addEmpresa($confirme = ""){
     //    if (!$this->user->validarPermissao('add_empresa')){
     //            //header("Location: ".BASE_URL."adminLTE");
@@ -103,7 +106,7 @@ class perfilController extends controller{
     //    
     //    $this->loadPainel("addEmpresa", $this->arrayInfo);
     //}
-    
+
     //public function addActionEmpresa() {
     //    if (!$this->user->validarPermissao('add_empresa')){
     //            //header("Location: ".BASE_URL."adminLTE");
@@ -135,7 +138,7 @@ class perfilController extends controller{
     //    }
     //    //$this->addMenu($confirme);
     //}
-    
+
     //private function atualizarPrincipal($idHash, $principal = array()) {
     //    $empresa = new Empresa();
     //    if (count($principal)>0){
@@ -154,7 +157,7 @@ class perfilController extends controller{
     //    else { $mensagem = "Nao ha valores para serem modificados"; }
     //    return $mensagem;
     //}
-    
+
     //public function editPrincipalAction() {
     //    if (!$this->user->validarPermissao('edit_config')){
     //            //header("Location: ".BASE_URL."adminLTE");
@@ -179,7 +182,7 @@ class perfilController extends controller{
     //    $mensagem = $this->atualizarPrincipal($idHash, $principal);
     //    $this->index($mensagem);
     //}
-    
+
     //public function editEmprPrincipalAction() {
     //    if (!$this->user->validarPermissao('edit_empresa')){
     //            //header("Location: ".BASE_URL."adminLTE");
@@ -204,7 +207,7 @@ class perfilController extends controller{
     //    $mensagem = $this->atualizarPrincipal($idHash, $principal);
     //    $this->empresa($mensagem);
     //}
-    
+
     //private function atualizarEndereco($idHash, $endereco = array()) {
     //    $empresa = new Empresa();
     //    if (count($empresa)>0){
@@ -224,7 +227,7 @@ class perfilController extends controller{
     //    else { $mensagem = "Nao ha valores para serem modificados"; }
     //    return $mensagem;
     //}
-    
+
     //public function editAuxiliarAction() {
     //    if (!$this->user->validarPermissao('edit_config')){
     //            //header("Location: ".BASE_URL."adminLTE");
@@ -251,7 +254,7 @@ class perfilController extends controller{
     //    $mensagem = $this->atualizarEndereco($idHash, $endereco);
     //    $this->index($mensagem);
     //}
-    
+
     //public function editEmprAuxiliarAction() {
     //    if (!$this->user->validarPermissao('edit_empresa')){
     //            //header("Location: ".BASE_URL."adminLTE");
@@ -278,25 +281,26 @@ class perfilController extends controller{
     //    $mensagem = $this->atualizarEndereco($idHash, $endereco);
     //    $this->empresa($mensagem);
     //}
-    
-    private function gerarFiltroCnae($allEmpresa = array()) {
+
+    private function gerarFiltroCnae($allEmpresa = array())
+    {
         $cnae = new Cnae();
-        
+
         $where = array();
         $where['classe']['!='] = '';
         $array = $cnae->selecionarALLCnae($where);
-        
+
         $object = new ArrayObject();
         //$cnaeInfo = array();
         foreach ($array as $cn) {
-            $object->offsetSet($cn['classe'], $cn);//cnaeInfo[$cn['classe']] = $cn;
+            $object->offsetSet($cn['classe'], $cn); //cnaeInfo[$cn['classe']] = $cn;
         }
         //$object = new ArrayObject($cnaeInfo);
         $filtroCnae = new ArrayObject();
         foreach ($allEmpresa as $item) {
-            for ($iterator = $object->getIterator(); $iterator->valid(); $iterator->next()){
-                if ($iterator->key() === $item['cnae']){
-                    if (!($filtroCnae->offsetExists($item['cnae']))){
+            for ($iterator = $object->getIterator(); $iterator->valid(); $iterator->next()) {
+                if ($iterator->key() === $item['cnae']) {
+                    if (!($filtroCnae->offsetExists($item['cnae']))) {
                         $filtroCnae->offsetSet($iterator->key(), $iterator->current());
                     }
                     //$filtroCnae[$iterator->key()] = $iterator->current();
@@ -307,48 +311,56 @@ class perfilController extends controller{
         $filtroCnae->ksort();
         return $filtroCnae->getArrayCopy();
     }
-    
-    public function empresa($mensagem = "") {
-        if (!$this->user->validarPermissao('view_empresa')){
-                //header("Location: ".BASE_URL."adminLTE");
-                $filtro = array('permission'=>1);
-                //loginController::login($filtro);
-                $login = new loginController();
-                $login->index($filtro);
-                //$adminLTE->index();
-                exit();
-            }
-        
+
+    public function empresa($mensagem = "")
+    {
+        if (!$this->user->validarPermissao('view_empresa')) {
+            //header("Location: ".BASE_URL."adminLTE");
+            $filtro = array('permission' => 1);
+            //loginController::login($filtro);
+            $login = new loginController();
+            $login->index($filtro);
+            //$adminLTE->index();
+            exit();
+        }
+
         $empresa = new Empresa();
-        
-        
-        if (isset($_GET['pagAtual']) && !(empty($_GET['pagAtual'])) ){ 
-            $pagina = intval($_GET['pagAtual']); 
+
+
+        if (isset($_GET['pagAtual']) && !(empty($_GET['pagAtual']))) {
+            $pagina = intval($_GET['pagAtual']);
             $paginaAtual = (($pagina < 1) ? 1 : $pagina);
-        } else { $paginaAtual = 1; }
-        
+        } else {
+            $paginaAtual = 1;
+        }
+
         $limit = 10;
         $offset = ($paginaAtual * $limit) - $limit;
-        
-        $filtro = array("cnpj"=>NULL,"regime"=>NULL, "status"=>NULL, "nome"=>NULL, "cnae"=>NULL);
+
+        $filtro = array("cnpj" => NULL, "regime" => NULL, "status" => NULL, "nome" => NULL, "cnae" => NULL);
         //$filtro = array("permissao"=>NULL, "status"=>NULL, "nome"=>NULL, "email"=>NULL);
-        if (!empty($_GET['cnpj']))
-            { $filtro['cnpj'] = $_GET['cnpj']; }
-        if (!empty($_GET['status']))
-            { $filtro['status'] = (intval($_GET['status'])-1); }
-        if (!empty($_GET['nome']))
-            { $filtro['nome'] = $_GET['nome']; }
-        if (!empty($_GET['regime']))
-            { $filtro['regime'] = $_GET['regime']; }
-        if (!empty($_GET['cnae']))
-            { $filtro['cnae'] = $_GET['cnae']; }
-        
+        if (!empty($_GET['cnpj'])) {
+            $filtro['cnpj'] = $_GET['cnpj'];
+        }
+        if (!empty($_GET['status'])) {
+            $filtro['status'] = (intval($_GET['status']) - 1);
+        }
+        if (!empty($_GET['nome'])) {
+            $filtro['nome'] = $_GET['nome'];
+        }
+        if (!empty($_GET['regime'])) {
+            $filtro['regime'] = $_GET['regime'];
+        }
+        if (!empty($_GET['cnae'])) {
+            $filtro['cnae'] = $_GET['cnae'];
+        }
+
         $allEmpresa = $empresa->getAllEmpresa($filtro, $offset, $limit);
         $this->arrayInfo["allEmpresa"] = $allEmpresa;
         //$this->arrayInfo['cliente'] = $cliente->getAllCliente($filtro, $offset, $limit);
         $this->arrayInfo['permissao'] = $this->user->getPermissoes();
         $this->arrayInfo['mensagem'] = $mensagem;
-        
+
         $arrayCNAE = array();
         $arrayCNPJ = array();
         $this->arrayInfo['totalEmpresa'] = count($allEmpresa);
@@ -357,14 +369,14 @@ class perfilController extends controller{
             $arrayCNPJ[$item['id']] = $item['cpf_cnpj'];
             //echo (array_search($item['cnae'], $cnaeInfo[0]));
         }
-        
+
         //$where['classe'] = $empresa->getCNAE();
         //$this->arrayInfo['empresa_cnae'] = $cnae->selecionarALLCnae($where);
         //$TotalItems = count($empresa->getTotalEmpresa($filtro));
         $TotalEmpresa = $empresa->getTotalEmpresa($filtro);
         $TotalItems = count($TotalEmpresa);
         $this->arrayInfo['paginaAtual'] = $paginaAtual;
-        $this->arrayInfo['numeroPaginas'] = ceil($TotalItems/$limit);
+        $this->arrayInfo['numeroPaginas'] = ceil($TotalItems / $limit);
         $this->arrayInfo['filtro'] = $filtro;
         $filtroCNAE = $this->gerarFiltroCnae($TotalEmpresa);
         //echo ("<pre>");
@@ -373,10 +385,10 @@ class perfilController extends controller{
         $this->arrayInfo['cnae'] = $arrayCNAE;
         $this->arrayInfo['cnpj'] = $arrayCNPJ;
         $this->arrayInfo['cnaeFiltro'] = $filtroCNAE;
-        
+
         $this->loadPainel("selEmpresas", $this->arrayInfo);
     }
-    
+
     //public function editEmpresa($id, $mensagem = "") {
     //    if (!$this->user->validarPermissao('edit_empresa')){
     //            //header("Location: ".BASE_URL."adminLTE");

@@ -11,11 +11,13 @@
  *
  * @author Daniel_Caldeira
  */
-class notFoundController extends controller{
+class notFoundController extends Controller
+{
     //put your code here
-    public function index() {
+    public function index()
+    {
         $dados = array();
-                
+
         $this->loadTemplate("404", $dados);
     }
 }

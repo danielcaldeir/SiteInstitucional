@@ -11,24 +11,26 @@
  *
  * @author Daniel_Caldeira
  */
-class produtoController extends controller{
+class produtoController extends Controller
+{
     private $user;
     private $arrayInfo;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->user = new Usuario();
         $this->arrayInfo = array();
-        
-        if (!empty($_SESSION['token'])){
+
+        if (!empty($_SESSION['token'])) {
             //print_r($_SESSION['token']);
-            if (!$this->user->isLogado($_SESSION['token'])){
+            if (!$this->user->isLogado($_SESSION['token'])) {
                 //adminLTEController::logout();
                 loginController::logout();
                 exit();
             }
             //$this->permissao->getPermissaoIDGrupo($this->user->getIDGrupo());
-            if (!$this->user->validarPermissao('add_permissao')){
-                $filtro = array('permission'=>1);
+            if (!$this->user->validarPermissao('add_permissao')) {
+                $filtro = array('permission' => 1);
                 //loginController::login($filtro);
                 $login = new loginController();
                 $login->index($filtro);
@@ -55,10 +57,11 @@ class produtoController extends controller{
     }
 
     //put your code here
-    public function index($confirme = "") {
+    public function index($confirme = "")
+    {
         $anun = new anuncios();
         $cat = new categorias();
-        
+
         $anun->setIDUsuario($this->user->getID());
         $this->arrayInfo['anuncios'] = $anun->selecionarAnuncios();
         $this->arrayInfo['cats'] = $cat->selecionarAllCategorias();
@@ -77,16 +80,18 @@ class produtoController extends controller{
         // );
         // $this->loadTemplate("meusAnuncios", $dados);
     }
-    
-    public function add() {
+
+    public function add()
+    {
         $cat = new categorias();
         $this->arrayInfo['cats'] = $cat->selecionarAllCategorias();
         $this->loadPainel("addAnuncio", $this->arrayInfo);
     }
 
-    public function addAction() {
-        $dados = array ();
-        if (isset($_POST['titulo']) && !empty($_POST['titulo'])){
+    public function addAction()
+    {
+        $dados = array();
+        if (isset($_POST['titulo']) && !empty($_POST['titulo'])) {
             // $usuario = addslashes($_POST['usuario']);
             $usuario = $this->user->getID();
             $IDEmpresa = $this->user->getIDEmpresa();
@@ -96,7 +101,7 @@ class produtoController extends controller{
             $descricao = addslashes($_POST['descricao']);
             $estado = addslashes($_POST['estado']);
 
-            if (!empty($titulo) && !empty($categoria) && !empty($valor)){
+            if (!empty($titulo) && !empty($categoria) && !empty($valor)) {
                 $anuncio = new anuncios();
                 $anuncio->setIDUsuario($usuario);
                 $anuncio->setTitulo($titulo);
@@ -115,7 +120,7 @@ class produtoController extends controller{
                 // $dados["error"] = "true";
                 $mensagem = "Inclusao nao realizada!";
             }
-        } else{
+        } else {
             // header("Location: ../index.php?pag=addAnuncio&error=true");
             // $dados["error"] = "true";
             $mensagem = "Inclusao nao realizada!";
@@ -127,20 +132,21 @@ class produtoController extends controller{
         // $this->loadTemplate("addAnuncio", $dados);
     }
 
-    public function edit($id, $confirme = "") {
+    public function edit($id, $confirme = "")
+    {
         $anuncio = new anuncios();
         $anuncio->setID($id);
         // $info = $anuncio->selecionarAnunciosID();
         // $info = $anuncio->result();
-        
+
         $anunImagens = new anunciosImagens();
         $anunImagens->setIDAnuncio($id);
         $anunImagens->selecionarAnunciosImagens();
 
-        if ($anunImagens->numRows() > 0){
+        if ($anunImagens->numRows() > 0) {
             $fotosArray = $anunImagens->result();
             $fotos = true;
-        }else {
+        } else {
             $fotosArray = array();
             $fotos = false;
         }
@@ -151,13 +157,14 @@ class produtoController extends controller{
         $this->arrayInfo['cats'] = $cat->selecionarAllCategorias();
         $this->arrayInfo['fotos'] = $fotos;
         $this->arrayInfo['fotosArray'] = $fotosArray;
-        
+
         $this->loadPainel("editAnuncio", $this->arrayInfo);
     }
 
-    public function editAction() {
+    public function editAction()
+    {
         $anuncio = new anuncios();
-        if (isset($_POST['id']) && !empty($_POST['id'])){
+        if (isset($_POST['id']) && !empty($_POST['id'])) {
             $id = addslashes($_POST['id']);
             $IDEmpresa = $this->user->getIDEmpresa();
             // $usuario = addslashes($_POST['usuario']);
@@ -175,7 +182,7 @@ class produtoController extends controller{
             // print_r($fotos);
             // exit();
 
-            if (!empty($titulo) && !empty($categoria) && !empty($valor)){
+            if (!empty($titulo) && !empty($categoria) && !empty($valor)) {
                 $anuncio->setID($id);
                 $anuncio->setIDUsuario($usuario);
                 $anuncio->setIDEmpresa($IDEmpresa);
@@ -185,12 +192,12 @@ class produtoController extends controller{
                 $anuncio->setDescricao($descricao);
                 $anuncio->setEstado($estado);
                 $anuncio->atualizarAnuncios();
-                
+
                 $array = $anuncio->selecionarAnunciosID();
                 foreach ($array as $key => $value) {
                     $idAnuncio = $value['id'];
                 }
-                
+
                 $fotoCTRL = new fotoController();
                 $fotoCTRL->addFoto($idAnuncio, $fotos);
                 // exit();
@@ -204,7 +211,7 @@ class produtoController extends controller{
                 $confirme = "Nao foi informado um ID valido";
                 $this->edit($id, $confirme);
             }
-        } else{
+        } else {
             // header("Location: ../index.php?pag=editarAnuncio&error=true&id=".$id);
             // header("Location: ".BASE_URL."produto/editarAnuncio/".$id."/error");
             $confirme = "Nao foi informado um ID valido";
@@ -212,8 +219,9 @@ class produtoController extends controller{
         }
     }
 
-    public function delAction($id) {
-        if(isset($_POST['id']) && !empty($_POST['id'])) {
+    public function delAction($id)
+    {
+        if (isset($_POST['id']) && !empty($_POST['id'])) {
             $id = $_POST['id'];
 
             $imagem = new anunciosImagens();
@@ -238,7 +246,8 @@ class produtoController extends controller{
         }
     }
 
-    public function addAnuncio($confirme = null) {
+    public function addAnuncio($confirme = null)
+    {
         $c = new categorias();
         $cats = $c->selecionarAllCategorias();
         $this->arrayInfo['cats'] = $cats;
@@ -248,10 +257,11 @@ class produtoController extends controller{
         // );
         $this->loadPainel("addAnuncio", $this->arrayInfo);
     }
-    
-    public function adicionarAnuncio() {
-        $dados = array ();
-        if (isset($_POST['titulo']) && !empty($_POST['titulo'])){
+
+    public function adicionarAnuncio()
+    {
+        $dados = array();
+        if (isset($_POST['titulo']) && !empty($_POST['titulo'])) {
             // $usuario = addslashes($_POST['usuario']);
             $usuario = $this->user->getID();
             $IDEmpresa = $this->user->getIDEmpresa();
@@ -261,7 +271,7 @@ class produtoController extends controller{
             $descricao = addslashes($_POST['descricao']);
             $estado = addslashes($_POST['estado']);
 
-            if (!empty($titulo) && !empty($categoria) && !empty($valor)){
+            if (!empty($titulo) && !empty($categoria) && !empty($valor)) {
                 $anuncio = new anuncios();
                 $anuncio->setIDUsuario($usuario);
                 $anuncio->setTitulo($titulo);
@@ -282,7 +292,7 @@ class produtoController extends controller{
                 // $dados["error"] = "true";
                 $confirme = "Preencha todos os Campos";
             }
-        } else{
+        } else {
             //header("Location: ../index.php?pag=addAnuncio&error=true");
             // $dados["error"] = "true";
             $confirme = "Preencha todos os Campos";
@@ -293,26 +303,27 @@ class produtoController extends controller{
         // $dados["cats"] = $cats;
         // $this->loadTemplate("addAnuncio", $dados);
     }
-    
-    public function editarAnuncio($id, $confirme = "") {
+
+    public function editarAnuncio($id, $confirme = "")
+    {
         $anuncio = new anuncios();
         $anuncio->setID($id);
         // $info = $anuncio->selecionarAnunciosID();
         // $info = $anuncio->result();
-        
+
         $anunImagens = new anunciosImagens();
         $anunImagens->setIDAnuncio($id);
         $anunImagens->selecionarAnunciosImagens();
-        if ($anunImagens->numRows() > 0){
+        if ($anunImagens->numRows() > 0) {
             $fotosArray = $anunImagens->result();
             $fotos = true;
-        }else {
+        } else {
             $fotosArray = array();
             $fotos = false;
         }
         $c = new categorias();
         // $cats = $c->selecionarAllCategorias();
-        
+
         $this->arrayInfo['id'] = $id;
         $this->arrayInfo['confirme'] = $confirme;
         $this->arrayInfo['info'] = $anuncio->selecionarAnunciosID();
@@ -329,9 +340,10 @@ class produtoController extends controller{
         // );
         $this->loadPainel("editarAnuncio", $this->arrayInfo);
     }
-    
-    public function sisEditarAnuncio(){
-        if (isset($_POST['id']) && !empty($_POST['id'])){
+
+    public function sisEditarAnuncio()
+    {
+        if (isset($_POST['id']) && !empty($_POST['id'])) {
             $id = addslashes($_POST['id']);
             // $usuario = addslashes($_POST['usuario']);
             $usuario = $this->user->getID();
@@ -349,7 +361,7 @@ class produtoController extends controller{
             // print_r($fotos);
             // exit();
 
-            if (!empty($titulo) && !empty($categoria) && !empty($valor)){
+            if (!empty($titulo) && !empty($categoria) && !empty($valor)) {
                 $anuncio = new anuncios();
                 $anuncio->setID($id);
                 $anuncio->setIDUsuario($usuario);
@@ -360,7 +372,7 @@ class produtoController extends controller{
                 $anuncio->setDescricao($descricao);
                 $anuncio->setEstado($estado);
                 $anuncio->atualizarAnuncios();
-                
+
                 $array = $anuncio->selecionarAnunciosID();
                 foreach ($array as $key => $value) {
                     $idAnuncio = $value['id'];
@@ -412,28 +424,30 @@ class produtoController extends controller{
                 // }
                 //exit();
                 //header("Location: ../index.php?pag=editarAnuncio&sucess=true&id=".$id);
-                header("Location: ".BASE_URL."produto/editarAnuncio/".$id."/sucess");
+                header("Location: " . BASE_URL . "produto/editarAnuncio/" . $id . "/sucess");
             } else {
                 //header("Location: ../index.php?pag=editarAnuncio&error=true&id=".$id);
-                header("Location: ".BASE_URL."produto/editarAnuncio/".$id."/error");
+                header("Location: " . BASE_URL . "produto/editarAnuncio/" . $id . "/error");
             }
-        } else{
+        } else {
             $id = null;
             //header("Location: ../index.php?pag=editarAnuncio&error=true&id=".$id);
-            header("Location: ".BASE_URL."produto/editarAnuncio/".$id."/error");
+            header("Location: " . BASE_URL . "produto/editarAnuncio/" . $id . "/error");
         }
     }
-    
-    public function excluirAnuncio($id) {
+
+    public function excluirAnuncio($id)
+    {
         // $dados = array (
         //     "id" => $id
         // );
         $this->arrayInfo['id'] = $id;
         $this->loadPainel("excluirAnuncio", $this->arrayInfo);
     }
-    
-    public function sisExcluirAnuncio($id) {
-        if(isset($_POST['id']) && !empty($_POST['id'])) {
+
+    public function sisExcluirAnuncio($id)
+    {
+        if (isset($_POST['id']) && !empty($_POST['id'])) {
             $id = $_POST['id'];
 
             $imagem = new anunciosImagens();
@@ -457,8 +471,9 @@ class produtoController extends controller{
             // $this->loadTemplate("excluirAnuncio", $dados);
         }
     }
-    
-    public function meusAnuncios($confirme = "") {
+
+    public function meusAnuncios($confirme = "")
+    {
         $a = new anuncios();
         // $id_usuario = $this->user->getID(); //$_SESSION['id'];
         $a->setIDUsuario($this->user->getID());
@@ -476,37 +491,38 @@ class produtoController extends controller{
         // );
         // $this->loadTemplate("meusAnuncios", $dados);
     }
-    
-    public function abrir($id) {
-        
-        if (empty($id)){
-            header("Location: ".BASE_URL);
+
+    public function abrir($id)
+    {
+
+        if (empty($id)) {
+            header("Location: " . BASE_URL);
             exit();
         }
-        
+
         $anunImagens = new anunciosImagens();
         $anunImagens->setIDAnuncio($id);
         $fotos = $anunImagens->selecionarAnunciosImagens();
-        
-        if ($anunImagens->numRows() == 1){
+
+        if ($anunImagens->numRows() == 1) {
             $fotos = array();
             $fotos[] = $anunImagens->result();
         }
-        
+
         $anuncio = new anuncios();
         $anuncio->setID($id);
         $result = $anuncio->selecionarAnunciosID();
-        
+
         $usuario = new usuario();
         $usuario->setID($result['id_usuario']);
         $user = $usuario->selecionarUser();
-        
-        $dados = array (
+
+        $dados = array(
             "fotos" => $fotos,
             "result" => $result,
             "user" => $user
         );
-        
+
         $this->loadTemplate("produto", $dados);
     }
 }
